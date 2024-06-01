@@ -5,9 +5,9 @@ namespace domain.Abstractions
 {
     public interface IDataCache
     {
-        Task CacheData(string key, object value, TimeSpan expire);
-        Task<string?> GetCachedData(string key);
-        Task DeleteCache(string key);
-        Task DeleteCacheByKeyPattern(string pattern);
+        Task CacheDataAsync(string key, object value, TimeSpan expires);
+        Task<string?> GetCacheAsync(string key);
+        Task DeleteCacheAsync(string key);
+        Task DeleteCacheByKeyPatternAsync(string pattern);
     }
 }

@@ -81,6 +81,8 @@ namespace domain.Models
 
     public class Personal : Contacts
     {
+        public string? ImageKey { get; set; }
+
         public string FirstName { get; set; }
 
         public string? Patronymic { get; set; }

@@ -14,7 +14,7 @@ namespace datahub.Redis
     {
         private readonly IDatabase _db = context.GetDatabase();
 
-        public async Task CacheData(string key, object value, TimeSpan expires)
+        public async Task CacheDataAsync(string key, object value, TimeSpan expires)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace datahub.Redis
             }
         }
 
-        public async Task<string?> GetCachedData(string key)
+        public async Task<string?> GetCacheAsync(string key)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace datahub.Redis
             }
         }
 
-        public async Task DeleteCache(string key)
+        public async Task DeleteCacheAsync(string key)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace datahub.Redis
             }
         }
 
-        public async Task DeleteCacheByKeyPattern(string pattern)
+        public async Task DeleteCacheByKeyPatternAsync(string pattern)
         {
             try
             {

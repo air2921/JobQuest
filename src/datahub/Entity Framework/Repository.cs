@@ -69,7 +69,7 @@ namespace datahub.Entity_Framework
             }
         }
 
-        public async Task<IEnumerable<T>> GetAll(ISpecification<T>? specification = null, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<T>> GetRangeAsync(ISpecification<T>? specification = null, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -93,7 +93,7 @@ namespace datahub.Entity_Framework
             }
         }
 
-        public async Task<T?> GetByFilter(ISpecification<T> specification, CancellationToken cancellationToken = default)
+        public async Task<T?> GetByFilterAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -116,7 +116,7 @@ namespace datahub.Entity_Framework
             }
         }
 
-        public async Task<T?> GetById(int id, CancellationToken cancellationToken = default)
+        public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -136,7 +136,7 @@ namespace datahub.Entity_Framework
             }
         }
 
-        public async Task<int> Add(T entity, Func<T, int>? GetId = null, CancellationToken cancellationToken = default)
+        public async Task<int> AddAsync(T entity, Func<T, int>? GetId = null, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -162,7 +162,7 @@ namespace datahub.Entity_Framework
             }
         }
 
-        public async Task AddRange(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+        public async Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -183,7 +183,7 @@ namespace datahub.Entity_Framework
             }
         }
 
-        public async Task<T?> Delete(int id, CancellationToken cancellationToken = default)
+        public async Task<T?> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -210,7 +210,7 @@ namespace datahub.Entity_Framework
             }
         }
 
-        public async Task<IEnumerable<T?>> DeleteMany(IEnumerable<int> identifiers, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<T?>> DeleteRangeAsync(IEnumerable<int> identifiers, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -242,7 +242,7 @@ namespace datahub.Entity_Framework
             }
         }
 
-        public async Task<T?> DeleteByFilter(ISpecification<T> specification, CancellationToken cancellationToken = default)
+        public async Task<T?> DeleteByFilterAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -272,7 +272,7 @@ namespace datahub.Entity_Framework
             }
         }
 
-        public async Task<T?> Update(T entity, CancellationToken cancellationToken = default)
+        public async Task<T?> UpdateAsync(T entity, CancellationToken cancellationToken = default)
         {
             try
             {
