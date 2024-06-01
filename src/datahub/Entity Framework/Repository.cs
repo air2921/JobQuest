@@ -123,7 +123,7 @@ namespace datahub.Entity_Framework
                 using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(GET_BY_ID_AWAITING));
                 cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
 
-                return await _dbSet.FindAsync(id, cancellationToken);
+                return await _dbSet.FindAsync([id], cancellationToken: cancellationToken);
             }
             catch (OperationCanceledException)
             {
@@ -190,7 +190,7 @@ namespace datahub.Entity_Framework
                 using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(DELETE_AWAITING));
                 cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
 
-                var entity = await _dbSet.FindAsync(id, cancellationToken);
+                var entity = await _dbSet.FindAsync([id], cancellationToken: cancellationToken);
                 if (entity is not null)
                 {
                     var deletedEntity = _dbSet.Remove(entity).Entity;
@@ -221,7 +221,7 @@ namespace datahub.Entity_Framework
 
                 foreach (var id in identifiers)
                 {
-                    var entity = await _dbSet.FindAsync(id);
+                    var entity = await _dbSet.FindAsync([id], cancellationToken: cancellationToken);
                     if (entity != null)
                     {
                         deletedEntities.Add(entity);

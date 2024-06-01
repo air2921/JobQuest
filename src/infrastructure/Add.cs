@@ -3,6 +3,7 @@ using application.DTO.Infrastructure;
 using infrastructure.Abstractions;
 using infrastructure.EmailSender;
 using infrastructure.S3;
+using infrastructure.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -40,6 +41,8 @@ namespace infrastructure
             });
 
             services.AddScoped<IS3Service, S3Service>();
+            services.AddScoped<IGenerate, Generate>();
+            services.AddScoped<IHashUtility, HashUtility>();
 
         }
     }

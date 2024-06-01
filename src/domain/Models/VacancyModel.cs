@@ -12,9 +12,9 @@ namespace domain.Models
         [Key]
         public int VacancyId { get; set; }
 
-        public string CompanyName { get; set; }
+        public string CompanyName { get; set; } = null!;
 
-        public string Location { get; set; }
+        public string Location { get; set; } = null!;
 
         public int MinSalary { get; set; } = 0;
 

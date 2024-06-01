@@ -10,8 +10,8 @@ namespace domain.Models.Chat
     {
         [Key]
         public int MessageId { get; set; }
-        
-        public string Message { get; set; }
+
+        public string Message { get; set; } = null!;
 
         public bool IsRead { get; set; }
 
@@ -21,10 +21,10 @@ namespace domain.Models.Chat
         public int ChatId { get; set; }
 
         [ForeignKey("EmployerId")]
-        public string EmployerId { get; set; }
+        public string EmployerId { get; set; } = null!;
 
         [ForeignKey("CandidateId")]
-        public string CandidateId { get; set; }
+        public string CandidateId { get; set; } = null!;
 
         [JsonIgnore]
         public ChatModel? Chat { get; set; }

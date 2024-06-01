@@ -11,7 +11,7 @@ namespace domain.Models
         [Key]
         public int TokenId { get; set; }
 
-        public string Value { get; set; }
+        public string Value { get; set; } = null!;
 
         public DateTime Expires { get; set; }
 

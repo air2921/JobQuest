@@ -13,31 +13,31 @@ namespace domain.Models
         [Key]
         public int CompanyId { get; set; }
 
-        public string CompanyName { get; set; }
+        public string CompanyName { get; set; } = null!;
 
-        public string Location { get; set; }
+        public string Location { get; set; } = null!;
 
-        public string PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = null!;
 
         public DateTime RegisterDate { get; set; }
 
-        public string OKOPF { get; set; }
+        public string OKOPF { get; set; } = null!;
 
-        public string INN { get; set; }
+        public string INN { get; set; } = null!;
 
-        public string OGRN { get; set; }
+        public string OGRN { get; set; } = null!;
 
-        public string KPP { get; set; }
+        public string KPP { get; set; } = null!;
 
-        public string OKATO { get; set; }
+        public string OKATO { get; set; } = null!;
 
-        public string OKPO { get; set; }
+        public string OKPO { get; set; } = null!;
 
         [ForeignKey("UserId")]
         public int UserId { get; set; }
 
         [JsonIgnore]
-        public UserModel User { get; set; }
+        public UserModel? User { get; set; }
 
         [JsonIgnore]
         public ICollection<VacancyModel>? Vacancies { get; set; }

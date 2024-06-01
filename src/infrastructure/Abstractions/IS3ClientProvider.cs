@@ -4,6 +4,6 @@ namespace infrastructure.Abstractions
 {
     public interface IS3ClientProvider
     {
-        public S3ClientObject GetS3Client();
+        S3ClientObject GetS3Client();
     }
 }

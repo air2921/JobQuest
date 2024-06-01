@@ -12,11 +12,11 @@ namespace domain.Attributes
                 return false;
 
             string[] roles =
-            {
-                $"{Role.Candidate.ToString()}",
-                $"{Role.Employer.ToString()}",
-                $"{Role.Admin.ToString()}",
-            };
+            [
+                $"{Role.Candidate}",
+                $"{Role.Employer}",
+                $"{Role.Admin}",
+            ];
 
             return roles.Contains((string)value);
         }

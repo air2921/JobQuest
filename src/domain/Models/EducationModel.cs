@@ -15,7 +15,7 @@ namespace domain.Models
         [Education(ErrorMessage = "Неизвестное образование")]
         public int Level { get; set; }
 
-        public string Institution { get; set; }
+        public string Institution { get; set; } = null!;
 
         public DateTime DateOfEnrollment { get; set; }
 

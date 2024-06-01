@@ -5,9 +5,9 @@ namespace domain.Abstractions
 {
     public interface IDatabaseTransaction
     {
-        public Task<IDbContextTransaction> BeginAsync();
-        public Task CommitAsync(IDbContextTransaction transaction);
-        public Task RollbackAsync(IDbContextTransaction transaction);
-        public void Dispose(IDbContextTransaction transaction);
+        Task<IDbContextTransaction> BeginAsync();
+        Task CommitAsync(IDbContextTransaction transaction);
+        Task RollbackAsync(IDbContextTransaction transaction);
+        void Dispose(IDbContextTransaction transaction);
     }
 }
