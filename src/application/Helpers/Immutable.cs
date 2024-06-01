@@ -1,4 +1,6 @@
-﻿namespace api.Helpers
+﻿using System;
+
+namespace application.Helpers
 {
     public static class Immutable
     {

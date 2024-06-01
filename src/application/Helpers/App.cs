@@ -1,4 +1,4 @@
-﻿namespace api.Helpers
+﻿namespace application.Helpers
 {
     public static class App
     {

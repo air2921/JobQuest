@@ -83,10 +83,13 @@ namespace domain.Models
     {
         public string? ImageKey { get; set; }
 
+        [Name(nullValidate: true, ErrorMessage = "Неверный формат имени")]
         public string FirstName { get; set; } = null!;
 
+        [Name(nullValidate: false, ErrorMessage = "Неверный формат имени")]
         public string? Patronymic { get; set; }
 
+        [Name(nullValidate: true, ErrorMessage = "Неверный формат имени")]
         public string LastName { get; set; } = null!;
 
         public bool IsMale { get; set; }
