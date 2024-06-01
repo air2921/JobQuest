@@ -14,13 +14,13 @@ namespace domain.Models
         public int UserId { get; set; }
 
         [EmailAddress(ErrorMessage = "Неверный формат электронной почты")]
-        public string Email { get; set; }
+        public string Email { get; set; } = null!;
 
         [Hash(ErrorMessage = "Ошибка при создании пароля, возможно пароль имеет неподдерживаемые символы")]
-        public string PasswordHash { get; set; }
+        public string PasswordHash { get; set; } = null!;
 
         [Role(ErrorMessage = "Такой роли не существует")]
-        public string Role { get; set; }
+        public string Role { get; set; } = null!;
 
         public bool IsBlocked { get; set; }
 

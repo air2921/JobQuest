@@ -11,11 +11,11 @@ namespace domain.Models
         [Key]
         public int ExperienceId { get; set; }
 
-        public string Company { get; set; }
+        public string Company { get; set; } = null!;
 
-        public string Location { get; set; }
+        public string Location { get; set; } = null!;
 
-        public string WebSite { get; set; }
+        public string WebSite { get; set; } = null!;
 
         public DateTime StartOfWork { get; set; }
 

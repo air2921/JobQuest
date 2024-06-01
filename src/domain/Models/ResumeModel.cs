@@ -13,7 +13,7 @@ namespace domain.Models
         [Key]
         public int ResumeId { get; set; }
 
-        public string ResumeName { get; set; }
+        public string ResumeName { get; set; } = null!;
 
         public int MinSalary { get; set; } = 0;
 
@@ -28,17 +28,17 @@ namespace domain.Models
         [WorkSchedule(ErrorMessage = "Неизвестный график работы")]
         public int WorkSchedule { get; set; }
 
-        public string Location { get; set; }
+        public string Location { get; set; } = null!;
 
-        public string Citizenship { get; set; }
+        public string Citizenship { get; set; } = null!;
 
-        public string WorkPermit { get; set; }
+        public string WorkPermit { get; set; } = null!;
 
-        public string SpecializationName { get; set; }
+        public string SpecializationName { get; set; } = null!;
 
         public HashSet<string>? Skills { get; set; }
 
-        public Dictionary<string, string> Languages { get; set; }
+        public Dictionary<string, string>? Languages { get; set; }
 
         public string? About { get; set; }
 
@@ -83,11 +83,11 @@ namespace domain.Models
     {
         public string? ImageKey { get; set; }
 
-        public string FirstName { get; set; }
+        public string FirstName { get; set; } = null!;
 
         public string? Patronymic { get; set; }
 
-        public string LastName { get; set; }
+        public string LastName { get; set; } = null!;
 
         public bool IsMale { get; set; }
 
