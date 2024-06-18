@@ -1,4 +1,5 @@
 ﻿using domain.Attributes;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -14,7 +15,9 @@ namespace domain.Models
         [Key]
         public int ReviewId { get; set; }
 
-        public int JobTitle { get; set; }
+        public string JobTitle { get; set; } = null!;
+
+        public DateTime CreatedAt { get; set; }
 
         [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
         public int DurationOfWork { get; set; }
@@ -43,8 +46,7 @@ namespace domain.Models
         [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
         public int GrowthOpportunitiesGrade { get; set; }
 
-        [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
-        public int OverallGrade
+        public double OverallGrade
         {
             get => _grade;
             private set

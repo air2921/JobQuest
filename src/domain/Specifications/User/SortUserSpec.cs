@@ -12,7 +12,7 @@ namespace domain.Specifications.User
             Roles = roles;
             IsBlocked = isBlocked;
 
-            Query.Where(x =>Roles.Contains(x.Role));
+            Query.Where(x => Roles.Contains(x.Role));
 
             Query.Where(x => x.IsBlocked.Equals(IsBlocked));
         }

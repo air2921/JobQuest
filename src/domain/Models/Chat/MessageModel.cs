@@ -21,10 +21,10 @@ namespace domain.Models.Chat
         public int ChatId { get; set; }
 
         [ForeignKey("EmployerId")]
-        public string EmployerId { get; set; } = null!;
+        public int EmployerId { get; set; }
 
         [ForeignKey("CandidateId")]
-        public string CandidateId { get; set; } = null!;
+        public int CandidateId { get; set; }
 
         [JsonIgnore]
         public ChatModel? Chat { get; set; }

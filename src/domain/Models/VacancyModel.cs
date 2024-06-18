@@ -1,4 +1,5 @@
 ﻿using domain.Attributes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,7 +13,9 @@ namespace domain.Models
         [Key]
         public int VacancyId { get; set; }
 
-        public string CompanyName { get; set; } = null!;
+        public string VacancyName { get; set; } = null!;
+
+        public DateTime CreatedAt { get; set; }
 
         public string Location { get; set; } = null!;
 

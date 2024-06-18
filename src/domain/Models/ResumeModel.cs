@@ -15,6 +15,8 @@ namespace domain.Models
 
         public string ResumeName { get; set; } = null!;
 
+        public DateTime CreatedAt { get; set; }
+
         public int MinSalary { get; set; } = 0;
 
         public int MaxSalary { get; set; } = 0;
