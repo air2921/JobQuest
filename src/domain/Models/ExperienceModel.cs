@@ -15,13 +15,27 @@ namespace domain.Models
 
         public string Location { get; set; } = null!;
 
-        public string WebSite { get; set; } = null!;
+        public string? WebSite { get; set; }
 
         public DateTime StartOfWork { get; set; }
 
         public DateTime? EndOfWork { get; set; }
 
         public bool IsPresentTime { get; set; }
+
+        public int ExperienceCountInMounts
+        {
+            get
+            {
+                if (EndOfWork is not null && !IsPresentTime)
+                    return (EndOfWork.Value - StartOfWork).Days / 30;
+                else if (EndOfWork is null && IsPresentTime)
+                    return (DateTime.UtcNow - StartOfWork).Days / 30;
+                else
+                    return 0;
+            }
+            private set { }
+        }
 
         public string? Duties { get; set; }
 

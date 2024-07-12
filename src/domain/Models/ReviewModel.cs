@@ -10,8 +10,6 @@ namespace domain.Models
     [Table("Reviews")]
     public class ReviewModel
     {
-        private int _grade;
-
         [Key]
         public int ReviewId { get; set; }
 
@@ -48,14 +46,13 @@ namespace domain.Models
 
         public double OverallGrade
         {
-            get => _grade;
-            private set
+            get
             {
                 int[] grades = [HiringProcessGrade, ManagementGrade, SalaryGrade, WorkConditionsGrade,
                     RestConditionsGrade, WorkPlaceGrade, TeamGrade, GrowthOpportunitiesGrade];
 
                 int sum = grades.Sum();
-                _grade = sum != 0 ? sum / grades.Length : 0;
+                return sum != 0 ? sum / grades.Length : 0;
             }
         }
 
