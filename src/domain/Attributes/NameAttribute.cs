@@ -1,22 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
-namespace domain.Attributes
+namespace domain.Attributes;
+
+public class NameAttribute(bool nullValidate) : ValidationAttribute
 {
-    public class NameAttribute(bool nullValidate) : ValidationAttribute
+    public override bool IsValid(object? value)
     {
-        public override bool IsValid(object? value)
-        {
-            if (value is null)
-                return !nullValidate;
+        if (value is null)
+            return !nullValidate;
 
-            if (value is not string name)
-                return false;
+        if (value is not string name)
+            return false;
 
-            string pattern = @"[^ \p{L}]";
-            var regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Multiline);
+        string pattern = @"[^ \p{L}]";
+        var regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Multiline);
 
-            return regex.IsMatch(name);
-        }
+        return regex.IsMatch(name);
     }
 }

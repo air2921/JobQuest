@@ -3,27 +3,26 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace domain.Attributes
+namespace domain.Attributes;
+
+public class EmploymentAttribute : ValidationAttribute
 {
-    public class EmploymentAttribute : ValidationAttribute
+    public override bool IsValid(object? value)
     {
-        public override bool IsValid(object? value)
-        {
-            if (value is null)
-                return false;
+        if (value is null)
+            return false;
 
-            if (!int.TryParse(value.ToString(), out int employment))
-                return false;
+        if (!int.TryParse(value.ToString(), out int employment))
+            return false;
 
-            int[] employments =
-            [
-                (int)Employment.Full,
-                (int)Employment.Partial,
-                (int)Employment.Internship,
-                (int)Employment.Project
-            ];
+        int[] employments =
+        [
+            (int)Employment.Full,
+            (int)Employment.Partial,
+            (int)Employment.Internship,
+            (int)Employment.Project
+        ];
 
-            return employments.Contains(employment);
-        }
+        return employments.Contains(employment);
     }
 }

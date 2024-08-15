@@ -7,65 +7,64 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace infrastructure.S3
+namespace infrastructure.S3;
+
+public class S3Service(IS3ClientProvider s3provider, ILogger<S3Service> logger) : IS3Service
 {
-    public class S3Service(IS3ClientProvider s3provider, ILogger<S3Service> logger) : IS3Service
+    private readonly S3ClientObject _provider = s3provider.GetS3Client();
+    private const string ERROR = "Неизвестная ошибка при получении данных";
+
+    public async Task Upload(Stream stream, string key)
     {
-        private readonly S3ClientObject _provider = s3provider.GetS3Client();
-        private const string ERROR = "Неизвестная ошибка при получении данных";
-
-        public async Task Upload(Stream stream, string key)
+        try
         {
-            try
+            await _provider.S3Client.PutObjectAsync(new PutObjectRequest
             {
-                await _provider.S3Client.PutObjectAsync(new PutObjectRequest
-                {
-                    BucketName = _provider.Bucket,
-                    Key = key,
-                    InputStream = stream
-                });
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex.ToString());
-                throw new S3Exception(ERROR);
-            }
+                BucketName = _provider.Bucket,
+                Key = key,
+                InputStream = stream
+            });
         }
-
-        public async Task<Stream> Download(string key)
+        catch (Exception ex)
         {
-            try
-            {
-                var response = await _provider.S3Client.GetObjectAsync(new GetObjectRequest
-                {
-                    BucketName = _provider.Bucket,
-                    Key = key
-                });
-
-                return response.ResponseStream;
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex.ToString());
-                throw new S3Exception(ERROR);
-            }
+            logger.LogError(ex.ToString());
+            throw new S3Exception(ERROR);
         }
+    }
 
-        public async Task Delete(string key)
+    public async Task<Stream> Download(string key)
+    {
+        try
         {
-            try
+            var response = await _provider.S3Client.GetObjectAsync(new GetObjectRequest
             {
-                await _provider.S3Client.DeleteObjectAsync(new DeleteObjectRequest
-                {
-                    BucketName = _provider.Bucket,
-                    Key = key
-                });
-            }
-            catch (Exception ex)
+                BucketName = _provider.Bucket,
+                Key = key
+            });
+
+            return response.ResponseStream;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex.ToString());
+            throw new S3Exception(ERROR);
+        }
+    }
+
+    public async Task Delete(string key)
+    {
+        try
+        {
+            await _provider.S3Client.DeleteObjectAsync(new DeleteObjectRequest
             {
-                logger.LogError(ex.ToString());
-                throw new S3Exception(ERROR);
-            }
+                BucketName = _provider.Bucket,
+                Key = key
+            });
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex.ToString());
+            throw new S3Exception(ERROR);
         }
     }
 }
