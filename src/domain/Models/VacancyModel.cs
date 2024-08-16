@@ -13,27 +13,37 @@ public class VacancyModel
     [Key]
     public int VacancyId { get; set; }
 
+    [Column]
     public string VacancyName { get; set; } = null!;
 
+    [Column]
     public DateTime CreatedAt { get; set; }
 
+    [Column]
     public string Location { get; set; } = null!;
 
+    [Column]
     public int MinSalary { get; set; } = 0;
 
+    [Column]
     public int MaxSalary { get; set; } = 0;
 
+    [Column]
     public int Experience { get; set; } = 0;
 
+    [Column]
     [Education(ErrorMessage = "Неизвестное образование")]
     public int EducationLevel { get; set; }
 
+    [Column]
     [Employment(ErrorMessage = "Неизвестная занятость")]
     public int Employment { get; set; }
 
+    [Column]
     [WorkSchedule(ErrorMessage = "Неизвестный график работы")]
     public int WorkSchedule { get; set; }
 
+    [Column]
     public string? About { get; set; }
 
     [ForeignKey("CompanyId")]

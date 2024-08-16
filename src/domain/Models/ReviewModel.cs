@@ -13,37 +13,49 @@ public class ReviewModel
     [Key]
     public int ReviewId { get; set; }
 
+    [Column]
     public string JobTitle { get; set; } = null!;
 
+    [Column]
     public DateTime CreatedAt { get; set; }
 
+    [Column]
     [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
     public int DurationOfWork { get; set; }
 
+    [Column]
     [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
     public int HiringProcessGrade { get; set; }
 
+    [Column]
     [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
     public int ManagementGrade { get; set; }
 
+    [Column]
     [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
     public int SalaryGrade { get; set; }
 
+    [Column]
     [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
     public int WorkConditionsGrade { get; set; }
 
+    [Column]
     [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
     public int RestConditionsGrade { get; set; }
 
+    [Column]
     [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
     public int WorkPlaceGrade { get; set; }
 
+    [Column]
     [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
     public int TeamGrade { get; set; }
 
+    [Column]
     [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
     public int GrowthOpportunitiesGrade { get; set; }
 
+    [NotMapped]
     public double OverallGrade
     {
         get
@@ -56,8 +68,10 @@ public class ReviewModel
         }
     }
 
+    [Column]
     public bool IsRecomended { get; set; }
 
+    [Column]
     public string? Description { get; set; }
 
     [ForeignKey("CompanyId")]

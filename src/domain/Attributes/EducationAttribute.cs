@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace domain.Attributes;
 
+[AttributeUsage(AttributeTargets.Property)]
 public class EducationAttribute : ValidationAttribute
 {
     public override bool IsValid(object? value)

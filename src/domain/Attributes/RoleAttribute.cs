@@ -1,9 +1,11 @@
 ﻿using domain.Models;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace domain.Attributes;
 
+[AttributeUsage(AttributeTargets.Property)]
 public class RoleAttribute : ValidationAttribute
 {
     public override bool IsValid(object? value)

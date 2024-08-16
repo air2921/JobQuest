@@ -1,4 +1,5 @@
-﻿using datahub.Entity_Framework;
+﻿using common;
+using datahub.Entity_Framework;
 using datahub.Redis;
 using domain.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +24,7 @@ public static class Add
 
         services.AddDbContext<AppDbContext>(options =>
         {
-            options.UseNpgsql(config.GetConnectionString("Postgres"))
+            options.UseNpgsql(config.GetConnectionString(App.MAIN_DB))
             .EnableServiceProviderCaching(false)
             .EnableDetailedErrors(true)
             .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);

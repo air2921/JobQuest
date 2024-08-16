@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Pipelines.Sockets.Unofficial.Arenas;
 
 namespace datahub.Entity_Framework;
 
@@ -35,6 +36,7 @@ public class Repository<T> : IRepository<T> where T : class
     private readonly ILogger<Repository<T>> _logger;
     private readonly AppDbContext _context;
     private readonly DbSet<T> _dbSet;
+    private readonly string _tName = typeof(T).FullName ?? typeof(T).Name;
 
     public Repository(ILogger<Repository<T>> logger, AppDbContext context)
     {
@@ -64,7 +66,8 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(ex.ToString(), nameof(_context), nameof(_dbSet));
+            var specName = specification?.GetType().FullName ?? "null";
+            _logger.LogCritical(ex.ToString(), _tName, specName);
             throw new EntityException(ERROR);
         }
     }
@@ -88,7 +91,8 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(ex.ToString(), nameof(_context), nameof(_dbSet));
+            var specName = specification?.GetType().FullName ?? "null";
+            _logger.LogCritical(ex.ToString(), _tName, specName);
             throw new EntityException(ERROR);
         }
     }
@@ -111,7 +115,8 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(ex.ToString(), nameof(_context), nameof(_dbSet));
+            var specName = specification?.GetType().FullName ?? "null";
+            _logger.LogCritical(ex.ToString(), _tName, specName);
             throw new EntityException(ERROR);
         }
     }
@@ -123,7 +128,7 @@ public class Repository<T> : IRepository<T> where T : class
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(GET_BY_ID_AWAITING));
             cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
 
-            return await _dbSet.FindAsync([id], cancellationToken: cancellationToken);
+            return await _dbSet.FindAsync(id, cancellationToken);
         }
         catch (OperationCanceledException)
         {
@@ -131,7 +136,7 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(ex.ToString(), nameof(_context), nameof(_dbSet));
+            _logger.LogCritical(ex.ToString(), _tName);
             throw new EntityException(ERROR);
         }
     }
@@ -157,8 +162,8 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(ex.ToString(), nameof(_context), nameof(_dbSet));
-            throw new EntityException("Error when creating entity");
+            _logger.LogCritical(ex.ToString(), _tName);
+            throw new EntityException(ERROR);
         }
     }
 
@@ -178,8 +183,8 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(ex.ToString(), nameof(_context), nameof(_dbSet));
-            throw new EntityException("Error when creating entity");
+            _logger.LogCritical(ex.ToString(), _tName);
+            throw new EntityException(ERROR);
         }
     }
 
@@ -190,7 +195,7 @@ public class Repository<T> : IRepository<T> where T : class
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(DELETE_AWAITING));
             cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
 
-            var entity = await _dbSet.FindAsync([id], cancellationToken: cancellationToken);
+            var entity = await _dbSet.FindAsync(id, cancellationToken);
             if (entity is not null)
             {
                 var deletedEntity = _dbSet.Remove(entity).Entity;
@@ -205,8 +210,8 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(ex.ToString(), nameof(_context), nameof(_dbSet));
-            throw new EntityException("Error when deleting data");
+            _logger.LogCritical(ex.ToString(), _tName);
+            throw new EntityException(ERROR);
         }
     }
 
@@ -217,19 +222,22 @@ public class Repository<T> : IRepository<T> where T : class
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(DELETE_RANGE_AWAITING));
             cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
 
-            var deletedEntities = new List<T>();
+            var tasks = identifiers
+                .Select(id => _dbSet.FindAsync(id).AsTask())
+                .Where(task => task is not null)
+                .ToArray();
 
-            foreach (var id in identifiers)
-            {
-                var entity = await _dbSet.FindAsync([id], cancellationToken: cancellationToken);
-                if (entity != null)
-                {
-                    deletedEntities.Add(entity);
-                    _dbSet.Remove(entity);
-                }
-            }
+            await Task.WhenAll(tasks);
+
+            var entities = tasks
+                .Select(task => task.Result)
+                .Where(entity => entity is not null)
+                .ToList();
+
+            entities.ForEach(entity => _dbSet.Remove(entity!));
+
             await _context.SaveChangesAsync(cancellationToken);
-            return deletedEntities;
+            return entities!;
         }
         catch (OperationCanceledException)
         {
@@ -237,8 +245,8 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(ex.ToString(), nameof(_context), nameof(_dbSet));
-            throw new EntityException("Error when deleting data");
+            _logger.LogCritical(ex.ToString(), _tName);
+            throw new EntityException(ERROR);
         }
     }
 
@@ -267,8 +275,9 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(ex.ToString(), nameof(_context), nameof(_dbSet));
-            throw new EntityException("Error when deleting data");
+            var specName = specification?.GetType().FullName ?? "null";
+            _logger.LogCritical(ex.ToString(), _tName, specName);
+            throw new EntityException(ERROR);
         }
     }
 
@@ -291,8 +300,8 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(ex.ToString(), nameof(_context), nameof(_dbSet));
-            throw new EntityException("Error when updating data");
+            _logger.LogCritical(ex.ToString(), _tName);
+            throw new EntityException(ERROR);
         }
     }
 }

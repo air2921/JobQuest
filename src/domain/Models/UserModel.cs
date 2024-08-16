@@ -12,15 +12,19 @@ public class UserModel
     [Key]
     public int UserId { get; set; }
 
+    [Column]
     [EmailAddress(ErrorMessage = "Неверный формат электронной почты")]
     public string Email { get; set; } = null!;
 
+    [Column]
     [Hash(ErrorMessage = "Ошибка при создании пароля, возможно пароль имеет неподдерживаемые символы")]
     public string PasswordHash { get; set; } = null!;
 
+    [Column]
     [Role(ErrorMessage = "Такой роли не существует")]
     public string Role { get; set; } = null!;
 
+    [Column]
     public bool IsBlocked { get; set; }
 
     [JsonIgnore]

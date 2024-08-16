@@ -12,6 +12,7 @@ public class ChatModel
     [Key]
     public int ChatId { get; set; }
 
+    [Column]
     public DateTime CreatedAt { get; set; }
 
     [ForeignKey("CandidateId")]

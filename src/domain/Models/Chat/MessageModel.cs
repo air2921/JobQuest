@@ -11,10 +11,13 @@ public class MessageModel
     [Key]
     public int MessageId { get; set; }
 
+    [Column]
     public string Message { get; set; } = null!;
 
+    [Column]
     public bool IsRead { get; set; }
 
+    [Column]
     public DateTime SentAt { get; set; }
 
     [ForeignKey("ChatId")]

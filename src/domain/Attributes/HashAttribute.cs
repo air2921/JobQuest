@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
 namespace domain.Attributes;
 
+[AttributeUsage(AttributeTargets.Property)]
 public class HashAttribute : ValidationAttribute
 {
     public override bool IsValid(object? value)

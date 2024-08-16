@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace domain.Attributes;
 
+[AttributeUsage(AttributeTargets.Property)]
 public class GradeAttribute : ValidationAttribute
 {
     public override bool IsValid(object? value)

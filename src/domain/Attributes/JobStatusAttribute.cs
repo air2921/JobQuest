@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace domain.Attributes;
 
+[AttributeUsage(AttributeTargets.Property)]
 public class JobStatusAttribute : ValidationAttribute
 {
     public override bool IsValid(object? value)

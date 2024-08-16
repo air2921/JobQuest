@@ -11,18 +11,25 @@ public class ExperienceModel
     [Key]
     public int ExperienceId { get; set; }
 
+    [Column]
     public string Company { get; set; } = null!;
 
+    [Column]
     public string Location { get; set; } = null!;
 
+    [Column]
     public string? WebSite { get; set; }
 
+    [Column]
     public DateTime StartOfWork { get; set; }
 
+    [Column]
     public DateTime? EndOfWork { get; set; }
 
+    [Column]
     public bool IsPresentTime { get; set; }
 
+    [NotMapped]
     public int ExperienceCountInMounts
     {
         get
@@ -37,6 +44,7 @@ public class ExperienceModel
         private set { }
     }
 
+    [Column]
     public string? Duties { get; set; }
 
     [ForeignKey("ResumeId")]

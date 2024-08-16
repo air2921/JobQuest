@@ -12,13 +12,17 @@ public class EducationModel
     [Key]
     public int EducationId { get; set; }
 
+    [Column]
     [Education(ErrorMessage = "Неизвестное образование")]
     public int Level { get; set; }
 
+    [Column]
     public string Institution { get; set; } = null!;
 
+    [Column]
     public DateTime DateOfEnrollment { get; set; }
 
+    [Column]
     public DateTime DateOfGraduation { get; set; }
 
     [ForeignKey("ResumeId")]

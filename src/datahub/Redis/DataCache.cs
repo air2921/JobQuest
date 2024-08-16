@@ -3,9 +3,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace datahub.Redis;
@@ -13,6 +11,7 @@ namespace datahub.Redis;
 public class DataCache(RedisContext context, ILogger<DataCache> logger) : IDataCache
 {
     private readonly IDatabase _db = context.GetDatabase();
+    private readonly IServer _server = context.GetServer();
 
     public async Task CacheDataAsync(string key, object value, TimeSpan expires)
     {
@@ -70,6 +69,7 @@ public class DataCache(RedisContext context, ILogger<DataCache> logger) : IDataC
         try
         {
             var value = await _db.StringGetAsync(key);
+
             if (value.HasValue)
                 await _db.KeyDeleteAsync(key);
 
@@ -86,36 +86,20 @@ public class DataCache(RedisContext context, ILogger<DataCache> logger) : IDataC
         }
     }
 
-    public async Task DeleteCacheByKeyPatternAsync(string pattern)
+    public async Task DeleteCacheByPatternAsync(string pattern)
     {
         try
         {
-            var redisKeys = await _db.ExecuteAsync("KEYS", "*");
-            var result = redisKeys.ToDictionary().Keys;
+            var keys = _server.Keys(pattern: pattern);
 
-            if (result == null)
+            if (keys.Count() <= 0)
                 return;
 
-            logger.LogInformation($"Request to delete data by pattern from redis cluster\nPattern: {pattern}");
-
-            var deletedKeys = new List<string>();
-            var partsOfPattern = pattern.Split('_');
-
-            var tasks = result
-                .Where(x => x.StartsWith(pattern))
-                .ToHashSet()
-                .Select(async match =>
-                {
-                    if (partsOfPattern[0].Equals(match[0]) && partsOfPattern[1].Equals(match[1]))
-                    {
-                        await _db.KeyDeleteAsync(match);
-                        deletedKeys.Add(match);
-                    }
-                });
+            var tasks = keys
+                .Select(key => _db.KeyDeleteAsync(key))
+                .ToList();
 
             await Task.WhenAll(tasks);
-
-            logger.LogInformation(string.Join(", ", deletedKeys));
         }
         catch (Exception ex)
         {
@@ -123,7 +107,7 @@ public class DataCache(RedisContext context, ILogger<DataCache> logger) : IDataC
         }
     }
 
-    private static string GetStringValue(RedisValue? redisValue)
+    private string GetStringValue(RedisValue? redisValue)
     {
         string? dataToReturn = null;
 

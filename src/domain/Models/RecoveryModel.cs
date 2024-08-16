@@ -11,8 +11,10 @@ public class RecoveryModel
     [Key]
     public int TokenId { get; set; }
 
+    [Column]
     public string Value { get; set; } = null!;
 
+    [Column]
     public DateTime Expires { get; set; }
 
     [ForeignKey("UserId")]

@@ -12,9 +12,11 @@ public class ResponseModel
     [Key]
     public int ResponseId { get; set; }
 
+    [Column]
     [ResponseStatus(ErrorMessage = "Неизвестный статус")]
     public int Status { get; set; }
 
+    [Column]
     public DateTime ResponseOfDate { get; set; }
 
     [ForeignKey("ResumeId")]

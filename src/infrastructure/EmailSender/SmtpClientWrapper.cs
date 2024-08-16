@@ -7,6 +7,8 @@ using MimeKit;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using common.Exceptions;
+using System;
+using common;
 
 namespace infrastructure.EmailSender;
 
@@ -21,15 +23,10 @@ public class SmtpClientWrapper(
         try
         {
             await _smtpClient.ConnectAsync("smtp.yandex.ru", 587, SecureSocketOptions.Auto);
-            await _smtpClient.AuthenticateAsync(configuration["Email"], configuration["EmailPassword"]);
+            await _smtpClient.AuthenticateAsync(configuration[App.EMAIL], configuration[App.EMAIL_PASSWORD]);
             await _smtpClient.SendAsync(message);
         }
-        catch (AuthenticationException ex)
-        {
-            logger.LogError(ex.ToString(), nameof(EmailSendAsync));
-            throw new SmtpClientException("Error sending message");
-        }
-        catch (SocketException ex)
+        catch (Exception ex) when (ex is AuthenticationException || ex is SocketException)
         {
             logger.LogError(ex.ToString(), nameof(EmailSendAsync));
             throw new SmtpClientException("Error sending message");
