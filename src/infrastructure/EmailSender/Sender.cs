@@ -1,6 +1,6 @@
-﻿using application.Abstractions.Infrastructure;
-using application.DTO.Infrastructure;
-using domain.Exceptions;
+﻿using domain.Abstractions;
+using common.Exceptions;
+using common.DTO;
 using infrastructure.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;

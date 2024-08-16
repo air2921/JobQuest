@@ -1,5 +1,4 @@
-﻿using domain.Exceptions;
-using infrastructure.Abstractions;
+﻿using infrastructure.Abstractions;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using MimeKit;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using common.Exceptions;
 
 namespace infrastructure.EmailSender;
 

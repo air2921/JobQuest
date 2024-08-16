@@ -1,5 +1,5 @@
-﻿using application.Abstractions.Infrastructure;
-using application.DTO.Infrastructure;
+﻿using common.DTO;
+using domain.Abstractions;
 using infrastructure.Abstractions;
 using infrastructure.EmailSender;
 using infrastructure.S3;

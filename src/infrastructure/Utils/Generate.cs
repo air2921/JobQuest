@@ -1,4 +1,4 @@
-﻿using application.Abstractions.Infrastructure;
+﻿using domain.Abstractions;
 using System;
 using System.Text;
 

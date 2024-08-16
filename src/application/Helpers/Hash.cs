@@ -1,7 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System;
 using System.Text;
-using application.Abstractions.Infrastructure;
 
 namespace application.Helpers
 {

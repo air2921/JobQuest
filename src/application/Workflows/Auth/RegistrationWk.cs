@@ -1,8 +1,4 @@
-﻿using application.Abstractions.Infrastructure;
-using application.DTO.Api;
-using domain.Abstractions;
-using domain.Exceptions;
-using domain.Models;
+﻿using domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

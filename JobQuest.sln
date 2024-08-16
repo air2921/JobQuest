@@ -12,8 +12,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "application", "src\application\application.csproj", "{E3F9E525-1201-4604-AF48-F353C2C4F7D5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "datahub", "src\datahub\datahub.csproj", "{F344654F-CCC1-40AC-9EEE-07745E2AAE6D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{20978D6B-66DC-4F49-933A-0E104DB8700F} = {20978D6B-66DC-4F49-933A-0E104DB8700F}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "common", "src\common\common.csproj", "{20978D6B-66DC-4F49-933A-0E104DB8700F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "common", "src\common\common.csproj", "{20978D6B-66DC-4F49-933A-0E104DB8700F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

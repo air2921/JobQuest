@@ -4,8 +4,8 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using application.DTO.Application;
-using application.Abstractions.Infrastructure;
+using domain.Abstractions;
+using common.DTO;
 
 namespace application.Helpers
 {

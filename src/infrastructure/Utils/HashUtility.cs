@@ -1,4 +1,4 @@
-﻿using application.Abstractions.Infrastructure;
+﻿using domain.Abstractions;
 using Microsoft.Extensions.Logging;
 using System;
 using BC = BCrypt.Net;
