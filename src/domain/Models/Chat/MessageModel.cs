@@ -29,12 +29,12 @@ public class MessageModel
     [ForeignKey("CandidateId")]
     public int CandidateId { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ChatModel? Chat { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public CompanyModel? Employer { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ResumeModel? Candidate { get; set; }
 }

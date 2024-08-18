@@ -16,4 +16,8 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Workflows\Auth\" />
+  </ItemGroup>
+
 </Project>

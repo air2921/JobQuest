@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace infrastructure.S3;
 
-public class S3ClientProvider(IConfiguration configuration) : IS3ClientProvider
+public class S3ClientProvider(IConfiguration configuration)
 {
     public S3ClientObject GetS3Client()
     {

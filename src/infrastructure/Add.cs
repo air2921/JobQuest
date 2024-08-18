@@ -22,7 +22,7 @@ public static class Add
             log.AddSerilog(logger);
         });
 
-        services.AddScoped<IS3ClientProvider>(provider =>
+        services.AddScoped(provider =>
         {
             return new S3ClientProvider(config);
         });

@@ -28,6 +28,6 @@ public class EducationModel
     [ForeignKey("ResumeId")]
     public int ResumeId { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ResumeModel? Resume { get; set; }
 }

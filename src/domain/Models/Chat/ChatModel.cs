@@ -21,12 +21,12 @@ public class ChatModel
     [ForeignKey("EmployerId")]
     public int EmployerId { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ResumeModel? CandidateUser { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public CompanyModel? EmployerUser { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ICollection<MessageModel>? Messages { get; set; }
 }

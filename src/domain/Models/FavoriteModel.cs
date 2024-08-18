@@ -16,9 +16,9 @@ public class FavoriteModel
     [ForeignKey("VacancyId")]
     public int VacancyId { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public UserModel? User { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public VacancyModel? Vacancy { get; set; }
 }

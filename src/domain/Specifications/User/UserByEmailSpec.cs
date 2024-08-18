@@ -7,7 +7,7 @@ public class UserByEmailSpec : Specification<UserModel>
 {
     public UserByEmailSpec(string email)
     {
-        Email = email;
+        Email = email.ToLowerInvariant();
 
         Query.Where(x => x.Email.Equals(Email));
     }

@@ -17,8 +17,7 @@ public class HashUtility(ILogger<HashUtility> logger) : IHashUtility
         }
         catch (Exception ex)
         {
-            logger.LogCritical(ex.ToString());
-
+            logger.LogError(ex.Message);
             return false;
         }
     }

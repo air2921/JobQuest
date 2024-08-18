@@ -5,18 +5,20 @@ using System.Linq;
 
 namespace domain.Specifications.User;
 
-public class SortUserSpec : Specification<UserModel>
+public class SortUserSpec : SortCollectionSpec<UserModel>
 {
-    public SortUserSpec(string[] roles, bool isBlocked)
+    public SortUserSpec(int skip, int count, bool byDesc)
+        : base(skip, count, byDesc, x => x.CreatedAt)
     {
-        Roles = roles;
-        IsBlocked = isBlocked;
+        if (Roles is not null && Roles.Length > 0)
+            Query.Where(x => Roles.Contains(x.Role));
 
-        Query.Where(x => Roles.Contains(x.Role));
+        if (IsBlocked.HasValue)
+            Query.Where(x => x.IsBlocked.Equals(IsBlocked.Value));
 
-        Query.Where(x => x.IsBlocked.Equals(IsBlocked));
+        Initialize();
     }
 
-    public string[] Roles { get; set; }
-    public bool IsBlocked { get; set; }
+    public string[]? Roles { get; set; }
+    public bool? IsBlocked { get; set; }
 }

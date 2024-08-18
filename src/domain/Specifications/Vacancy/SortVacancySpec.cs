@@ -5,31 +5,24 @@ using System.Linq;
 
 namespace domain.Specifications.Vacancy;
 
-public class SortVacancySpec : Specification<VacancyModel>
+public class SortVacancySpec : SortCollectionSpec<VacancyModel>
 {
-    public SortVacancySpec(string[]? locations, int? minSal,int? minExp,
-        int[]? educLevels, int[]? employments, int[]? schedules,
-        string? name, bool byDesc, int skip, int count)
+    public SortVacancySpec(int skip, int count, bool byDesc) : base(skip, count, byDesc, x => x.CreatedAt)
     {
-        Locations = locations;
-        MinSalary = minSal;
-        MinExperience = minExp;
-        EducationLevels = educLevels;
-        Employments = employments;
-        WorkSchedules = schedules;
-        Name = name;
-        ByDesc = byDesc;
-        SkipCount = skip;
-        Count = count;
-
         if (Locations is not null && Locations.Length > 0)
             Query.Where(x => Locations.Contains(x.Location));
 
         if (MinExperience.HasValue)
             Query.Where(x => x.Experience >= MinExperience.Value);
 
+        if (MaxExperience.HasValue)
+            Query.Where(x => x.Experience <= MaxExperience.Value);
+
         if (MinSalary.HasValue)
             Query.Where(x => x.MinSalary >= MinSalary.Value);
+
+        if (MaxSalary.HasValue)
+            Query.Where(x => x.MaxSalary <= MaxSalary.Value);
 
         if (EducationLevels is not null && EducationLevels.Length > 0)
             Query.Where(x => EducationLevels.Contains(x.EducationLevel));
@@ -46,22 +39,16 @@ public class SortVacancySpec : Specification<VacancyModel>
             Query.OrderBy(x => Math.Abs(x.VacancyName.IndexOf(Name) - x.VacancyName.Length));
         }
 
-        if (ByDesc)
-            Query.OrderByDescending(x => x.CreatedAt);
-        else
-            Query.OrderBy(x => x.CreatedAt);
-
-        Query.Skip(SkipCount).Take(Count);
+        Initialize();
     }
 
-    public string[]? Locations { get; private set; }
-    public int? MinSalary { get; private set; }
-    public int? MinExperience { get; private set; }
-    public int[]? EducationLevels { get; private set; }
-    public int[]? Employments { get; private set; }
-    public int[]? WorkSchedules { get; private set; }
-    public string? Name { get; private set; }
-    public bool ByDesc { get; private set; }
-    public int SkipCount { get; private set; }
-    public int Count { get; private set; }
+    public string[]? Locations { get; set; }
+    public int? MinSalary { get; set; }
+    public int? MaxSalary { get; set; }
+    public int? MinExperience { get; set; }
+    public int? MaxExperience { get; set; }
+    public int[]? EducationLevels { get; set; }
+    public int[]? Employments { get; set; }
+    public int[]? WorkSchedules { get; set; }
+    public string? Name { get; set; }
 }

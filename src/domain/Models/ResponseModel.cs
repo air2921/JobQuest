@@ -25,10 +25,10 @@ public class ResponseModel
     [ForeignKey("VacancyId")]
     public int VacancyId { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ResumeModel? Resume { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public VacancyModel? Vacancy { get; set; }
 }
 

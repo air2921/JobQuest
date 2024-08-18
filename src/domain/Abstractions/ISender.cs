@@ -2,7 +2,7 @@
 
 namespace domain.Abstractions;
 
-public interface ISender<T>
+public interface ISender<T> where T : class
 {
     Task SendMessage(T message);
 }

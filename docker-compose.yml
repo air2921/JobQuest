@@ -15,7 +15,6 @@ services:
       - 8080:8081
     networks:
       - "webapi"
-    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development 
     depends_on:

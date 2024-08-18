@@ -20,6 +20,6 @@ public class RecoveryModel
     [ForeignKey("UserId")]
     public int UserId { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public UserModel? User { get; set; }
 }

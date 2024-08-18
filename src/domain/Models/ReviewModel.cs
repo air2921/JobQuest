@@ -77,6 +77,6 @@ public class ReviewModel
     [ForeignKey("CompanyId")]
     public int CompanyId { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public CompanyModel? Company { get; set; }
 }

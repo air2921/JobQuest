@@ -44,18 +44,18 @@ public class VacancyModel
     public int WorkSchedule { get; set; }
 
     [Column]
-    public string? About { get; set; }
+    public string About { get; set; } = null!;
 
     [ForeignKey("CompanyId")]
     public int CompanyId { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public CompanyModel? Company { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ICollection<ResponseModel>? Responses { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ICollection<FavoriteModel>? Favorites { get; set; }
 }
 

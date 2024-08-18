@@ -6,12 +6,14 @@ namespace infrastructure.Utils;
 
 public class Generate : IGenerate
 {
+    private static readonly Random _rnd = new();
+
     public string GuidCombine(int count, bool useNoHyphensFormat = false)
     {
-        if (count.Equals(0) || count >= 11)
-            throw new NotSupportedException("Too long Guid");
+        if (count <= 0 || count >= 11)
+            throw new NotSupportedException($"Combine of {count} guid is not supported");
 
-        var builder = new StringBuilder();
+        var builder = new StringBuilder(useNoHyphensFormat ? 32 : 36 * count);
         for (int i = 0; i < count; i++)
         {
             if (useNoHyphensFormat)
@@ -25,14 +27,12 @@ public class Generate : IGenerate
 
     public int GenerateCode(int length)
     {
-        var rnd = new Random();
-
         if (length <= 0 || length >= 11)
-            throw new NotSupportedException("Invalid code length");
+            throw new NotSupportedException($"Lenght {length} is not supported");
 
         var builder = new StringBuilder(length);
         for (int i = 0; i < length; i++)
-            builder.Append(rnd.Next(10));
+            builder.Append(_rnd.Next(10));
 
         return int.Parse(builder.ToString());
     }
