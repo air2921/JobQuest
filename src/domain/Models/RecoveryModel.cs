@@ -15,6 +15,9 @@ public class RecoveryModel
     public string Value { get; set; } = null!;
 
     [Column]
+    public DateTime CreatedAt { get; set; }
+
+    [Column]
     public DateTime Expires { get; set; }
 
     [ForeignKey("UserId")]

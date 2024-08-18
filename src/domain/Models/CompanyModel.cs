@@ -9,21 +9,18 @@ using System.Text.Json.Serialization;
 namespace domain.Models;
 
 [Table("Companies")]
-public class CompanyModel
+public class CompanyModel : Contact
 {
     [Key]
     public int CompanyId { get; set; }
 
+    [Column]
     public string CompanyName { get; set; } = null!;
 
-    [Email(nullValidate: false, ErrorMessage = "Неверный формат электронной почты")]
-    public string? Email { get; set; }
-
+    [Column]
     public string Location { get; set; } = null!;
 
-    [PhoneNumber(nullValidate: false, ErrorMessage = "Неверный формат номера телефона")]
-    public string? PhoneNumber { get; set; }
-
+    [Column]
     public DateTime RegisterDate { get; set; }
 
     [ForeignKey("UserId")]

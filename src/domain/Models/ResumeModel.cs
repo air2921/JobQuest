@@ -1,4 +1,5 @@
 ﻿using domain.Attributes;
+using domain.Enums;
 using domain.Models.Chat;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Text.Json.Serialization;
 namespace domain.Models;
 
 [Table("Resumes")]
-public class ResumeModel : Personal
+public class ResumeModel : Contact
 {
     [Key]
     public int ResumeId { get; set; }
@@ -54,10 +55,47 @@ public class ResumeModel : Personal
     public HashSet<string>? Skills { get; set; }
 
     [Column]
-    public Dictionary<string, string>? Languages { get; set; }
+    public Dictionary<string, LagnuageLevel>? Languages { get; set; }
 
     [Column]
     public string? About { get; set; }
+
+    [Column]
+    public string? ImageKey { get; set; }
+
+    [Column]
+    [Name(nullValidate: true, ErrorMessage = "Неверный формат имени")]
+    public string FirstName { get; set; } = null!;
+
+    [Column]
+    [Name(nullValidate: false, ErrorMessage = "Неверный формат имени")]
+    public string? Patronymic { get; set; }
+
+    [Column]
+    [Name(nullValidate: true, ErrorMessage = "Неверный формат имени")]
+    public string LastName { get; set; } = null!;
+
+    [Column]
+    public bool IsMale { get; set; }
+
+    [Column]
+    public DateTime DateOfBirthday { get; set; }
+
+    [NotMapped]
+    public int Age
+    {
+        get
+        {
+            var today = DateTime.Today;
+            int age = today.Year - DateOfBirthday.Year;
+
+            if (today < DateOfBirthday.AddYears(age))
+                age--;
+
+            return age;
+        }
+        private set { }
+    }
 
     [ForeignKey("UserId")]
     public int UserId { get; set; }
@@ -79,55 +117,4 @@ public class ResumeModel : Personal
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ICollection<MessageModel>? SentMessagesAsCandidate { get; set; }
-}
-
-public class Contacts
-{
-    [Column]
-    [PhoneNumber(nullValidate: false, ErrorMessage = "Неверный формат номера телефона")]
-    public string? PhoneNumber { get; set; }
-
-    [Column]
-    [Email(nullValidate: false, ErrorMessage = "Неверный формат электронной почты")]
-    public string? Email { get; set; }
-
-    [Column]
-    [Attributes.Url(nullValidate: false, ErrorMessage = "Неверный формат ссылки")]
-    public string? Telegram { get; set; }
-
-    [Column]
-    [Attributes.Url(nullValidate: false, ErrorMessage = "Неверный формат ссылки")]
-    public string? Github { get; set; }
-
-    [Column]
-    [Attributes.Url(nullValidate: false, ErrorMessage = "Неверный формат ссылки")]
-    public string? LinkedIn { get; set; }
-
-    [Column]
-    [Attributes.Url(nullValidate: false, ErrorMessage = "Неверный формат ссылки")]
-    public string? WebSite { get; set; }
-}
-
-public class Personal : Contacts
-{
-    [Column]
-    public string? ImageKey { get; set; }
-
-    [Column]
-    [Name(nullValidate: true, ErrorMessage = "Неверный формат имени")]
-    public string FirstName { get; set; } = null!;
-
-    [Column]
-    [Name(nullValidate: false, ErrorMessage = "Неверный формат имени")]
-    public string? Patronymic { get; set; }
-
-    [Column]
-    [Name(nullValidate: true, ErrorMessage = "Неверный формат имени")]
-    public string LastName { get; set; } = null!;
-
-    [Column]
-    public bool IsMale { get; set; }
-
-    [Column]
-    public DateTime DateOfBirthday { get; set; }
 }
