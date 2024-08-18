@@ -4,7 +4,7 @@ using System;
 
 namespace domain.Specifications;
 
-public abstract class SortCollectionSpec<T> : Specification<T> where T : class
+public abstract class SortCollectionSpec<T> : IncludeSpec<T> where T : class
 {
     protected SortCollectionSpec(int skip, int count, bool orderByDesc, Expression<Func<T, object?>> expression)
     {
@@ -20,6 +20,7 @@ public abstract class SortCollectionSpec<T> : Specification<T> where T : class
     public int SkipCount { get; set; }
     public int Count { get; set; }
     public bool OrderByDesc { get; set; }
+    public Expression<Func<T, object?>>[]? Expressions { get; set; }
     private Expression<Func<T, object?>> OrderByExpression { get; }
 
     protected void Initialize()
@@ -30,5 +31,8 @@ public abstract class SortCollectionSpec<T> : Specification<T> where T : class
             Query.OrderBy(OrderByExpression);
 
         Query.Skip(SkipCount).Take(Count);
+
+        if (Expressions is not null)
+            IncludeEntities(Expressions);
     }
 }

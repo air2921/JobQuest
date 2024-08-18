@@ -7,8 +7,24 @@ using System.IdentityModel.Tokens.Jwt;
 using domain.Abstractions;
 using common.DTO;
 using common;
+using domain.Models;
+using System.Threading.Tasks;
+using domain.Specifications.Response;
 
 namespace application.Helpers;
+
+public class HH(IRepository<ResponseModel> repository)
+{
+    public async Task Gg()
+    {
+        var spec = new SortResponseSpec(0, 20, true, 2921)
+        {
+            Expressions = [x => x.Vacancy, x => x.Resume]
+        };
+
+        var responses = await repository.GetRangeAsync(spec);
+    }
+}
 
 public class TokenComparator(IConfiguration configuration, IGenerate generate)
 {

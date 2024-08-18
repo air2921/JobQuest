@@ -1,4 +1,5 @@
-﻿using domain.Models.Chat;
+﻿using domain.Attributes;
+using domain.Models.Chat;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,10 +16,12 @@ public class CompanyModel
 
     public string CompanyName { get; set; } = null!;
 
+    [Email(nullValidate: false, ErrorMessage = "Неверный формат электронной почты")]
     public string? Email { get; set; }
 
     public string Location { get; set; } = null!;
 
+    [PhoneNumber(nullValidate: false, ErrorMessage = "Неверный формат номера телефона")]
     public string? PhoneNumber { get; set; }
 
     public DateTime RegisterDate { get; set; }

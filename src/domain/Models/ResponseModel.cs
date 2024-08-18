@@ -19,6 +19,13 @@ public class ResponseModel
     [Column]
     public DateTime ResponseOfDate { get; set; }
 
+    [Column]
+    [Reason(nullValidate: false, ErrorMessage = "Неизвестная причина отказа")]
+    public int? Reason { get; set; }
+
+    [Column]
+    public string? ReasonDescription { get; set; }
+
     [ForeignKey("ResumeId")]
     public int ResumeId { get; set; }
 
@@ -30,11 +37,4 @@ public class ResponseModel
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public VacancyModel? Vacancy { get; set; }
-}
-
-public enum StatusResponse
-{
-    Expectation = 101,
-    Invitation = 201,
-    Refusal = 301
 }

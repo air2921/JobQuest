@@ -88,7 +88,7 @@ public class Contacts
     public string? PhoneNumber { get; set; }
 
     [Column]
-    [EmailAddress(ErrorMessage = "Неверный формат электронной почты")]
+    [Email(nullValidate: false, ErrorMessage = "Неверный формат электронной почты")]
     public string? Email { get; set; }
 
     [Column]
@@ -130,13 +130,4 @@ public class Personal : Contacts
 
     [Column]
     public DateTime DateOfBirthday { get; set; }
-}
-
-public enum JobStatus
-{
-    Actively,
-    Сonsidering,
-    Think,
-    Accepted,
-    NoSearching
 }

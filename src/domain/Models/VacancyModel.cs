@@ -58,30 +58,3 @@ public class VacancyModel
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ICollection<FavoriteModel>? Favorites { get; set; }
 }
-
-public enum Employment
-{
-    Full = 101,
-    Partial = 102,
-    Internship = 103,
-    Project = 104
-}
-
-public enum WorkSchedule
-{
-    FullDay = 101,
-    Remote = 102,
-    Flexible = 103
-}
-
-public enum EducationLevel
-{
-    Secondary = 101,
-    Vocational = 102,
-    IncompleteHigher = 201,
-    Higher = 202,
-    Bachelor = 203,
-    Master = 204,
-    PhD = 301,
-    DoF = 302
-}

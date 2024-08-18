@@ -7,15 +7,20 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace infrastructure.S3;
 
 public class S3Service(S3ClientProvider s3provider, ILogger<S3Service> logger) : IS3Service
 {
-    private readonly S3ClientObject _provider = s3provider.GetS3Client();
-    private const string ERROR = "Неизвестная ошибка при получении данных";
+    private readonly object _lockObj = new();
 
-    public async Task Upload(Stream stream, string key)
+    private readonly S3ClientObject _provider = s3provider.GetS3Client();
+    private const string ERROR_GET = "Неизвестная ошибка при получении данных";
+    private const string ERROR_POST = "Неизвестная ошибка при загрузке данных";
+    private const string ERROR_DELETE = "Неизвестная ошибка при удалении данных";
+
+    public async Task Upload(Stream stream, string key, CancellationToken token = default)
     {
         try
         {
@@ -24,16 +29,16 @@ public class S3Service(S3ClientProvider s3provider, ILogger<S3Service> logger) :
                 BucketName = _provider.Bucket,
                 Key = key,
                 InputStream = stream
-            });
+            }, token);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex.Message);
-            throw new S3Exception(ERROR);
+            logger.LogError(ex.Message, key);
+            throw new S3Exception(ERROR_POST);
         }
     }
 
-    public async Task<Stream> Download(string key)
+    public async Task<Stream> Download(string key, CancellationToken token = default)
     {
         try
         {
@@ -41,40 +46,51 @@ public class S3Service(S3ClientProvider s3provider, ILogger<S3Service> logger) :
             {
                 BucketName = _provider.Bucket,
                 Key = key
-            });
+            }, token);
 
             return response.ResponseStream;
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message, key);
-            throw new S3Exception(ERROR);
+            throw new S3Exception(ERROR_GET);
         }
     }
 
-    public async Task<Dictionary<string, Stream>> DownloadCollection(IEnumerable<string> keys)
+    public async Task<Dictionary<string, Stream>> DownloadCollection(IEnumerable<string> keys, CancellationToken token = default)
     {
         var fileStreams = new Dictionary<string, Stream>();
 
-        var tasks = keys.Select(async key =>
-        {
-            try
-            {
-                var stream = await Download(key);
-                fileStreams.Add(key, stream);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex.Message, key);
-            }
-        });
+        var cts = CancellationTokenSource.CreateLinkedTokenSource(token);
+        var linkedToken = cts.Token;
 
-        await Task.WhenAll(tasks);
+        try
+        {
+            var tasks = keys.Select(async key =>
+            {
+                var stream = await Download(key, linkedToken);
+                lock (_lockObj)
+                {
+                    fileStreams.Add(key, stream);
+                }
+            });
+
+            await Task.WhenAll(tasks);
+        }
+        catch (Exception)
+        {
+            cts.Cancel();
+            foreach (var stream in fileStreams.Values)
+                stream?.Dispose();
+
+            fileStreams.Clear();
+            throw;
+        }
 
         return fileStreams;
     }
 
-    public async Task Delete(string key)
+    public async Task Delete(string key, CancellationToken token = default)
     {
         try
         {
@@ -82,12 +98,12 @@ public class S3Service(S3ClientProvider s3provider, ILogger<S3Service> logger) :
             {
                 BucketName = _provider.Bucket,
                 Key = key
-            });
+            }, token);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex.Message);
-            throw new S3Exception(ERROR);
+            logger.LogError(ex.Message, key);
+            throw new S3Exception(ERROR_DELETE);
         }
     }
 }

@@ -3,7 +3,7 @@ using domain.Models;
 
 namespace domain.Specifications.User;
 
-public class UserByEmailSpec : Specification<UserModel>
+public class UserByEmailSpec : IncludeSpec<UserModel>
 {
     public UserByEmailSpec(string email)
     {

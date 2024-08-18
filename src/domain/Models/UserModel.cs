@@ -17,7 +17,7 @@ public class UserModel
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [Column]
-    [EmailAddress(ErrorMessage = "Неверный формат электронной почты")]
+    [Email(nullValidate: true, ErrorMessage = "Неверный формат электронной почты")]
     public string Email { get; set; } = null!;
 
     [Column]
@@ -45,11 +45,4 @@ public class UserModel
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ICollection<RecoveryModel>? Recoveries { get; set; }
-}
-
-public enum Role
-{
-    Employer,
-    Candidate,
-    Admin
 }
