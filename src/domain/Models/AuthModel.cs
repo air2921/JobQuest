@@ -20,6 +20,13 @@ public class AuthModel
     [Column]
     public DateTime Expires { get; set; }
 
+    [NotMapped]
+    public bool IsExpired
+    {
+        get => Expires < DateTime.UtcNow;
+        private set { }
+    }
+
     [ForeignKey("UserId")]
     public int UserId { get; set; }
 

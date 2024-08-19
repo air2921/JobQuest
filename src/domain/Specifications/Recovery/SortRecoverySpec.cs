@@ -7,24 +7,23 @@ namespace domain.Specifications.Recovery;
 
 public class SortRecoverySpec : SortCollectionSpec<RecoveryModel>
 {
-    public SortRecoverySpec(int skip, int count, bool byDesc, int userId)
+    public SortRecoverySpec(int skip, int count, bool byDesc, bool isUsed)
         : base(skip, count, byDesc, x => x.CreatedAt)
     {
-        UserId = userId;
+        IsUsed = isUsed;
 
-        Query.Where(x => x.UserId.Equals(UserId));
+        if (UserId.HasValue)
+            Query.Where(x => x.UserId.Equals(UserId.Value));
+
+        Query.Where(x => x.IsUsed.Equals(IsUsed));
 
         if (IsExpired.HasValue)
-        {
-            if (IsExpired.Value)
-                Query.Where(x => x.Expires < DateTime.UtcNow);
-            else
-                Query.Where(x => x.Expires > DateTime.UtcNow);
-        }
+            Query.Where(x => x.IsExpired.Equals(IsExpired));
 
         Initialize();
     }
 
     public bool? IsExpired { get; set; }
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
+    public bool IsUsed { get; set; }
 }

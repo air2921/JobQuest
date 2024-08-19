@@ -1,5 +1,6 @@
 ﻿using api.Startup_Extensions;
 using common;
+using Hangfire;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 
@@ -40,6 +41,8 @@ namespace api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseHangfireDashboard();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

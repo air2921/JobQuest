@@ -19,7 +19,6 @@ public class JobStatusAttribute : ValidationAttribute
         int[] statuses =
         [
             (int)JobStatus.Actively,
-            (int)JobStatus.Сonsidering,
             (int)JobStatus.Think,
             (int)JobStatus.Accepted,
             (int)JobStatus.NoSearching

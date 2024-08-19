@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Hangfire;
+using Hangfire.PostgreSql;
 
 namespace api.Startup_Extensions
 {
@@ -42,6 +44,14 @@ namespace api.Startup_Extensions
                     }
                 });
             });
+
+            services.AddHangfire(config =>
+                config.UsePostgreSqlStorage(options =>
+                {
+                    options.UseNpgsqlConnection(configuration.GetConnectionString(App.MAIN_DB)!);
+                }));
+
+            services.AddHangfireServer();
 
             services.AddCors(options =>
             {

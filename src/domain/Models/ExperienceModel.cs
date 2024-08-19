@@ -12,6 +12,9 @@ public class ExperienceModel
     public int ExperienceId { get; set; }
 
     [Column]
+    public string SpecializationName { get; set; } = null!;
+
+    [Column]
     public string Company { get; set; } = null!;
 
     [Column]

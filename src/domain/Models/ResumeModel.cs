@@ -52,10 +52,7 @@ public class ResumeModel : Contact
     public string SpecializationName { get; set; } = null!;
 
     [Column]
-    public HashSet<string>? Skills { get; set; }
-
-    [Column]
-    public Dictionary<string, LagnuageLevel>? Languages { get; set; }
+    public string[]? Skills { get; set; }
 
     [Column]
     public string? About { get; set; }
@@ -105,6 +102,9 @@ public class ResumeModel : Contact
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ICollection<ResponseModel>? Responses { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public ICollection<LanguageModel>? Languages { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ICollection<EducationModel>? Educations { get; set; }
