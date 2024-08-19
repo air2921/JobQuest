@@ -1,6 +1,6 @@
 ﻿namespace domain.Enums;
 
-public enum LagnuageLevel
+public enum LanguageLevel
 {
     A1 = 1,
     A2 = 2,

@@ -12,6 +12,7 @@ public class LanguageModel
     public int LanguageKey { get; set; }
 
     [Column]
+    [Language(ErrorMessage = "Неизвестный язык")]
     public string LanguageName { get; set; } = null!;
 
     [Column]

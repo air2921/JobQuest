@@ -1,5 +1,6 @@
 ﻿using domain.Enums;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
@@ -16,14 +17,12 @@ public class EmploymentAttribute : ValidationAttribute
         if (!int.TryParse(value.ToString(), out int employment))
             return false;
 
-        int[] employments =
-        [
-            (int)Employment.Full,
-            (int)Employment.Partial,
-            (int)Employment.Internship,
-            (int)Employment.Project
-        ];
+        var enumValues = Enum.GetValues(typeof(Employment));
+        var numberValues = new List<int>();
 
-        return employments.Contains(employment);
+        foreach (var enumValue in enumValues)
+            numberValues.Add((int)enumValue);
+
+        return numberValues.Contains(employment);
     }
 }

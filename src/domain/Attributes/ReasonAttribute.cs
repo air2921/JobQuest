@@ -1,5 +1,6 @@
 ﻿using domain.Enums;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
@@ -17,22 +18,12 @@ public class ReasonAttribute(bool nullValidate) : ValidationAttribute
         if (!int.TryParse(value.ToString(), out int reason))
             return false;
 
-        int[] reasons =
-        [
-            (int)Reason.SalaryLevelInsufficient,
-            (int)Reason.InsufficientQualifications,
-            (int)Reason.Unreliability,
-            (int)Reason.Dishonesty,
-            (int)Reason.PoorReferences,
-            (int)Reason.FrequentJobChanges,
-            (int)Reason.NotMeetingVacancyRequirements,
-            (int)Reason.CulturalMisfit,
-            (int)Reason.LackOfRelevantExperience,
-            (int)Reason.LackOfInterestOrMotivation,
-            (int)Reason.VacancyClosed,
-            (int)Reason.Other
-        ];
+        var enumValues = Enum.GetValues(typeof(Reason));
+        var numberValues = new List<int>();
 
-        return reasons.Contains(reason);
+        foreach (var enumValue in enumValues)
+            numberValues.Add((int)enumValue);
+
+        return numberValues.Contains(reason);
     }
 }

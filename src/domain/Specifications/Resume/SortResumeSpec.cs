@@ -11,6 +11,9 @@ public class SortResumeSpec : SortCollectionSpec<ResumeModel>
     public SortResumeSpec(int skip, int count, bool byDesc, IEnumerable<ExperienceModel> experiences)
         : base(skip, count, byDesc, x => x.CreatedAt)
     {
+        if (UserId.HasValue)
+            Query.Where(x => x.UserId.Equals(UserId));
+
         if (MinSalary.HasValue)
             Query.Where(x => x.MinSalary >= MinSalary);
 
@@ -48,7 +51,7 @@ public class SortResumeSpec : SortCollectionSpec<ResumeModel>
                 resume.Languages.Count >= Languages.Count &&
                 Languages.All(lang =>
                     resume.Languages.Any(langModel =>
-                        langModel.LanguageName == lang.Key &&
+                        langModel.LanguageName == lang.Key.ToString() &&
                         langModel.Level >= (int)lang.Value)));
         }
 
@@ -94,49 +97,39 @@ public class SortResumeSpec : SortCollectionSpec<ResumeModel>
                 : string.IsNullOrWhiteSpace(x.ImageKey));
 
         if (HasPhoneNumber.HasValue)
-        {
             Query.Where(x => HasPhoneNumber.Value
                 ? !string.IsNullOrWhiteSpace(x.PhoneNumber)
                 : string.IsNullOrWhiteSpace(x.PhoneNumber));
-        }
 
         if (HasEmail.HasValue)
-        {
             Query.Where(x => HasEmail.Value
                 ? !string.IsNullOrWhiteSpace(x.Email)
                 : string.IsNullOrWhiteSpace(x.Email));
-        }
 
         if (HasTelegram.HasValue)
-        {
             Query.Where(x => HasTelegram.Value
                 ? !string.IsNullOrWhiteSpace(x.Telegram)
                 : string.IsNullOrWhiteSpace(x.Telegram));
-        }
 
         if (HasGithub.HasValue)
-        {
             Query.Where(x => HasGithub.Value
                 ? !string.IsNullOrWhiteSpace(x.Github)
                 : string.IsNullOrWhiteSpace(x.Github));
-        }
 
         if (HasLinkedIn.HasValue)
-        {
             Query.Where(x => HasLinkedIn.Value
                 ? !string.IsNullOrWhiteSpace(x.LinkedIn)
                 : string.IsNullOrWhiteSpace(x.LinkedIn));
-        }
 
         if (HasWebSite.HasValue)
-        {
             Query.Where(x => HasWebSite.Value
                 ? !string.IsNullOrWhiteSpace(x.WebSite)
                 : string.IsNullOrWhiteSpace(x.WebSite));
-        }
 
         Initialize();
     }
+
+    public int? UserId { get; set; }
 
     public int? MinSalary { get; set; }
     public int? MaxSalary { get; set; }
@@ -150,7 +143,7 @@ public class SortResumeSpec : SortCollectionSpec<ResumeModel>
 
     public string[]? SpecializationNames { get; set; }
     public string[]? Skills { get; set; }
-    public Dictionary<string, LagnuageLevel>? Languages { get; set; }
+    public Dictionary<Language, LanguageLevel>? Languages { get; set; }
 
     public int? MinExp { get; set; }
     public int? MaxExp { get; set; }
