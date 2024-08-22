@@ -6,12 +6,8 @@ namespace domain.Specifications.Recovery
 {
     public class CountRecoverySpec : Specification<RecoveryModel>
     {
-        public CountRecoverySpec(bool? isUsed = null, bool? isExpired = null, int? userId = null)
+        public CountRecoverySpec()
         {
-            IsUsed = isUsed;
-            IsExpired = isExpired;
-            UserId = userId;
-
             if (UserId.HasValue)
                 Query.Where(x => x.UserId.Equals(UserId.Value));
 
