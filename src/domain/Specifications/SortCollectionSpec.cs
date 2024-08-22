@@ -20,7 +20,6 @@ public abstract class SortCollectionSpec<T> : IncludeSpec<T> where T : class
     public int SkipCount { get; set; }
     public int Count { get; set; }
     public bool OrderByDesc { get; set; }
-    public Expression<Func<T, object?>>[]? Expressions { get; set; }
     private Expression<Func<T, object?>> OrderByExpression { get; }
 
     protected void Initialize()

@@ -8,7 +8,7 @@ namespace domain.Specifications.Resume;
 
 public class SortResumeSpec : SortCollectionSpec<ResumeModel>
 {
-    public SortResumeSpec(int skip, int count, bool byDesc, IEnumerable<ExperienceModel> experiences)
+    public SortResumeSpec(int skip, int count, bool byDesc)
         : base(skip, count, byDesc, x => x.CreatedAt)
     {
         if (UserId.HasValue)
@@ -61,20 +61,20 @@ public class SortResumeSpec : SortCollectionSpec<ResumeModel>
 
             if (MinExp.HasValue || MaxExp.HasValue)
             {
-                Query.Where(x => experiences.Sum(ex => ex.ExperienceCountInMounts) >= MinExp.GetValueOrDefault(0) &&
-                    experiences.Sum(ex => ex.ExperienceCountInMounts) <= MaxExp.GetValueOrDefault(int.MaxValue));
+                Query.Where(x => x.Experiences.Sum(ex => ex.ExperienceCountInMounts) >= MinExp.GetValueOrDefault(0) &&
+                    x.Experiences.Sum(ex => ex.ExperienceCountInMounts) <= MaxExp.GetValueOrDefault(int.MaxValue));
             }
 
             if (StillWorks.HasValue)
             {
                 if (StillWorks.Value)
-                    Query.Where(x => experiences.Any(ex => ex.IsPresentTime));
+                    Query.Where(x => x.Experiences.Any(ex => ex.IsPresentTime));
                 else
-                    Query.Where(x => experiences.All(ex => !ex.IsPresentTime));
+                    Query.Where(x => x.Experiences.All(ex => !ex.IsPresentTime));
             }
 
             if (HasDuties.HasValue)
-                Query.Where(x => experiences.All(ex => !string.IsNullOrWhiteSpace(ex.Duties)));
+                Query.Where(x => x.Experiences.All(ex => !string.IsNullOrWhiteSpace(ex.Duties)));
         }
 
         if (MinAge.HasValue)

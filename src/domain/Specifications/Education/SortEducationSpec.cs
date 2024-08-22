@@ -1,5 +1,4 @@
 ﻿using Ardalis.Specification;
-using domain.Attributes;
 using domain.Models;
 using System;
 using System.Collections.Generic;

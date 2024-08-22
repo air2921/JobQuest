@@ -19,6 +19,6 @@ public class SortResponseSpec : SortCollectionSpec<ResponseModel>
         Initialize();
     }
 
-    public int ResumeId { get; set; }
+    public int ResumeId { get; private set; }
     public int? Status { get; set; }
 }

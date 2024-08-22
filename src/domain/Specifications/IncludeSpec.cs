@@ -20,4 +20,6 @@ public abstract class IncludeSpec<T> : Specification<T> where T : class
             Query.Include(convertedExpression);
         }
     }
+
+    public Expression<Func<T, object?>>[]? Expressions { get; set; }
 }

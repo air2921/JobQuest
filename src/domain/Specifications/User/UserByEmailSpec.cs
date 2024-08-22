@@ -12,5 +12,5 @@ public class UserByEmailSpec : IncludeSpec<UserModel>
         Query.Where(x => x.Email.Equals(Email));
     }
 
-    public string Email { get; set; }
+    public string Email { get; private set; }
 }

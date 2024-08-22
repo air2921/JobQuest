@@ -8,7 +8,8 @@ namespace domain.Specifications.Vacancy;
 
 public class SortVacancySpec : SortCollectionSpec<VacancyModel>
 {
-    public SortVacancySpec(int skip, int count, bool byDesc) : base(skip, count, byDesc, x => x.CreatedAt)
+    public SortVacancySpec(int skip, int count, bool byDesc) 
+        : base(skip, count, byDesc, x => x.CreatedAt)
     {
         if (CompanyId.HasValue)
             Query.Where(x => x.CompanyId.Equals(CompanyId));

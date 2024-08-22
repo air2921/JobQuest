@@ -8,7 +8,7 @@ namespace domain.Specifications.Experience;
 public class SortExperienceSpec : SortCollectionSpec<ExperienceModel>
 {
     public SortExperienceSpec(int skip, int count, bool byDesc)
-    : base(skip, count, byDesc, x => x.ExperienceCountInMounts) 
+        : base(skip, count, byDesc, x => x.ExperienceCountInMounts) 
     {
         if (ResumeId.HasValue)
             Query.Where(x => x.ResumeId.Equals(ResumeId));

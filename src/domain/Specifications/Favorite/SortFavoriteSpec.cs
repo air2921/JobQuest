@@ -15,5 +15,5 @@ public class SortFavoriteSpec : SortCollectionSpec<FavoriteModel>
         Initialize();
     }
 
-    public int UserId { get; set; }
+    public int UserId { get; private set; }
 }
