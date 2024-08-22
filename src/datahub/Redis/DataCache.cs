@@ -26,7 +26,7 @@ public class DataCache : IDataCache
         _server = _context.GetServer(App.REDIS_PRIMARY);
     }
 
-    public void SetDataBase(string name)
+    public void Change(string name)
     {
         _db = _context.GetDatabase(name);
         _server = _context.GetServer(name);

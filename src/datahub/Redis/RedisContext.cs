@@ -24,7 +24,7 @@ public class RedisContext
             var connectionStr = db.GetValue<string>(App.REDIS_CONNECTION);
 
             if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(connectionStr))
-                throw new InvalidOperationException("Invalid Redis configuration.");
+                throw new InvalidOperationException("Invalid Redis configuration");
 
             _multiplexers.TryAdd(name, ConnectionMultiplexer.Connect(connectionStr));
         }
@@ -33,12 +33,12 @@ public class RedisContext
     public IDatabase GetDatabase(string dbName) =>
         _multiplexers.TryGetValue(dbName, out var multiplexer)
             ? multiplexer.GetDatabase()
-            : throw new ArgumentException($"Database with name {dbName} does not exist.");
+            : throw new ArgumentException($"Database with name {dbName} does not exist");
 
     public IServer GetServer(string dbName) =>
         _multiplexers.TryGetValue(dbName, out var multiplexer)
             ? multiplexer.GetServer(multiplexer.GetEndPoints().First())
-            : throw new ArgumentException($"Database with name {dbName} does not exist.");
+            : throw new ArgumentException($"Database with name {dbName} does not exist");
 
     public static void Dispose()
     {
