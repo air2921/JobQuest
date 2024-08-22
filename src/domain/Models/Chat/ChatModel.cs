@@ -13,7 +13,7 @@ public class ChatModel
     public int ChatId { get; set; }
 
     [Column]
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [ForeignKey("CandidateId")]
     public int CandidateId { get; set; }

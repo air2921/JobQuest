@@ -20,29 +20,29 @@ public class SortResumeSpec : SortCollectionSpec<ResumeModel>
         if (MaxSalary.HasValue)
             Query.Where(x => x.MaxSalary <= MaxSalary);
 
-        if (Statuses is not null && Statuses.Length > 0)
+        if (Statuses is not null && Statuses.Any())
             Query.Where(x => Statuses.Contains(x.Status));
 
-        if (Employments is not null && Employments.Length > 0)
+        if (Employments is not null && Employments.Any())
             Query.Where(x => Employments.Contains(x.Employment));
 
-        if (WorkSchedules is not null && WorkSchedules.Length > 0)
+        if (WorkSchedules is not null && WorkSchedules.Any())
             Query.Where(x => WorkSchedules.Contains(x.WorkSchedule));
 
-        if (Locations is not null && Locations.Length > 0)
+        if (Locations is not null && Locations.Any())
             Query.Where(x => Locations.Contains(x.Location));
 
-        if (Citizenships is not null && Citizenships.Length > 0)
+        if (Citizenships is not null && Citizenships.Any())
             Query.Where(x => Citizenships.Contains(x.Citizenship));
 
-        if (WorkPermits is not null && WorkPermits.Length > 0)
+        if (WorkPermits is not null && WorkPermits.Any())
             Query.Where(x => WorkPermits.Contains(x.WorkPermit));
 
-        if (SpecializationNames is not null && SpecializationNames.Length > 0)
-            Query.Where(x => SpecializationNames.Contains(x.SpecializationName));
+        if (SpecialityNames is not null && SpecialityNames.Any())
+            Query.Where(x => SpecialityNames.Contains(x.SpecialityName));
 
-        if (Skills is not null && Skills.Length > 0)
-            Query.Where(x => x.Skills != null && x.Skills.Length >= Skills.Length && Skills.All(skill => x.Skills.Contains(skill)));
+        if (Skills is not null && Skills.Any())
+            Query.Where(x => x.Skills != null && x.Skills.Length >= Skills.Count() && Skills.All(skill => x.Skills.Contains(skill)));
 
         if (Languages is not null && Languages.Count > 0)
         {
@@ -134,16 +134,16 @@ public class SortResumeSpec : SortCollectionSpec<ResumeModel>
     public int? MinSalary { get; set; }
     public int? MaxSalary { get; set; }
 
-    public int[]? Statuses { get; set; }
-    public int[]? Employments { get; set; }
-    public int[]? WorkSchedules { get; set; }
-    public string[]? Locations { get; set; }
-    public string[]? Citizenships { get; set; }
-    public string[]? WorkPermits { get; set; }
+    public IEnumerable<int>? Statuses { get; set; }
+    public IEnumerable<int>? Employments { get; set; }
+    public IEnumerable<int>? WorkSchedules { get; set; }
+    public IEnumerable<string>? Locations { get; set; }
+    public IEnumerable<string>? Citizenships { get; set; }
+    public IEnumerable<string>? WorkPermits { get; set; }
 
-    public string[]? SpecializationNames { get; set; }
-    public string[]? Skills { get; set; }
-    public Dictionary<Language, LanguageLevel>? Languages { get; set; }
+    public IEnumerable<string>? SpecialityNames { get; set; }
+    public IEnumerable<string>? Skills { get; set; }
+    public Dictionary<Enums.Language, LanguageLevel>? Languages { get; set; }
 
     public int? MinExp { get; set; }
     public int? MaxExp { get; set; }

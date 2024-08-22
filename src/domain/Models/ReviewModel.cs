@@ -17,7 +17,7 @@ public class ReviewModel
     public string JobTitle { get; set; } = null!;
 
     [Column]
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [Column]
     [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]

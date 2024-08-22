@@ -18,7 +18,7 @@ public class MessageModel
     public bool IsRead { get; set; }
 
     [Column]
-    public DateTime SentAt { get; set; }
+    public DateTime SentAt { get; set; } = DateTime.UtcNow;
 
     [ForeignKey("ChatId")]
     public int ChatId { get; set; }

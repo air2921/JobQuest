@@ -19,7 +19,7 @@ public class ResumeModel : Contact
     public string ResumeName { get; set; } = null!;
 
     [Column]
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [Column]
     public int MinSalary { get; set; } = 0;
@@ -49,7 +49,7 @@ public class ResumeModel : Contact
     public string WorkPermit { get; set; } = null!;
 
     [Column]
-    public string SpecializationName { get; set; } = null!;
+    public string SpecialityName { get; set; } = null!;
 
     [Column]
     public string[]? Skills { get; set; }

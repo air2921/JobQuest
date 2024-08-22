@@ -3,7 +3,11 @@
 public static class App
 {
     public const string MAIN_DB = "Postgres";
-    public const string REDIS_DB = "Redis";
+    public const string REDIS_SECTION = "Redis";
+    public const string REDIS_CONNECTION = "Connection";
+    public const string REDIS_NAME = "Name";
+    public const string REDIS_PRIMARY = "Primary";
+    public const string REDIS_SECONDARY = "Secondary";
     public const string ELASTIC_SEARCH = "Elasticsearch";
     public const string EMAIL = "Email";
     public const string EMAIL_PASSWORD = "EmailPassword";

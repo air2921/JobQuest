@@ -1,5 +1,4 @@
-﻿using domain.Attributes;
-using domain.Models.Chat;
+﻿using domain.Models.Chat;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

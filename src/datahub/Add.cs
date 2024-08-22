@@ -30,7 +30,7 @@ public static class Add
             .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);
         });
 
-        services.AddScoped<RedisContext>(provider =>
+        services.AddSingleton(provider =>
         {
             return new RedisContext(config);
         });
@@ -38,5 +38,7 @@ public static class Add
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IDatabaseTransaction, DatabaseTransaction>();
         services.AddScoped<IDataCache, DataCache>();
+
+        services.AddHostedService<RedisCleanupService>();
     }
 }

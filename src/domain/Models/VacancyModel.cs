@@ -14,10 +14,13 @@ public class VacancyModel
     public int VacancyId { get; set; }
 
     [Column]
+    public bool IsOpened { get; set; } = true;
+
+    [Column]
     public string VacancyName { get; set; } = null!;
 
     [Column]
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [Column]
     public string Location { get; set; } = null!;

@@ -11,7 +11,7 @@ public class FavoriteModel
     [Key]
     public int FavoriteId { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [ForeignKey("UserId")]
     public int UserId { get; set; }

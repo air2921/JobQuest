@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
-using System.Threading.Tasks;
 
 namespace domain.Abstractions;
 

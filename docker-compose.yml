@@ -19,7 +19,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development 
     depends_on:
       - postgres_db
-      - redis
+      - redis-primary
+      - redis-secondary
       - elasticsearch
 
   postgres_db:
@@ -37,11 +38,20 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
       
-  redis:
-    container_name: redis
+  redis-primary:
+    container_name: redis-primary
     image: redis:latest
     ports:
       - "6379:6379"
+    networks:
+      - "webapi" 
+    restart: always
+
+  redis-secondary:
+    container_name: redis-secondary
+    image: redis:latest
+    ports:
+      - "6380:6379"
     networks:
       - "webapi" 
     restart: always
