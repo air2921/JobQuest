@@ -6,22 +6,22 @@ using System.ComponentModel.DataAnnotations;
 namespace domain.Attributes;
 
 [AttributeUsage(AttributeTargets.Property)]
-public class WorkScheduleAttribute : ValidationAttribute
+public class LanguageLevelAttribute : ValidationAttribute
 {
     public override bool IsValid(object? value)
     {
         if (value is null)
             return false;
 
-        if (!int.TryParse(value.ToString(), out int workSchedule))
+        if (!int.TryParse(value.ToString(), out int level))
             return false;
 
-        var enumValues = Enum.GetValues(typeof(WorkSchedule));
+        var enumValues = Enum.GetValues(typeof(LanguageLevel));
         var numberValues = new List<int>();
 
         foreach (var enumValue in enumValues)
             numberValues.Add((int)enumValue);
 
-        return numberValues.Contains(workSchedule);
+        return numberValues.Contains(level);
     }
 }

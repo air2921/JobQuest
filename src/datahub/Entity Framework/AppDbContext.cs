@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
     public DbSet<UserModel> Users { get; set; }
     public DbSet<CompanyModel> Companies { get; set; }
     public DbSet<ResumeModel> Resumes { get; set; }
+    public DbSet<LanguageModel> Languages { get; set; }
     public DbSet<EducationModel> Educations { get; set; }
     public DbSet<ExperienceModel> Experiences { get; set; }
     public DbSet<VacancyModel> Vacancies { get; set; }
@@ -78,6 +79,12 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<EducationModel>()
             .HasOne(e => e.Resume)
             .WithMany(e => e.Educations)
+            .HasForeignKey(e => e.ResumeId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<LanguageModel>()
+            .HasOne(e => e.Resume)
+            .WithMany(e => e.Languages)
             .HasForeignKey(e => e.ResumeId)
             .OnDelete(DeleteBehavior.Cascade);
 

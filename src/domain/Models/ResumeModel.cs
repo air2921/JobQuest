@@ -19,7 +19,7 @@ public class ResumeModel : Contact
     public string ResumeName { get; set; } = null!;
 
     [Column]
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [Column]
     public int MinSalary { get; set; } = 0;
@@ -49,13 +49,10 @@ public class ResumeModel : Contact
     public string WorkPermit { get; set; } = null!;
 
     [Column]
-    public string SpecializationName { get; set; } = null!;
+    public string SpecialityName { get; set; } = null!;
 
     [Column]
-    public HashSet<string>? Skills { get; set; }
-
-    [Column]
-    public Dictionary<string, LagnuageLevel>? Languages { get; set; }
+    public string[]? Skills { get; set; }
 
     [Column]
     public string? About { get; set; }
@@ -105,6 +102,9 @@ public class ResumeModel : Contact
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ICollection<ResponseModel>? Responses { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public ICollection<LanguageModel>? Languages { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ICollection<EducationModel>? Educations { get; set; }

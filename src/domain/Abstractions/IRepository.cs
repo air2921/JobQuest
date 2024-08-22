@@ -8,7 +8,7 @@ namespace domain.Abstractions;
 
 public interface IRepository<T> where T : class
 {
-    int GetCount(ISpecification<T>? specification, CancellationToken cancellationToken = default);
+    int GetCount(ISpecification<T>? specification);
     Task<IEnumerable<T>> GetRangeAsync(ISpecification<T>? specification = null, CancellationToken cancellationToken = default);
     Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
     Task<T?> GetByFilterAsync(ISpecification<T> specification, CancellationToken cancellationToken = default);
