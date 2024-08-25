@@ -1,6 +1,6 @@
 ﻿namespace domain.Localize;
 
-public class Mail
+public static class Mail
 {
     public const string REGISTRATION_CONFIRM_HEAD = "mail_registration_confirm_header";
     public const string REGISTRATION_CONFIRM_BODY = "mail_registration_confirm_body";

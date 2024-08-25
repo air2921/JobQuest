@@ -1,6 +1,6 @@
 ﻿namespace domain.Localize;
 
-public static class Locale
+public static class Message
 {
     public const string TIMED_OUT = "timed_out";
     public const string NOT_FOUND = "not_found";
