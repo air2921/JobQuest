@@ -1,30 +1,27 @@
-﻿using domain.Models;
+﻿using domain.Enums;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
-namespace domain.Attributes
+namespace domain.Attributes;
+
+[AttributeUsage(AttributeTargets.Property)]
+public class JobStatusAttribute : ValidationAttribute
 {
-    public class JobStatusAttribute : ValidationAttribute
+    public override bool IsValid(object? value)
     {
-        public override bool IsValid(object? value)
-        {
-            if (value is null)
-                return false;
+        if (value is null)
+            return false;
 
-            if (!int.TryParse(value.ToString(), out int status))
-                return false;
+        if (!int.TryParse(value.ToString(), out int status))
+            return false;
 
-            int[] statuses =
-            [
-                (int)JobStatus.Actively,
-                (int)JobStatus.Сonsidering,
-                (int)JobStatus.Think,
-                (int)JobStatus.Accepted,
-                (int)JobStatus.NoSearching
-            ];
+        var enumValues = Enum.GetValues(typeof(JobStatus));
+        var numberValues = new List<int>();
 
-            return statuses.Contains(status);
-        }
+        foreach (var enumValue in enumValues)
+            numberValues.Add((int)enumValue);
+
+        return numberValues.Contains(status);
     }
 }

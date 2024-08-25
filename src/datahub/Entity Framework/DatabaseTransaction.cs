@@ -1,17 +1,15 @@
 ﻿using domain.Abstractions;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Threading.Tasks;
 
-namespace datahub.Entity_Framework
+namespace datahub.Entity_Framework;
+
+public class DatabaseTransaction(AppDbContext dbContext) : IDatabaseTransaction
 {
-    public class DatabaseTransaction(AppDbContext dbContext) : IDatabaseTransaction
-    {
-        public async Task<IDbContextTransaction> BeginAsync() => await dbContext.Database.BeginTransactionAsync();
+    public IDbContextTransaction Begin() => dbContext.Database.BeginTransaction();
 
-        public async Task CommitAsync(IDbContextTransaction transaction) => await transaction.CommitAsync();
+    public void Commit(IDbContextTransaction transaction) => transaction.Commit();
 
-        public async Task RollbackAsync(IDbContextTransaction transaction) => await transaction.RollbackAsync();
+    public void Rollback(IDbContextTransaction transaction) => transaction.Rollback();
 
-        public void Dispose(IDbContextTransaction transaction) => transaction.Dispose();
-    }
+    public void Dispose(IDbContextTransaction transaction) => transaction.Dispose();
 }

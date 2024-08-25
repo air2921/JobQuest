@@ -1,0 +1,26 @@
+[
+  {
+    "key": "mail_registration_confirm_header",
+    "value": "Complete Your Registration on JobQuest"
+  },
+  {
+    "key": "mail_registration_confirm_body",
+    "value": "You received this email to complete the registration process for your account. Please use the confirmation code below to finish the registration process.\nIf you did not initiate this registration or received this email by mistake, please ignore it.\nYour account will not be registered, and no changes will be made.\n\nThank you for using our service !\n\nYour confirmation code: "
+  },
+  {
+    "key": "mail_account_recovery_header",
+    "value": "Account Recovery for JobQuest"
+  },
+  {
+    "key": "mail_account_recovery_body",
+    "value": "You received this email in response to a request for account recovery.\nIf you received this email by mistake, you can revoke the token provided below yourself, or it will be automatically revoked soon.\n\nThank you for using our service !\n\nYour unique recovery token: "
+  },
+  {
+    "key": "mail_login_confirm_header",
+    "value": "Complete Your JobQuest Account Login"
+  },
+  {
+    "key": "mail_login_confirm_body",
+    "value": "You received this email to complete your account login.\nIf you received this email by mistake, please change your password by following the instructions on the relevant page.\n\nThank you for using our service!\n\nYour confirmation code: "
+  }
+]

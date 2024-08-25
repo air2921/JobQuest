@@ -1,70 +1,82 @@
 ﻿using domain.Attributes;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace domain.Models
+namespace domain.Models;
+
+[Table("Reviews")]
+public class ReviewModel
 {
-    [Table("Reviews")]
-    public class ReviewModel
+    [Key]
+    public int ReviewId { get; set; }
+
+    [Column]
+    public string JobTitle { get; set; } = null!;
+
+    [Column]
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    [Column]
+    [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
+    public int DurationOfWork { get; set; }
+
+    [Column]
+    [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
+    public int HiringProcessGrade { get; set; }
+
+    [Column]
+    [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
+    public int ManagementGrade { get; set; }
+
+    [Column]
+    [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
+    public int SalaryGrade { get; set; }
+
+    [Column]
+    [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
+    public int WorkConditionsGrade { get; set; }
+
+    [Column]
+    [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
+    public int RestConditionsGrade { get; set; }
+
+    [Column]
+    [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
+    public int WorkPlaceGrade { get; set; }
+
+    [Column]
+    [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
+    public int TeamGrade { get; set; }
+
+    [Column]
+    [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
+    public int GrowthOpportunitiesGrade { get; set; }
+
+    [NotMapped]
+    public double OverallGrade
     {
-        private int _grade;
-
-        [Key]
-        public int ReviewId { get; set; }
-
-        public int JobTitle { get; set; }
-
-        [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
-        public int DurationOfWork { get; set; }
-
-        [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
-        public int HiringProcessGrade { get; set; }
-
-        [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
-        public int ManagementGrade { get; set; }
-
-        [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
-        public int SalaryGrade { get; set; }
-
-        [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
-        public int WorkConditionsGrade { get; set; }
-
-        [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
-        public int RestConditionsGrade { get; set; }
-
-        [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
-        public int WorkPlaceGrade { get; set; }
-
-        [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
-        public int TeamGrade { get; set; }
-
-        [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
-        public int GrowthOpportunitiesGrade { get; set; }
-
-        [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
-        public int OverallGrade
+        get
         {
-            get => _grade;
-            private set
-            {
-                int[] grades = [HiringProcessGrade, ManagementGrade, SalaryGrade, WorkConditionsGrade,
-                    RestConditionsGrade, WorkPlaceGrade, TeamGrade, GrowthOpportunitiesGrade];
+            int[] grades = [HiringProcessGrade, ManagementGrade, SalaryGrade, WorkConditionsGrade,
+                RestConditionsGrade, WorkPlaceGrade, TeamGrade, GrowthOpportunitiesGrade];
 
-                int sum = grades.Sum();
-                _grade = sum != 0 ? sum / grades.Length : 0;
-            }
+            int sum = grades.Sum();
+            return sum != 0 ? sum / grades.Length : 0;
         }
-
-        public bool IsRecomended { get; set; }
-
-        public string? Description { get; set; }
-
-        [ForeignKey("CompanyId")]
-        public int CompanyId { get; set; }
-
-        [JsonIgnore]
-        public CompanyModel? Company { get; set; }
     }
+
+    [Column]
+    public bool IsRecomended { get; set; }
+
+    [Column]
+    public string? Description { get; set; }
+
+    [ForeignKey("CompanyId")]
+    public int CompanyId { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public CompanyModel? Company { get; set; }
 }

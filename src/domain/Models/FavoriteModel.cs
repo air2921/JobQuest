@@ -1,25 +1,28 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace domain.Models
+namespace domain.Models;
+
+[Table("Favorites")]
+public class FavoriteModel
 {
-    [Table("Favorites")]
-    public class FavoriteModel
-    {
-        [Key]
-        public int FavoriteId { get; set; }
+    [Key]
+    public int FavoriteId { get; set; }
 
-        [ForeignKey("UserId")]
-        public int UserId { get; set; }
+    [Column]
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        [ForeignKey("VacancyId")]
-        public int VacancyId { get; set; }
+    [ForeignKey("UserId")]
+    public int UserId { get; set; }
 
-        [JsonIgnore]
-        public UserModel? User { get; set; }
+    [ForeignKey("VacancyId")]
+    public int VacancyId { get; set; }
 
-        [JsonIgnore]
-        public VacancyModel? Vacancy { get; set; }
-    }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public UserModel? User { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public VacancyModel? Vacancy { get; set; }
 }

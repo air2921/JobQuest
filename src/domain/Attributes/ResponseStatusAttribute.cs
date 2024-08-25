@@ -1,28 +1,28 @@
-﻿using domain.Models;
+﻿using domain.Enums;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace domain.Attributes
+namespace domain.Attributes;
+
+[AttributeUsage(AttributeTargets.Property)]
+public class ResponseStatusAttribute : ValidationAttribute
 {
-    public class ResponseStatusAttribute : ValidationAttribute
+    public override bool IsValid(object? value)
     {
-        public override bool IsValid(object? value)
-        {
-            if (value is null)
-                return false;
+        if (value is null)
+            return false;
 
-            if (!int.TryParse(value.ToString(), out int status))
-                return false;
+        if (!int.TryParse(value.ToString(), out int status))
+            return false;
 
-            int[] statuses =
-            [
-                (int)StatusResponse.Expectation,
-                (int)StatusResponse.Invitation,
-                (int)StatusResponse.Refusal,
-            ];
+        var enumValues = Enum.GetValues(typeof(StatusResponse));
+        var numberValues = new List<int>();
 
-            return statuses.Contains(status);
-        }
+        foreach (var enumValue in enumValues)
+            numberValues.Add((int)enumValue);
+
+        return numberValues.Contains(status);
     }
 }

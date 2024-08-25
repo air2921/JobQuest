@@ -1,10 +1,9 @@
 ﻿using MimeKit;
 using System.Threading.Tasks;
 
-namespace infrastructure.Abstractions
+namespace infrastructure.Abstractions;
+
+public interface ISmtpClientWrapper
 {
-    public interface ISmtpClientWrapper
-    {
-        Task EmailSendAsync(MimeMessage message);
-    }
+    Task EmailSendAsync(MimeMessage message);
 }

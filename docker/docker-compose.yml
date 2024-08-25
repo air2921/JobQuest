@@ -1,0 +1,101 @@
+version: '3.4'
+
+networks:
+  webapi:
+    driver: bridge
+
+services:
+  api:
+    container_name: api
+    image: ${DOCKER_REGISTRY-}api
+    build:
+      context: ..
+      dockerfile: /src/api/Dockerfile
+    ports: 
+      - 8080:8081
+    networks:
+      - "webapi"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development 
+    depends_on:
+      - postgres_db
+      - redis-primary
+      - redis-secondary
+      - elasticsearch
+
+  postgres_db:
+    container_name: postgres_db
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    networks:
+      - "webapi"
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: PostgresQuest2921
+      POSTGRES_DB: JobQuest
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      
+  redis-primary:
+    container_name: redis-primary
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - "webapi" 
+    restart: always
+
+  redis-secondary:
+    container_name: redis-secondary
+    image: redis:latest
+    ports:
+      - "6380:6379"
+    networks:
+      - "webapi" 
+    restart: always
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch:8.12.2
+    ports:
+      - 9200:9200
+    networks:
+      - "webapi"
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+
+  kibana:
+    container_name: kibana
+    image: kibana:8.12.2
+    restart: always
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    networks:
+      - "webapi"
+    depends_on:
+      - elasticsearch
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    ports:
+      - "5050:80"
+    networks:
+      - "webapi"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: JobQuest2619@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: JobQuest261923663
+    depends_on:
+      - postgres_db
+
+volumes:
+  postgres-data:
+  elasticsearch-data:

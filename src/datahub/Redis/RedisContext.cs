@@ -1,22 +1,48 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using common;
+using Microsoft.Extensions.Configuration;
 using StackExchange.Redis;
 using System;
+using System.Collections.Concurrent;
+using System.Linq;
 
-namespace datahub.Redis
+namespace datahub.Redis;
+
+public class RedisContext
 {
-    public class RedisContext
+    private readonly IConfiguration _config;
+    private static readonly ConcurrentDictionary<string, ConnectionMultiplexer> _multiplexers = [];
+
+    public RedisContext(IConfiguration config)
     {
-        private readonly IDatabase _database;
-        private readonly IConfiguration _config;
+        _config = config;
 
-        public RedisContext(IConfiguration config)
+        var redisDatabases = _config.GetSection(App.REDIS_SECTION).GetChildren();
+
+        foreach (var db in redisDatabases)
         {
-            _config = config;
-            var connectionStr = _config.GetConnectionString("Redis") ?? throw new InvalidOperationException();
-            var connection = ConnectionMultiplexer.Connect(connectionStr);
-            _database = connection.GetDatabase();
-        }
+            var name = db.GetValue<string>(App.REDIS_NAME);
+            var connectionStr = db.GetValue<string>(App.REDIS_CONNECTION);
 
-        public IDatabase GetDatabase() => _database;
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(connectionStr))
+                throw new InvalidOperationException("Invalid Redis configuration");
+
+            _multiplexers.TryAdd(name, ConnectionMultiplexer.Connect(connectionStr));
+        }
+    }
+
+    public IDatabase GetDatabase(string dbName) =>
+        _multiplexers.TryGetValue(dbName, out var multiplexer)
+            ? multiplexer.GetDatabase()
+            : throw new ArgumentException($"Database with name {dbName} does not exist");
+
+    public IServer GetServer(string dbName) =>
+        _multiplexers.TryGetValue(dbName, out var multiplexer)
+            ? multiplexer.GetServer(multiplexer.GetEndPoints().First())
+            : throw new ArgumentException($"Database with name {dbName} does not exist");
+
+    public static void Dispose()
+    {
+        foreach (var multiplexer in _multiplexers.Values)
+            multiplexer.Dispose();
     }
 }

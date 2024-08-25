@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,8 +12,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Utils\" />
-    <Folder Include="Workflows\" />
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.6.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Workflows\Auth\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="JsonLocalizer">
+      <HintPath>..\..\asmbly\JsonLocalizer.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

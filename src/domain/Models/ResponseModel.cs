@@ -4,36 +4,37 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace domain.Models
+namespace domain.Models;
+
+[Table("Responses")]
+public class ResponseModel
 {
-    [Table("Responses")]
-    public class ResponseModel
-    {
-        [Key]
-        public int ResponseId { get; set; }
+    [Key]
+    public int ResponseId { get; set; }
 
-        [ResponseStatus(ErrorMessage = "Неизвестный статус")]
-        public int Status { get; set; }
+    [Column]
+    [ResponseStatus(ErrorMessage = "Неизвестный статус")]
+    public int Status { get; set; }
 
-        public DateTime ResponseOfDate { get; set; }
+    [Column]
+    public DateTime ResponseOfDate { get; set; }
 
-        [ForeignKey("ResumeId")]
-        public int ResumeId { get; set; }
+    [Column]
+    [Reason(nullValidate: false, ErrorMessage = "Неизвестная причина отказа")]
+    public int? Reason { get; set; }
 
-        [ForeignKey("VacancyId")]
-        public int VacancyId { get; set; }
+    [Column]
+    public string? ReasonDescription { get; set; }
 
-        [JsonIgnore]
-        public ResumeModel? Resume { get; set; }
+    [ForeignKey("ResumeId")]
+    public int ResumeId { get; set; }
 
-        [JsonIgnore]
-        public VacancyModel? Vacancy { get; set; }
-    }
+    [ForeignKey("VacancyId")]
+    public int VacancyId { get; set; }
 
-    public enum StatusResponse
-    {
-        Expectation = 101,
-        Invitation = 201,
-        Refusal = 301
-    }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public ResumeModel? Resume { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public VacancyModel? Vacancy { get; set; }
 }
