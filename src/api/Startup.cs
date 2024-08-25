@@ -6,6 +6,7 @@ using Hangfire;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 using infrastructure;
+using application;
 
 namespace api;
 
@@ -23,17 +24,18 @@ public class Startup(IWebHostEnvironment environment)
             .AddEnvironmentVariables()
             .Build();
 
-         Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Information()
-            .Enrich.FromLogContext()
-            .Enrich.WithProperty("Environment", env)
-            .ReadFrom.Configuration(config)
-            .WriteTo.Console()
-            .WriteTo.Elasticsearch(ConfigurationElasticSink(config))
-            .CreateLogger();
+        Log.Logger = new LoggerConfiguration()
+           .MinimumLevel.Information()
+           .Enrich.FromLogContext()
+           .Enrich.WithProperty("Environment", env)
+           .ReadFrom.Configuration(config)
+           .WriteTo.Console()
+           .WriteTo.Elasticsearch(ConfigurationElasticSink(config))
+           .CreateLogger();
 
         services.AddBackground();
         services.AddDataHub(config, Log.Logger);
+        services.AddApplication();
         services.AddInfrastructure(config, Log.Logger);
 
         services.AddServices(config, environment);
