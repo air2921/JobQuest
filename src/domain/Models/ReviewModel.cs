@@ -74,6 +74,12 @@ public class ReviewModel
     [Column]
     public string? Description { get; set; }
 
+    [ForeignKey("UserId")]
+    public int UserId { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public UserModel? User { get; set; }
+
     [ForeignKey("CompanyId")]
     public int CompanyId { get; set; }
 
