@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <Reference Include="JsonLocalizer">
-      <HintPath>..\..\Assembly\JsonLocalizer.dll</HintPath>
+      <HintPath>..\..\asmbly\JsonLocalizer.dll</HintPath>
     </Reference>
   </ItemGroup>
 
