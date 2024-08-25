@@ -11,6 +11,8 @@ namespace api;
 
 public class Startup(IWebHostEnvironment environment)
 {
+    private IServiceScope? _scope;
+
     public void ConfigureServices(IServiceCollection services)
     {
         var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -48,9 +50,9 @@ public class Startup(IWebHostEnvironment environment)
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        var scope = app.ApplicationServices.CreateScope();
-        var deleteExpiredAuth = scope.ServiceProvider.GetRequiredService<DeleteExpiredAuth>();
-        var deleteExpiredRecovery = scope.ServiceProvider.GetRequiredService<DeleteExpiredRecovery>();
+        _scope ??= app.ApplicationServices.CreateScope();
+        var deleteExpiredAuth = _scope.ServiceProvider.GetRequiredService<DeleteExpiredAuth>();
+        var deleteExpiredRecovery = _scope.ServiceProvider.GetRequiredService<DeleteExpiredRecovery>();
 
         app.UseHangfireDashboard();
 

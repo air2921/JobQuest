@@ -1,5 +1,4 @@
 ﻿using common;
-using JsonLocalizer;
 using application.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -7,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using Hangfire;
 using Hangfire.PostgreSql;
+using JsonLocalizer;
 
 namespace api.Startup_Extensions;
 
@@ -21,7 +21,7 @@ public static class AppServices
 
         services.AddJsonLocalizer(env, options =>
         {
-            options.BackStepCount = 2;
+            options.BackStepCount = 0;
             options.LocalizationDirectory = "localization";
             options.SupportedLanguages = ["en", "ru"];
             options.DefaultLanguage = "en";
@@ -86,9 +86,17 @@ public static class AppServices
         });
 
         services.AddAuthorizationBuilder()
-            .AddPolicy("RequireAdminPolicy", policy =>
+            .AddPolicy("AdminPolicy", policy =>
             {
-                policy.RequireRole("HighestAdmin", "Admin");
+                policy.RequireRole("Admin");
+            })
+            .AddPolicy("EmployerPolicy", policy =>
+            {
+                policy.RequireRole("Employer", "Admin");
+            })
+            .AddPolicy("CandidatePolicy", policy =>
+            {
+                policy.RequireRole("Candidate", "Admin");
             });
 
         services.AddAuthentication(auth =>
