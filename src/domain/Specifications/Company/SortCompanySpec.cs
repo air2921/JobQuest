@@ -1,7 +1,7 @@
 ﻿using Ardalis.Specification;
+using domain.SpecDTO;
 using domain.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace domain.Specifications.Company;
@@ -11,38 +11,44 @@ public class SortCompanySpec : SortCollectionSpec<CompanyModel>
     public SortCompanySpec(int skip, int count, bool byDesc)
         : base(skip, count, byDesc, x => x.RegisterDate)
     {
-        if (UserId.HasValue)
-            Query.Where(x => x.UserId.Equals(UserId));
-
-        if (!string.IsNullOrWhiteSpace(CompanyName))
+        if (DTO is null)
         {
-            Query.Where(x => x.CompanyName.Contains(CompanyName));
-            Query.OrderBy(x => Math.Abs(x.CompanyName.IndexOf(CompanyName) - x.CompanyName.Length));
+            Initialize();
+            return;
         }
 
-        if (CompanyGrade.HasValue)
+        if (DTO.UserId.HasValue)
+            Query.Where(x => x.UserId.Equals(DTO.UserId));
+
+        if (!string.IsNullOrWhiteSpace(DTO.CompanyName))
+        {
+            Query.Where(x => x.CompanyName.Contains(DTO.CompanyName));
+            Query.OrderBy(x => Math.Abs(x.CompanyName.IndexOf(DTO.CompanyName) - x.CompanyName.Length));
+        }
+
+        if (DTO.CompanyGrade.HasValue)
             Query.Where(x => x.Reviews != null && x.Reviews.Count > 0 &&
-                x.Reviews.Sum(r => r.OverallGrade) >= CompanyGrade);
+                x.Reviews.Sum(r => r.OverallGrade) >= DTO.CompanyGrade);
 
-        if (Locations is not null && Locations.Any())
-            Query.Where(x => Locations.Contains(x.Location));
+        if (DTO.Locations is not null && DTO.Locations.Any())
+            Query.Where(x => DTO.Locations.Contains(x.Location));
 
-        if (HasOpenedVacancies.HasValue)
+        if (DTO.HasOpenedVacancies.HasValue)
         {
             Query.Where(x => x.Vacancies != null && x.Vacancies.Count > 0);
 
-            if (HasOpenedVacancies.Value)
+            if (DTO.HasOpenedVacancies.Value)
+#pragma warning disable CS8604 // Possible null reference argument.
                 Query.Where(x => x.Vacancies.Any(v => v.IsOpened));
+#pragma warning restore CS8604 // Possible null reference argument.
             else
+#pragma warning disable CS8604 // Possible null reference argument.
                 Query.Where(x => x.Vacancies.All(v => !v.IsOpened));
+#pragma warning restore CS8604 // Possible null reference argument.
         }
 
         Initialize();
     }
 
-    public double? CompanyGrade { get; set; }
-    public int? UserId { get; set; }
-    public string? CompanyName { get; set; }
-    public bool? HasOpenedVacancies { get; set; }
-    public IEnumerable<string>? Locations { get; set; }
+    public SortCompanyDTO? DTO { get; set; }
 }

@@ -1,6 +1,6 @@
 ﻿using Ardalis.Specification;
+using domain.SpecDTO;
 using domain.Models;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace domain.Specifications.Experience;
@@ -10,39 +10,39 @@ public class SortExperienceSpec : SortCollectionSpec<ExperienceModel>
     public SortExperienceSpec(int skip, int count, bool byDesc)
         : base(skip, count, byDesc, x => x.ExperienceCountInMounts) 
     {
-        if (ResumeId.HasValue)
-            Query.Where(x => x.ResumeId.Equals(ResumeId));
+        if (DTO is null)
+        {
+            Initialize();
+            return;
+        }
 
-        if (SpecialityNames is not null && SpecialityNames.Any())
-            Query.Where(x => SpecialityNames.Contains(x.SpecialityName));
+        if (DTO.ResumeId.HasValue)
+            Query.Where(x => x.ResumeId.Equals(DTO.ResumeId));
 
-        if (Companies is not null && Companies.Any())
-            Query.Where(x => Companies.Contains(x.Company));
+        if (DTO.SpecialityNames is not null && DTO.SpecialityNames.Any())
+            Query.Where(x => DTO.SpecialityNames.Contains(x.SpecialityName));
 
-        if (Locations is not null && Locations.Any())
-            Query.Where(x => Locations.Contains(x.Location));
+        if (DTO.Companies is not null && DTO.Companies.Any())
+            Query.Where(x => DTO.Companies.Contains(x.Company));
 
-        if (HasWebSite.HasValue)
-            Query.Where(x => HasWebSite.Value
+        if (DTO.Locations is not null && DTO.Locations.Any())
+            Query.Where(x => DTO.Locations.Contains(x.Location));
+
+        if (DTO.HasWebSite.HasValue)
+            Query.Where(x => DTO.HasWebSite.Value
                 ? !string.IsNullOrWhiteSpace(x.WebSite)
                 : string.IsNullOrWhiteSpace(x.WebSite));
 
-        if (HasDuties.HasValue)
-            Query.Where(x => HasDuties.Value
+        if (DTO.HasDuties.HasValue)
+            Query.Where(x => DTO.HasDuties.Value
                 ? !string.IsNullOrWhiteSpace(x.Duties)
                 : string.IsNullOrWhiteSpace(x.Duties));
 
-        if (IsPresentTime.HasValue)
-            Query.Where(x => x.IsPresentTime.Equals(IsPresentTime));
+        if (DTO.IsPresentTime.HasValue)
+            Query.Where(x => x.IsPresentTime.Equals(DTO.IsPresentTime));
 
         Initialize();
     }
 
-    public int? ResumeId { get; set; }
-    public IEnumerable<string>? SpecialityNames { get; set; }
-    public IEnumerable<string>? Companies { get; set; }
-    public IEnumerable<string>? Locations { get; set; }
-    public bool? HasWebSite { get; set; }
-    public bool? HasDuties { get; set; }
-    public bool? IsPresentTime { get; set; }
+    public SortExperienceDTO? DTO { get; set; }
 }

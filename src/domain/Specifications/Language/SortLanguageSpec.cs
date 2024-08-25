@@ -1,4 +1,5 @@
 ﻿using Ardalis.Specification;
+using domain.SpecDTO;
 using domain.Models;
 using System.Linq;
 
@@ -9,15 +10,20 @@ public class SortLanguageSpec : SortCollectionSpec<LanguageModel>
     public SortLanguageSpec(int skip, int count, bool byDesc)
         : base(skip, count, byDesc, x => x.Level)
     {
-        if (ResumeId.HasValue)
-            Query.Where(x => x.ResumeId.Equals(ResumeId));
+        if (DTO is null)
+        {
+            Initialize();
+            return;
+        }
 
-        if (Level.HasValue)
-            Query.Where(x => x.Level >= Level);
+        if (DTO.ResumeId.HasValue)
+            Query.Where(x => x.ResumeId.Equals(DTO.ResumeId));
+
+        if (DTO.Level.HasValue)
+            Query.Where(x => x.Level >= DTO.Level);
 
         Initialize();
     }
 
-    public int? ResumeId { get; set; }
-    public int? Level { get; set; }
+    public SortLanguageDTO? DTO { get; set; }
 }

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace datahub.Redis;
 
-internal class RedisCleanupService(RedisContext redisContext) : IHostedService
+internal class RedisCleanupService : IHostedService
 {
     public Task StartAsync(CancellationToken cancellationToken)
     {

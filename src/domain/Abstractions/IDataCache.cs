@@ -5,7 +5,7 @@ namespace domain.Abstractions;
 
 public interface IDataCache
 {
-    void SetDataBase(string name);
+    void Change(string name);
     Task CacheDataAsync(string key, object value, TimeSpan expires);
     Task<string?> GetCacheAsync(string key);
     Task DeleteCacheAsync(string key);
