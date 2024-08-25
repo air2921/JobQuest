@@ -1,24 +1,21 @@
-﻿using domain.Models;
+﻿using domain.Enums;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace domain.Attributes
+namespace domain.Attributes;
+
+[AttributeUsage(AttributeTargets.Property)]
+public class RoleAttribute : ValidationAttribute
 {
-    public class RoleAttribute : ValidationAttribute
+    public override bool IsValid(object? value)
     {
-        public override bool IsValid(object? value)
-        {
-            if (value is null || value is not string)
-                return false;
+        if (value is null || value is not string stringValue)
+            return false;
 
-            string[] roles =
-            [
-                $"{Role.Candidate}",
-                $"{Role.Employer}",
-                $"{Role.Admin}",
-            ];
+        var enumValues = Enum.GetValues(typeof(Role)).Cast<Role>();
+        var stringValues = enumValues.Select(e => e.ToString()).ToList();
 
-            return roles.Contains((string)value);
-        }
+        return stringValues.Contains(stringValue);
     }
 }

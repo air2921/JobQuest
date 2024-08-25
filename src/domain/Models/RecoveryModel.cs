@@ -3,22 +3,36 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace domain.Models
+namespace domain.Models;
+
+[Table("Recoveries")]
+public class RecoveryModel
 {
-    [Table("Recoveries")]
-    public class RecoveryModel
+    [Key]
+    public int TokenId { get; set; }
+
+    [Column]
+    public string Value { get; set; } = null!;
+
+    [Column]
+    public bool IsUsed { get; set; } = false;
+
+    [Column]
+    public DateTime CreatedAt { get; set; }
+
+    [Column]
+    public DateTime Expires { get; set; }
+
+    [NotMapped]
+    public bool IsExpired
     {
-        [Key]
-        public int TokenId { get; set; }
-
-        public string Value { get; set; } = null!;
-
-        public DateTime Expires { get; set; }
-
-        [ForeignKey("UserId")]
-        public int UserId { get; set; }
-
-        [JsonIgnore]
-        public UserModel? User { get; set; }
+        get => Expires < DateTime.UtcNow;
+        private set { }
     }
+
+    [ForeignKey("UserId")]
+    public int UserId { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public UserModel? User { get; set; }
 }

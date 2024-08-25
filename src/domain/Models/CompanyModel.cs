@@ -5,50 +5,38 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace domain.Models
+namespace domain.Models;
+
+[Table("Companies")]
+public class CompanyModel : Contact
 {
-    [Table("Companies")]
-    public class CompanyModel
-    {
-        [Key]
-        public int CompanyId { get; set; }
+    [Key]
+    public int CompanyId { get; set; }
 
-        public string CompanyName { get; set; } = null!;
+    [Column]
+    public string CompanyName { get; set; } = null!;
 
-        public string Location { get; set; } = null!;
+    [Column]
+    public string Location { get; set; } = null!;
 
-        public string PhoneNumber { get; set; } = null!;
+    [Column]
+    public DateTime RegisterDate { get; set; }
 
-        public DateTime RegisterDate { get; set; }
+    [ForeignKey("UserId")]
+    public int UserId { get; set; }
 
-        public string OKOPF { get; set; } = null!;
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public UserModel? User { get; set; }
 
-        public string INN { get; set; } = null!;
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public ICollection<VacancyModel>? Vacancies { get; set; }
 
-        public string OGRN { get; set; } = null!;
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public ICollection<ReviewModel>? Reviews { get; set; }
 
-        public string KPP { get; set; } = null!;
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public ICollection<ChatModel>? EmployerChats { get; set; }
 
-        public string OKATO { get; set; } = null!;
-
-        public string OKPO { get; set; } = null!;
-
-        [ForeignKey("UserId")]
-        public int UserId { get; set; }
-
-        [JsonIgnore]
-        public UserModel? User { get; set; }
-
-        [JsonIgnore]
-        public ICollection<VacancyModel>? Vacancies { get; set; }
-
-        [JsonIgnore]
-        public ICollection<ReviewModel>? Reviews { get; set; }
-
-        [JsonIgnore]
-        public ICollection<ChatModel>? EmployerChats { get; set; }
-
-        [JsonIgnore]
-        public ICollection<MessageModel>? SentMessagesAsEmployer { get; set; }
-    }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public ICollection<MessageModel>? SentMessagesAsEmployer { get; set; }
 }

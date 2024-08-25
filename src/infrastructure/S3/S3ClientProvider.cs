@@ -1,25 +1,26 @@
 ﻿using Amazon.S3;
-using infrastructure.Abstractions;
+using common;
 using Microsoft.Extensions.Configuration;
 
-namespace infrastructure.S3
-{
-    public class S3ClientProvider(IConfiguration configuration) : IS3ClientProvider
-    {
-        public S3ClientObject GetS3Client()
-        {
-            var keyId = configuration.GetSection("S3")["keyId"]!;
-            var accessKey = configuration.GetSection("S3")["accessKey"]!;
-            var bucket = configuration.GetSection("S3")["bucket"]!;
+namespace infrastructure.S3;
 
-            return new S3ClientObject
+public class S3ClientProvider(IConfiguration configuration)
+{
+    public S3ClientObject GetS3Client()
+    {
+        var section = configuration.GetSection(App.S3_SECTION);
+
+        var keyId = section[App.S3_KEY_ID]!;
+        var accessKey = section[App.S3_ACCESS_KEY]!;
+        var bucket = section[App.S3_BUCKET]!;
+
+        return new S3ClientObject
+        {
+            Bucket = bucket,
+            S3Client = new AmazonS3Client(keyId, accessKey, new AmazonS3Config
             {
-                Bucket = bucket,
-                S3Client = new AmazonS3Client(keyId, accessKey, new AmazonS3Config
-                {
-                    ServiceURL = "https://s3.yandexcloud.net"
-                })
-            };
-        }
+                ServiceURL = App.S3_URL
+            })
+        };
     }
 }

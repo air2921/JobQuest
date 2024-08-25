@@ -1,4 +1,5 @@
-﻿using datahub.Entity_Framework;
+﻿using common;
+using datahub.Entity_Framework;
 using datahub.Redis;
 using domain.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -8,35 +9,36 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
 
-namespace datahub
+namespace datahub;
+
+public static class Add
 {
-    public static class Add
+    public static void AddDataHub(this IServiceCollection services,
+        IConfiguration config, Serilog.ILogger logger)
     {
-        public static void AddDataHub(this IServiceCollection services,
-            IConfiguration config, Serilog.ILogger logger)
+        services.AddLogging(log =>
         {
-            services.AddLogging(log =>
-            {
-                log.ClearProviders();
-                log.AddSerilog(logger);
-            });
+            log.ClearProviders();
+            log.AddSerilog(logger);
+        });
 
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseNpgsql(config.GetConnectionString("Postgres"))
-                .EnableServiceProviderCaching(false)
-                .EnableDetailedErrors(true)
-                .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);
-            });
+        services.AddDbContext<AppDbContext>(options =>
+        {
+            options.UseNpgsql(config.GetConnectionString(App.MAIN_DB))
+            .EnableServiceProviderCaching(false)
+            .EnableDetailedErrors(true)
+            .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);
+        });
 
-            services.AddScoped<RedisContext>(provider =>
-            {
-                return new RedisContext(config);
-            });
+        services.AddSingleton(provider =>
+        {
+            return new RedisContext(config);
+        });
 
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped<IDatabaseTransaction, DatabaseTransaction>();
-            services.AddScoped<IDataCache, DataCache>();
-        }
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped<IDatabaseTransaction, DatabaseTransaction>();
+        services.AddScoped<IDataCache, DataCache>();
+
+        services.AddHostedService<RedisCleanupService>();
     }
 }

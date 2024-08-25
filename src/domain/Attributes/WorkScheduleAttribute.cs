@@ -1,28 +1,27 @@
-﻿using domain.Models;
+﻿using domain.Enums;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
-namespace domain.Attributes
+namespace domain.Attributes;
+
+[AttributeUsage(AttributeTargets.Property)]
+public class WorkScheduleAttribute : ValidationAttribute
 {
-    public class WorkScheduleAttribute : ValidationAttribute
+    public override bool IsValid(object? value)
     {
-        public override bool IsValid(object? value)
-        {
-            if (value is null)
-                return false;
+        if (value is null)
+            return false;
 
-            if (!int.TryParse(value.ToString(), out int workSchedule))
-                return false;
+        if (!int.TryParse(value.ToString(), out int workSchedule))
+            return false;
 
-            int[] workSchedules =
-            [
-                (int)WorkSchedule.FullDay,
-                (int)WorkSchedule.Remote,
-                (int)WorkSchedule.Flexible
-            ];
+        var enumValues = Enum.GetValues(typeof(WorkSchedule));
+        var numberValues = new List<int>();
 
-            return workSchedules.Contains(workSchedule);
-        }
+        foreach (var enumValue in enumValues)
+            numberValues.Add((int)enumValue);
+
+        return numberValues.Contains(workSchedule);
     }
 }
