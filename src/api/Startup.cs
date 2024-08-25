@@ -48,21 +48,21 @@ public class Startup(IWebHostEnvironment environment)
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        var scope = app.ApplicationServices.CreateScope();
-        var deleteExpiredAuth = scope.ServiceProvider.GetRequiredService<DeleteExpiredAuth>();
-        var deleteExpiredRecovery = scope.ServiceProvider.GetRequiredService<DeleteExpiredRecovery>();
+        //var scope = app.ApplicationServices.CreateScope();
+        //var deleteExpiredAuth = scope.ServiceProvider.GetRequiredService<DeleteExpiredAuth>();
+        //var deleteExpiredRecovery = scope.ServiceProvider.GetRequiredService<DeleteExpiredRecovery>();
 
-        app.UseHangfireDashboard();
+        //app.UseHangfireDashboard();
 
-        RecurringJob.AddOrUpdate(
-            "DeleteExpiredAuthJob",
-            () => deleteExpiredAuth.DeleteExpired(),
-            Cron.Daily);
+        //RecurringJob.AddOrUpdate(
+        //    "DeleteExpiredAuthJob",
+        //    () => deleteExpiredAuth.DeleteExpired(),
+        //    Cron.Daily);
 
-        RecurringJob.AddOrUpdate(
-            "DeleteExpiredRecoveryJob",
-            () => deleteExpiredRecovery.DeleteExpired(),
-            Cron.Daily);
+        //RecurringJob.AddOrUpdate(
+        //    "DeleteExpiredRecoveryJob",
+        //    () => deleteExpiredRecovery.DeleteExpired(),
+        //    Cron.Daily);
 
         if (env.IsDevelopment())
         {

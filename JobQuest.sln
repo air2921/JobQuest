@@ -18,7 +18,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "datahub", "src\datahub\data
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "common", "src\common\common.csproj", "{20978D6B-66DC-4F49-933A-0E104DB8700F}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{EC5E953D-D8D9-4917-9500-43316E5ACE26}"
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker\docker-compose.dcproj", "{EC5E953D-D8D9-4917-9500-43316E5ACE26}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "background", "src\background\background.csproj", "{5147D3C2-D468-472F-BC3A-5C358BFDC324}"
 EndProject

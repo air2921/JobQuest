@@ -1,5 +1,4 @@
 ﻿using common;
-using JsonLocalizer;
 using application.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -7,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using Hangfire;
 using Hangfire.PostgreSql;
+using JsonLocalizer;
 
 namespace api.Startup_Extensions;
 
@@ -21,7 +21,7 @@ public static class AppServices
 
         services.AddJsonLocalizer(env, options =>
         {
-            options.BackStepCount = 2;
+            options.BackStepCount = 0;
             options.LocalizationDirectory = "localization";
             options.SupportedLanguages = ["en", "ru"];
             options.DefaultLanguage = "en";
@@ -55,13 +55,13 @@ public static class AppServices
             });
         });
 
-        services.AddHangfire(config =>
-            config.UsePostgreSqlStorage(options =>
-            {
-                options.UseNpgsqlConnection(configuration.GetConnectionString(App.MAIN_DB)!);
-            }));
+        //services.AddHangfire(config =>
+        //    config.UsePostgreSqlStorage(options =>
+        //    {
+        //        options.UseNpgsqlConnection(configuration.GetConnectionString(App.MAIN_DB)!);
+        //    }));
 
-        services.AddHangfireServer();
+        //services.AddHangfireServer();
 
         services.AddCors(options =>
         {
