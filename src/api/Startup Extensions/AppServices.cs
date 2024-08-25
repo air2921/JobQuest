@@ -55,13 +55,13 @@ public static class AppServices
             });
         });
 
-        //services.AddHangfire(config =>
-        //    config.UsePostgreSqlStorage(options =>
-        //    {
-        //        options.UseNpgsqlConnection(configuration.GetConnectionString(App.MAIN_DB)!);
-        //    }));
+        services.AddHangfire(config =>
+            config.UsePostgreSqlStorage(options =>
+            {
+                options.UseNpgsqlConnection(configuration.GetConnectionString(App.MAIN_DB)!);
+            }));
 
-        //services.AddHangfireServer();
+        services.AddHangfireServer();
 
         services.AddCors(options =>
         {
@@ -86,9 +86,17 @@ public static class AppServices
         });
 
         services.AddAuthorizationBuilder()
-            .AddPolicy("RequireAdminPolicy", policy =>
+            .AddPolicy("AdminPolicy", policy =>
             {
-                policy.RequireRole("HighestAdmin", "Admin");
+                policy.RequireRole("Admin");
+            })
+            .AddPolicy("EmployerPolicy", policy =>
+            {
+                policy.RequireRole("Employer", "Admin");
+            })
+            .AddPolicy("CandidatePolicy", policy =>
+            {
+                policy.RequireRole("Candidate", "Admin");
             });
 
         services.AddAuthentication(auth =>
