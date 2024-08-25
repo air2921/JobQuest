@@ -1,0 +1,42 @@
+[
+  {
+    "key": "timed_out",
+    "value": "The request timed out"
+  },
+  {
+    "key": "not_found",
+    "value": "The requested resource was not found"
+  },
+  {
+    "key": "error",
+    "value": "An unexpected error occurred"
+  },
+  {
+    "key": "forbidden",
+    "value": "Access is forbidden"
+  },
+  {
+    "key": "unauthorized",
+    "value": "Unauthorized access"
+  },
+  {
+    "key": "incorrect_login_data",
+    "value": "Incorrect login or password"
+  },
+  {
+    "key": "user_conflict",
+    "value": "A user with this email address is already registered"
+  },
+  {
+    "key": "conflict",
+    "value": "This resource already exists"
+  },
+  {
+    "key": "mail_error",
+    "value": "Error sending message"
+  },
+  {
+    "key": "invalid_file",
+    "value": "The file is corrupted or in an unsupported format"
+  }
+]

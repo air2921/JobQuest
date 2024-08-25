@@ -1,4 +1,5 @@
 ﻿using common;
+using JsonLocalizer;
 using application.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -11,12 +12,21 @@ namespace api.Startup_Extensions;
 
 public static class AppServices
 {
-    public static void AddServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
     {
         services.AddControllers();
         services.AddLogging();
         services.AddHttpClient();
         services.AddEndpointsApiExplorer();
+
+        services.AddJsonLocalizer(env, options =>
+        {
+            options.BackStepCount = 2;
+            options.LocalizationDirectory = "Localization";
+            options.SupportedLanguages = ["en", "ru"];
+            options.DefaultLanguage = "en";
+        });
+
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "webapi", Version = "v1" });

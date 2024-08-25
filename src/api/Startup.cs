@@ -9,7 +9,7 @@ using infrastructure;
 
 namespace api;
 
-public class Startup
+public class Startup(IWebHostEnvironment environment)
 {
     public void ConfigureServices(IServiceCollection services)
     {
@@ -21,7 +21,7 @@ public class Startup
             .AddEnvironmentVariables()
             .Build();
 
-        Log.Logger = new LoggerConfiguration()
+         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()
             .Enrich.FromLogContext()
             .Enrich.WithProperty("Environment", env)
@@ -30,12 +30,11 @@ public class Startup
             .WriteTo.Elasticsearch(ConfigurationElasticSink(config))
             .CreateLogger();
 
-
         services.AddBackground();
         services.AddDataHub(config, Log.Logger);
         services.AddInfrastructure(config, Log.Logger);
 
-        services.AddServices(config);
+        services.AddServices(config, environment);
     }
 
     private static ElasticsearchSinkOptions ConfigurationElasticSink(IConfigurationRoot configuration)

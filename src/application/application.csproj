@@ -21,4 +21,10 @@
     <Folder Include="Workflows\Auth\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="JsonLocalizer">
+      <HintPath>..\..\Assembly\JsonLocalizer.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

@@ -43,6 +43,5 @@ public static class Add
         services.AddScoped<IS3Service, S3Service>();
         services.AddScoped<IGenerate, Generate>();
         services.AddScoped<IHashUtility, HashUtility>();
-
     }
 }
