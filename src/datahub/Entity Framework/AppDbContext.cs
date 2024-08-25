@@ -53,6 +53,12 @@ public class AppDbContext : DbContext
             .HasForeignKey(r => r.CompanyId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<ReviewModel>()
+            .HasOne(r => r.User)
+            .WithMany(r => r.Reviews)
+            .HasForeignKey(r => r.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<ResponseModel>()
             .HasOne(r => r.Resume)
             .WithMany(r => r.Responses)
@@ -136,5 +142,14 @@ public class AppDbContext : DbContext
             .WithMany(u => u.SentMessagesAsCandidate)
             .HasForeignKey(m => m.CandidateId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<UserModel>()
+            .HasIndex(x => x.Email);
+
+        modelBuilder.Entity<RecoveryModel>()
+            .HasIndex(x => x.Value);
+
+        modelBuilder.Entity<AuthModel>()
+            .HasIndex(x => x.Value);
     }
 }

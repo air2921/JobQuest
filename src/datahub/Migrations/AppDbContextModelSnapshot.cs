@@ -47,6 +47,8 @@ namespace datahub.Migrations
 
                     b.HasIndex("UserId");
 
+                    b.HasIndex("Value");
+
                     b.ToTable("Auths");
                 });
 
@@ -323,6 +325,8 @@ namespace datahub.Migrations
 
                     b.HasIndex("UserId");
 
+                    b.HasIndex("Value");
+
                     b.ToTable("Recoveries");
                 });
 
@@ -506,6 +510,9 @@ namespace datahub.Migrations
                     b.Property<int>("TeamGrade")
                         .HasColumnType("integer");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("WorkConditionsGrade")
                         .HasColumnType("integer");
 
@@ -515,6 +522,8 @@ namespace datahub.Migrations
                     b.HasKey("ReviewId");
 
                     b.HasIndex("CompanyId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reviews");
                 });
@@ -546,6 +555,8 @@ namespace datahub.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("UserId");
+
+                    b.HasIndex("Email");
 
                     b.ToTable("Users");
                 });
@@ -773,7 +784,15 @@ namespace datahub.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("domain.Models.UserModel", "User")
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Company");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("domain.Models.VacancyModel", b =>
@@ -829,6 +848,8 @@ namespace datahub.Migrations
                     b.Navigation("Recoveries");
 
                     b.Navigation("Resumes");
+
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("domain.Models.VacancyModel", b =>

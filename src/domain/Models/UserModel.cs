@@ -32,6 +32,9 @@ public class UserModel
     public bool IsBlocked { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public ICollection<ReviewModel>? Reviews { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ICollection<CompanyModel>? Companies { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]

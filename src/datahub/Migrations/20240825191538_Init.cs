@@ -165,6 +165,7 @@ namespace datahub.Migrations
                     GrowthOpportunitiesGrade = table.Column<int>(type: "integer", nullable: false),
                     IsRecomended = table.Column<bool>(type: "boolean", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
                     CompanyId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -175,6 +176,12 @@ namespace datahub.Migrations
                         column: x => x.CompanyId,
                         principalTable: "Companies",
                         principalColumn: "CompanyId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reviews_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -407,6 +414,11 @@ namespace datahub.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Auths_Value",
+                table: "Auths",
+                column: "Value");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Chats_CandidateId",
                 table: "Chats",
                 column: "CandidateId");
@@ -467,6 +479,11 @@ namespace datahub.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Recoveries_Value",
+                table: "Recoveries",
+                column: "Value");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Responses_ResumeId",
                 table: "Responses",
                 column: "ResumeId");
@@ -485,6 +502,16 @@ namespace datahub.Migrations
                 name: "IX_Reviews_CompanyId",
                 table: "Reviews",
                 column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_UserId",
+                table: "Reviews",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Vacancies_CompanyId",
