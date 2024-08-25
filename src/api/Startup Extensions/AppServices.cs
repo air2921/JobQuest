@@ -22,7 +22,7 @@ public static class AppServices
         services.AddJsonLocalizer(env, options =>
         {
             options.BackStepCount = 2;
-            options.LocalizationDirectory = "Localization";
+            options.LocalizationDirectory = "localization";
             options.SupportedLanguages = ["en", "ru"];
             options.DefaultLanguage = "en";
         });
