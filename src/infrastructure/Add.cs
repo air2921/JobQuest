@@ -4,6 +4,7 @@ using infrastructure.Abstractions;
 using infrastructure.EmailSender;
 using infrastructure.S3;
 using infrastructure.Utils;
+using JsonLocalizer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -30,14 +31,16 @@ public static class Add
         services.AddScoped<ISmtpClientWrapper>(provider =>
         {
             var logger = provider.GetRequiredService<ILogger<SmtpClientWrapper>>();
-            return new SmtpClientWrapper(logger, config);
+            var localizer = provider.GetRequiredService<ILocalizer>();
+            return new SmtpClientWrapper(logger, config, localizer);
         });
 
         services.AddScoped<ISender<EmailDTO>>(provider =>
         {
             var logger = provider.GetRequiredService<ILogger<Sender>>();
             var smtpClient = provider.GetRequiredService<ISmtpClientWrapper>();
-            return new Sender(config, logger, smtpClient);
+            var localizer = provider.GetRequiredService<ILocalizer>();
+            return new Sender(config, logger, smtpClient, localizer);
         });
 
         services.AddScoped<IS3Service, S3Service>();
