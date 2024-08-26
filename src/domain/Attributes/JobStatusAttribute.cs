@@ -1,4 +1,6 @@
 ﻿using domain.Enums;
+using JsonLocalizer;
+using domain.Localize;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,6 +12,8 @@ public class JobStatusAttribute : ValidationAttribute
 {
     public override bool IsValid(object? value)
     {
+        ErrorMessage = Localizer.Translate(Validation.JOB_STATUS);
+
         if (value is null)
             return false;
 

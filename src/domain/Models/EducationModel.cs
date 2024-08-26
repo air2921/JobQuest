@@ -1,4 +1,6 @@
 ﻿using domain.Attributes;
+using domain.Localize;
+using JsonLocalizer;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,7 +18,7 @@ public class EducationModel
     public int EducationId { get; set; }
 
     [Column]
-    [Education(ErrorMessage = "Неизвестное образование")]
+    [Education]
     public int Level { get; set; }
 
     [Column]
@@ -36,7 +38,7 @@ public class EducationModel
         {
             if (_isPresentTime && value is not null)
                 throw new ValidationException(
-                    "Дата окончания учебы не может быть установлена, когда указано что вы еще учитесь");
+                    Localizer.Translate(Validation.EDUCATION_DATE_OF_GRADUATION));
 
             _dateOfGraduation = value;
         }
@@ -50,7 +52,7 @@ public class EducationModel
         {
             if (value && _dateOfGraduation is not null)
                 throw new ValidationException(
-                    "Нельзя указать что вы еще учитесь, когда указана дата окончания обучения");
+                    Localizer.Translate(Validation.EDUCATION_IS_PRESENT_TIME));
 
             _isPresentTime = value;
         }

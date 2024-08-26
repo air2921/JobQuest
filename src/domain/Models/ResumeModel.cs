@@ -28,15 +28,15 @@ public class ResumeModel : Contact
     public int MaxSalary { get; set; } = 0;
 
     [Column]
-    [JobStatus(ErrorMessage = "Неизвестный статус")]
+    [JobStatus]
     public int Status { get; set; }
 
     [Column]
-    [Employment(ErrorMessage = "Неизвестная занятость")]
+    [Employment]
     public int Employment { get; set; }
 
     [Column]
-    [WorkSchedule(ErrorMessage = "Неизвестный график работы")]
+    [WorkSchedule]
     public int WorkSchedule { get; set; }
 
     [Column]
@@ -61,15 +61,15 @@ public class ResumeModel : Contact
     public string? ImageKey { get; set; }
 
     [Column]
-    [Name(nullValidate: true, ErrorMessage = "Неверный формат имени")]
+    [Name(nullValidate: true)]
     public string FirstName { get; set; } = null!;
 
     [Column]
-    [Name(nullValidate: false, ErrorMessage = "Неверный формат имени")]
+    [Name(nullValidate: false)]
     public string? Patronymic { get; set; }
 
     [Column]
-    [Name(nullValidate: true, ErrorMessage = "Неверный формат имени")]
+    [Name(nullValidate: true)]
     public string LastName { get; set; } = null!;
 
     [Column]

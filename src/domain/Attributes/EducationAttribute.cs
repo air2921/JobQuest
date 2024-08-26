@@ -1,4 +1,6 @@
 ﻿using domain.Enums;
+using domain.Localize;
+using JsonLocalizer;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,6 +12,8 @@ public class EducationAttribute : ValidationAttribute
 {
     public override bool IsValid(object? value)
     {
+        ErrorMessage = Localizer.Translate(Validation.EDUCATION);
+
         if (value is null)
             return false;
 

@@ -1,5 +1,7 @@
 ﻿using domain.Enums;
 using System;
+using JsonLocalizer;
+using domain.Localize;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -10,6 +12,8 @@ public class WorkScheduleAttribute : ValidationAttribute
 {
     public override bool IsValid(object? value)
     {
+        ErrorMessage = Localizer.Translate(Validation.WORK_SCHEDULE);
+
         if (value is null)
             return false;
 

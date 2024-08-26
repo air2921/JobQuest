@@ -1,4 +1,6 @@
-﻿using System;
+﻿using domain.Localize;
+using JsonLocalizer;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -24,7 +26,7 @@ public class ExperienceModel
     public string Location { get; set; } = null!;
 
     [Column]
-    [Attributes.Url(nullValidate: false, ErrorMessage = "Неверный формат ссылки")]
+    [Attributes.Url(nullValidate: false)]
     public string? WebSite { get; set; }
 
     [Column]
@@ -38,7 +40,7 @@ public class ExperienceModel
         {
             if (_isPresentTime && value is not null)
                 throw new ValidationException(
-                    "Дата увольнения не может быть установлена, когда указано что вы еще работаете");
+                    Localizer.Translate(Validation.EXPERIENCE_END_OF_WORK));
 
             _endOfWork = value;
         }
@@ -52,7 +54,7 @@ public class ExperienceModel
         {
             if (value && _endOfWork is not null)
                 throw new ValidationException(
-                    "Нельзя указать что вы еще работаете, когда указана дата увольнения");
+                    Localizer.Translate(Validation.EXPERIENCE_IS_PRESENT_TIME));
 
             _isPresentTime = value;
         }

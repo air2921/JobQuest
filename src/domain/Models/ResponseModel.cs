@@ -13,14 +13,14 @@ public class ResponseModel
     public int ResponseId { get; set; }
 
     [Column]
-    [ResponseStatus(ErrorMessage = "Неизвестный статус")]
+    [ResponseStatus]
     public int Status { get; set; }
 
     [Column]
     public DateTime ResponseOfDate { get; set; }
 
     [Column]
-    [Reason(nullValidate: false, ErrorMessage = "Неизвестная причина отказа")]
+    [Reason(nullValidate: false)]
     public int? Reason { get; set; }
 
     [Column]
