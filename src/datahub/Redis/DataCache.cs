@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,6 +12,8 @@ namespace datahub.Redis;
 
 public class DataCache : IDataCache
 {
+    private static readonly JsonSerializerSettings _jsonSerializerSettings = new() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore };
+
     private readonly RedisContext _context;
     private readonly ILogger<DataCache> _logger;
 
@@ -32,7 +35,7 @@ public class DataCache : IDataCache
         _server = _context.GetServer(name);
     }
 
-    public async Task CacheDataAsync(string key, object value, TimeSpan expires)
+    public async Task SetAsync(string key, object value, TimeSpan expires)
     {
         try
         {
@@ -40,12 +43,7 @@ public class DataCache : IDataCache
             if (redisValue.HasValue)
                 await _db.KeyDeleteAsync(key);
 
-            var settings = new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-
-            var dataToSave = JsonConvert.SerializeObject(value, settings);
+            var dataToSave = JsonConvert.SerializeObject(value, _jsonSerializerSettings);
             await _db.StringSetAsync(key, dataToSave, expires);
 
             // FormatException at this line, idk whi it happens.
@@ -61,7 +59,7 @@ public class DataCache : IDataCache
         }
     }
 
-    public async Task<string?> GetCacheAsync(string key)
+    public async Task<T?> GetSingleAsync<T>(string key)
     {
         try
         {
@@ -74,7 +72,11 @@ public class DataCache : IDataCache
                 $"Information about the requested data:\n" +
                 $"Key: {key}\nValue: {GetStringValue(value)}");
 
-            return value;
+            if (!value.HasValue)
+                return default;
+
+            var jsonValue = value.ToString();
+            return JsonConvert.DeserializeObject<T>(jsonValue);
         }
         catch (Exception ex)
         {
@@ -83,7 +85,41 @@ public class DataCache : IDataCache
         }
     }
 
-    public async Task DeleteCacheAsync(string key)
+    public async Task<IEnumerable<T>?> GetRangeAsync<T>(string key)
+    {
+        try
+        {
+            var value = await _db.StringGetAsync(key);
+            if (!value.HasValue)
+                return null;
+
+            return JsonConvert.DeserializeObject<IEnumerable<T>>(value!);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogCritical(ex.Message, key);
+            return null;
+        }
+    }
+
+    public async Task DeleteRangeAsync(IEnumerable<string> keys)
+    {
+        try
+        {
+            var tasks = new List<Task>();
+
+            foreach (var key in keys)
+                tasks.Add(_db.KeyDeleteAsync(key));
+
+            await Task.WhenAll(tasks);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogCritical(ex.Message);
+        }
+    }
+
+    public async Task DeleteSingleAsync(string key)
     {
         try
         {
@@ -105,13 +141,13 @@ public class DataCache : IDataCache
         }
     }
 
-    public async Task DeleteCacheByPatternAsync(string pattern)
+    public async Task DeleteRangeByPatternAsync(string pattern)
     {
         try
         {
             var keys = _server.Keys(pattern: pattern);
 
-            if (keys.Count() <= 0)
+            if (!keys.Any())
                 return;
 
             var tasks = keys
