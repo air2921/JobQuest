@@ -1,0 +1,78 @@
+[
+  {
+    "key": "education_validation",
+    "value": "Указан неизвестный уровень образования"
+  },
+  {
+    "key": "email_validation",
+    "value": "Неверный формат электронной почты"
+  },
+  {
+    "key": "employment_validation",
+    "value": "Неизвестная занятость"
+  },
+  {
+    "key": "grade_validation",
+    "value": "Оценка должна быть от 1 до 5"
+  },
+  {
+    "key": "hash_validation",
+    "value": "Ошибка при создании пароля, возможно пароль имеет неподдерживаемые символы"
+  },
+  {
+    "key": "job_status_validation",
+    "value": "Неизвестный статус"
+  },
+  {
+    "key": "language_validation",
+    "value": "Неизвестный язык"
+  },
+  {
+    "key": "language_level_validation",
+    "value": "Неизвестный уровень языка"
+  },
+  {
+    "key": "name_validation",
+    "value": "Неверный формат имени"
+  },
+  {
+    "key": "phone_validation",
+    "value": "Неверный формат номера телефона"
+  },
+  {
+    "key": "reason_validation",
+    "value": "Неизвестная причина отказа"
+  },
+  {
+    "key": "response_validation",
+    "value": "Неизвестный статус"
+  },
+  {
+    "key": "role_validation",
+    "value": "Такой роли не существует"
+  },
+  {
+    "key": "url_validation",
+    "value": "Неверный формат ссылки"
+  },
+  {
+    "key": "work_schedule_validation",
+    "value": "Неизвестный график работы"
+  },
+  {
+    "key": "education_date_of_graduation",
+    "value": "Дата окончания учебы не может быть установлена, когда указано что вы еще учитесь"
+  },
+  {
+    "key": "education_is_present_time",
+    "value": "Нельзя указать что вы еще учитесь, когда указана дата окончания обучения"
+  },
+  {
+    "key": "experience_end_of_work",
+    "value": "Дата увольнения не может быть установлена, когда указано что вы еще работаете"
+  },
+  {
+    "key": "experience_is_present_time",
+    "value": "Нельзя указать что вы еще работаете, когда указана дата увольнения"
+  }
+]

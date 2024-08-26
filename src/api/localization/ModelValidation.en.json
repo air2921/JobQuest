@@ -1,0 +1,78 @@
+[
+  {
+    "key": "education_validation",
+    "value": "An unknown level of education specified"
+  },
+  {
+    "key": "email_validation",
+    "value": "Invalid email format"
+  },
+  {
+    "key": "employment_validation",
+    "value": "Unknown employment status"
+  },
+  {
+    "key": "grade_validation",
+    "value": "Grade must be between 1 and 5"
+  },
+  {
+    "key": "hash_validation",
+    "value": "Error creating password, the password may contain unsupported characters"
+  },
+  {
+    "key": "job_status_validation",
+    "value": "Unknown status"
+  },
+  {
+    "key": "language_validation",
+    "value": "Unknown language"
+  },
+  {
+    "key": "language_level_validation",
+    "value": "Unknown language level"
+  },
+  {
+    "key": "name_validation",
+    "value": "Invalid name format"
+  },
+  {
+    "key": "phone_validation",
+    "value": "Invalid phone number format"
+  },
+  {
+    "key": "reason_validation",
+    "value": "Unknown reason for refusal"
+  },
+  {
+    "key": "response_validation",
+    "value": "Unknown status"
+  },
+  {
+    "key": "role_validation",
+    "value": "Such a role does not exist"
+  },
+  {
+    "key": "url_validation",
+    "value": "Invalid link format"
+  },
+  {
+    "key": "work_schedule_validation",
+    "value": "Unknown work schedule"
+  },
+  {
+    "key": "education_date_of_graduation",
+    "value": "The graduation date cannot be set when it is indicated that you are still studying"
+  },
+  {
+    "key": "education_is_present_time",
+    "value": "You cannot indicate that you are still studying when a graduation date is specified"
+  },
+  {
+    "key": "experience_end_of_work",
+    "value": "The end of employment date cannot be set when it is indicated that you are still working"
+  },
+  {
+    "key": "experience_is_present_time",
+    "value": "You cannot indicate that you are still working when an end of employment date is specified"
+  }
+]

@@ -1,4 +1,6 @@
 ﻿using System;
+using JsonLocalizer;
+using domain.Localize;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
@@ -9,6 +11,8 @@ public class NameAttribute(bool nullValidate) : ValidationAttribute
 {
     public override bool IsValid(object? value)
     {
+        ErrorMessage = Localizer.Translate(Validation.NAME);
+
         if (value is null)
             return !nullValidate;
 

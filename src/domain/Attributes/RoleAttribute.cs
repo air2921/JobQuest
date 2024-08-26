@@ -1,4 +1,6 @@
 ﻿using domain.Enums;
+using JsonLocalizer;
+using domain.Localize;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,6 +12,8 @@ public class RoleAttribute : ValidationAttribute
 {
     public override bool IsValid(object? value)
     {
+        ErrorMessage = Localizer.Translate(Validation.ROLE);
+
         if (value is null || value is not string stringValue)
             return false;
 

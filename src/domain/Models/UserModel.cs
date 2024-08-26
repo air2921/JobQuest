@@ -17,15 +17,15 @@ public class UserModel
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [Column]
-    [Email(nullValidate: true, ErrorMessage = "Неверный формат электронной почты")]
+    [Email(nullValidate: true)]
     public string Email { get; set; } = null!;
 
     [Column]
-    [Hash(ErrorMessage = "Ошибка при создании пароля, возможно пароль имеет неподдерживаемые символы")]
+    [Hash]
     public string PasswordHash { get; set; } = null!;
 
     [Column]
-    [Role(ErrorMessage = "Такой роли не существует")]
+    [Role]
     public string Role { get; set; } = null!;
 
     [Column]

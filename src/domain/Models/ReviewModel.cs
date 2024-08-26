@@ -20,39 +20,39 @@ public class ReviewModel
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [Column]
-    [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
+    [Grade]
     public int DurationOfWork { get; set; }
 
     [Column]
-    [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
+    [Grade]
     public int HiringProcessGrade { get; set; }
 
     [Column]
-    [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
+    [Grade]
     public int ManagementGrade { get; set; }
 
     [Column]
-    [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
+    [Grade]
     public int SalaryGrade { get; set; }
 
     [Column]
-    [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
+    [Grade]
     public int WorkConditionsGrade { get; set; }
 
     [Column]
-    [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
+    [Grade]
     public int RestConditionsGrade { get; set; }
 
     [Column]
-    [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
+    [Grade]
     public int WorkPlaceGrade { get; set; }
 
     [Column]
-    [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
+    [Grade]
     public int TeamGrade { get; set; }
 
     [Column]
-    [Grade(ErrorMessage = "Оценка должна быть от 1 до 5")]
+    [Grade]
     public int GrowthOpportunitiesGrade { get; set; }
 
     [NotMapped]

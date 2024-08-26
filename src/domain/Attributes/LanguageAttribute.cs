@@ -1,6 +1,7 @@
 ﻿using domain.Enums;
+using JsonLocalizer;
+using domain.Localize;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
@@ -11,6 +12,8 @@ public class LanguageAttribute : ValidationAttribute
 {
     public override bool IsValid(object? value)
     {
+        ErrorMessage = Localizer.Translate(Validation.LANGUAGE);
+
         if (value is null)
             return false;
 

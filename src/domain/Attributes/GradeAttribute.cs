@@ -1,4 +1,6 @@
 ﻿using System;
+using JsonLocalizer;
+using domain.Localize;
 using System.ComponentModel.DataAnnotations;
 
 namespace domain.Attributes;
@@ -8,6 +10,8 @@ public class GradeAttribute : ValidationAttribute
 {
     public override bool IsValid(object? value)
     {
+        ErrorMessage = Localizer.Translate(Validation.GRADE);
+
         if (value is null)
             return false;
 

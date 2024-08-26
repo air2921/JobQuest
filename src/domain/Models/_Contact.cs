@@ -6,26 +6,26 @@ namespace domain.Models;
 public abstract class Contact
 {
     [Column]
-    [PhoneNumber(nullValidate: false, ErrorMessage = "Неверный формат номера телефона")]
+    [PhoneNumber(nullValidate: false)]
     public string? PhoneNumber { get; set; }
 
     [Column]
-    [Email(nullValidate: false, ErrorMessage = "Неверный формат электронной почты")]
+    [Email(nullValidate: false)]
     public string? Email { get; set; }
 
     [Column]
-    [Attributes.Url(nullValidate: false, ErrorMessage = "Неверный формат ссылки")]
+    [Attributes.Url(nullValidate: false)]
     public string? Telegram { get; set; }
 
     [Column]
-    [Attributes.Url(nullValidate: false, ErrorMessage = "Неверный формат ссылки")]
+    [Attributes.Url(nullValidate: false)]
     public string? Github { get; set; }
 
     [Column]
-    [Attributes.Url(nullValidate: false, ErrorMessage = "Неверный формат ссылки")]
+    [Attributes.Url(nullValidate: false)]
     public string? LinkedIn { get; set; }
 
     [Column]
-    [Attributes.Url(nullValidate: false, ErrorMessage = "Неверный формат ссылки")]
+    [Attributes.Url(nullValidate: false)]
     public string? WebSite { get; set; }
 }

@@ -35,15 +35,15 @@ public class VacancyModel
     public int Experience { get; set; } = 0;
 
     [Column]
-    [Education(ErrorMessage = "Неизвестное образование")]
+    [Education]
     public int EducationLevel { get; set; }
 
     [Column]
-    [Employment(ErrorMessage = "Неизвестная занятость")]
+    [Employment]
     public int Employment { get; set; }
 
     [Column]
-    [WorkSchedule(ErrorMessage = "Неизвестный график работы")]
+    [WorkSchedule]
     public int WorkSchedule { get; set; }
 
     [Column]
