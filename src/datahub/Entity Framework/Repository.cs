@@ -49,6 +49,8 @@ public class Repository<T> : IRepository<T> where T : class
 
     #endregion
 
+    #region Get Requests
+
     public int GetCount(ISpecification<T>? specification)
     {
         try
@@ -136,6 +138,10 @@ public class Repository<T> : IRepository<T> where T : class
         }
     }
 
+    #endregion
+
+    #region Add Requsts
+
     public async Task<int> AddAsync(T entity, Func<T, int>? GetId = null, CancellationToken cancellationToken = default)
     {
         try
@@ -182,6 +188,10 @@ public class Repository<T> : IRepository<T> where T : class
             throw new EntityException(_localizer.Translate(Message.ERROR));
         }
     }
+
+    #endregion
+
+    #region Delete Requests
 
     public async Task<T?> DeleteAsync(int id, CancellationToken cancellationToken = default)
     {
@@ -276,6 +286,10 @@ public class Repository<T> : IRepository<T> where T : class
         }
     }
 
+    #endregion
+
+    #region Update Requests
+
     public async Task<T?> UpdateAsync(T entity, CancellationToken cancellationToken = default)
     {
         try
@@ -299,4 +313,6 @@ public class Repository<T> : IRepository<T> where T : class
             throw new EntityException(_localizer.Translate(Message.ERROR));
         }
     }
+
+    #endregion
 }
