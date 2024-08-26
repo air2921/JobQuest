@@ -38,5 +38,17 @@
   {
     "key": "invalid_file",
     "value": "The file is corrupted or in an unsupported format"
+  },
+  {
+    "key": "s3_error_post",
+    "value": "Unknown error while receiving data"
+  },
+  {
+    "key": "s3_error_get",
+    "value": "Unknown error loading data"
+  },
+  {
+    "key": "s3_error_delete",
+    "value": "Unknown error when deleting data"
   }
 ]

@@ -8,17 +8,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Threading;
+using JsonLocalizer;
+using domain.Localize;
 
 namespace infrastructure.S3;
 
-public class S3Service(S3ClientProvider s3provider, ILogger<S3Service> logger) : IS3Service
+public class S3Service(S3ClientProvider s3provider, ILogger<S3Service> logger, ILocalizer localizer) : IS3Service
 {
     private readonly object _lockObj = new();
 
     private readonly S3ClientObject _provider = s3provider.GetS3Client();
-    private const string ERROR_GET = "Неизвестная ошибка при получении данных";
-    private const string ERROR_POST = "Неизвестная ошибка при загрузке данных";
-    private const string ERROR_DELETE = "Неизвестная ошибка при удалении данных";
 
     public async Task Upload(Stream stream, string key, CancellationToken token = default)
     {
@@ -34,7 +33,7 @@ public class S3Service(S3ClientProvider s3provider, ILogger<S3Service> logger) :
         catch (Exception ex)
         {
             logger.LogError(ex.Message, key);
-            throw new S3Exception(ERROR_POST);
+            throw new S3Exception(localizer.Translate(Message.S3_ERROR_POST));
         }
     }
 
@@ -53,7 +52,7 @@ public class S3Service(S3ClientProvider s3provider, ILogger<S3Service> logger) :
         catch (Exception ex)
         {
             logger.LogError(ex.Message, key);
-            throw new S3Exception(ERROR_GET);
+            throw new S3Exception(localizer.Translate(Message.S3_ERROR_GET));
         }
     }
 
@@ -103,7 +102,7 @@ public class S3Service(S3ClientProvider s3provider, ILogger<S3Service> logger) :
         catch (Exception ex)
         {
             logger.LogError(ex.Message, key);
-            throw new S3Exception(ERROR_DELETE);
+            throw new S3Exception(localizer.Translate(Message.S3_ERROR_DELETE));
         }
     }
 }
