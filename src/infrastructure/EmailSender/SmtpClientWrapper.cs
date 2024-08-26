@@ -9,12 +9,15 @@ using System.Threading.Tasks;
 using common.Exceptions;
 using System;
 using common;
+using JsonLocalizer;
+using domain.Localize;
 
 namespace infrastructure.EmailSender;
 
 public class SmtpClientWrapper(
     ILogger<SmtpClientWrapper> logger,
-    IConfiguration configuration) : ISmtpClientWrapper
+    IConfiguration configuration,
+    ILocalizer localizer) : ISmtpClientWrapper
 {
     private readonly SmtpClient _smtpClient = new();
 
@@ -29,7 +32,7 @@ public class SmtpClientWrapper(
         catch (Exception ex) when (ex is AuthenticationException || ex is SocketException)
         {
             logger.LogError(ex.ToString(), nameof(EmailSendAsync));
-            throw new SmtpClientException("Error sending message");
+            throw new SmtpClientException(localizer.Translate(Message.MAIL_ERROR));
         }
         finally
         {
