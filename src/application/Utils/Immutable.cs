@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace application.Helpers;
+namespace application.Utils;
 
 public static class Immutable
 {
-    #region Tokens Expire
+    #region Tokens Expires
 
-    public static readonly TimeSpan JwtExpiry = TimeSpan.FromMinutes(90);
-    public static readonly TimeSpan RefreshExpiry = TimeSpan.FromDays(90);
+    public static readonly TimeSpan JwtExpires = TimeSpan.FromMinutes(90);
+    public static readonly TimeSpan RefreshExpires = TimeSpan.FromDays(90);
 
     #endregion
 
@@ -25,7 +25,6 @@ public static class Immutable
 
     #region AuthCookie
 
-    public const string USERNAME_COOKIE_KEY = "auth_username";
     public const string USER_ID_COOKIE_KEY = "auth_user_id";
     public const string ROLE_COOKIE_KEY = "auth_role";
     public const string IS_AUTHORIZED = "auth_success";

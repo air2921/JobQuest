@@ -1,5 +1,5 @@
 ﻿using common;
-using application.Helpers;
+using application.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -8,11 +8,11 @@ using Hangfire;
 using Hangfire.PostgreSql;
 using JsonLocalizer;
 
-namespace api.Startup_Extensions;
+namespace api;
 
-public static class AppServices
+internal static class StartupExtension
 {
-    public static void AddServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
+    internal static void AddStartupServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
     {
         services.AddControllers();
         services.AddLogging();

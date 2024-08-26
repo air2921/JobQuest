@@ -1,5 +1,4 @@
-﻿using api.Startup_Extensions;
-using common;
+﻿using common;
 using background;
 using datahub;
 using Hangfire;
@@ -10,11 +9,9 @@ using application;
 
 namespace api;
 
-public class Startup(IWebHostEnvironment environment)
+internal class Startup(IWebHostEnvironment environment)
 {
-    private IServiceScope? _scope;
-
-    public void ConfigureServices(IServiceCollection services)
+    internal void ConfigureServices(IServiceCollection services)
     {
         var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         var config = new ConfigurationBuilder()
@@ -33,12 +30,11 @@ public class Startup(IWebHostEnvironment environment)
            .WriteTo.Elasticsearch(ConfigurationElasticSink(config))
            .CreateLogger();
 
-        services.AddBackground();
+        services.AddBackground(Log.Logger);
         services.AddDataHub(config, Log.Logger);
-        services.AddApplication();
+        services.AddApplication(config, Log.Logger);
         services.AddInfrastructure(config, Log.Logger);
-
-        services.AddServices(config, environment);
+        services.AddStartupServices(config, environment);
     }
 
     private static ElasticsearchSinkOptions ConfigurationElasticSink(IConfigurationRoot configuration)
@@ -50,22 +46,22 @@ public class Startup(IWebHostEnvironment environment)
         };
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    internal void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        _scope ??= app.ApplicationServices.CreateScope();
-        var deleteExpiredAuth = _scope.ServiceProvider.GetRequiredService<DeleteExpiredAuth>();
-        var deleteExpiredRecovery = _scope.ServiceProvider.GetRequiredService<DeleteExpiredRecovery>();
+        using var scope = app.ApplicationServices.CreateScope();
+        var authService = scope.ServiceProvider.GetRequiredService<DeleteExpiredAuth>();
+        var recoveryService = scope.ServiceProvider.GetRequiredService<DeleteExpiredRecovery>();
 
         app.UseHangfireDashboard();
 
         RecurringJob.AddOrUpdate(
             "DeleteExpiredAuthJob",
-            () => deleteExpiredAuth.DeleteExpired(),
+            () => authService.DeleteExpired(),
             Cron.Daily);
 
         RecurringJob.AddOrUpdate(
             "DeleteExpiredRecoveryJob",
-            () => deleteExpiredRecovery.DeleteExpired(),
+            () => recoveryService.DeleteExpired(),
             Cron.Daily);
 
         if (env.IsDevelopment())

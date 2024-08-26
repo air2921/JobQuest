@@ -8,9 +8,9 @@ using domain.Abstractions;
 using common.DTO;
 using common;
 
-namespace application.Helpers;
+namespace application.Utils;
 
-public class TokenComparator(IConfiguration configuration, IGenerate generate)
+public class TokenPublisher(IConfiguration configuration, IGenerate generate)
 {
     public string JsonWebToken(JwtDTO dto)
     {
