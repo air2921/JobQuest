@@ -15,12 +15,7 @@ public class Generate : IGenerate
 
         var builder = new StringBuilder(useNoHyphensFormat ? 32 : 36 * count);
         for (int i = 0; i < count; i++)
-        {
-            if (useNoHyphensFormat)
-                builder.Append(Guid.NewGuid().ToString("N"));
-            else
-                builder.Append(Guid.NewGuid().ToString());
-        }
+            builder.Append(Guid.NewGuid().ToString(useNoHyphensFormat ? "N" : string.Empty));
 
         return builder.ToString();
     }
