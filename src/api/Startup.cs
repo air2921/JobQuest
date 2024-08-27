@@ -10,9 +10,9 @@ using api.Middlewares;
 
 namespace api;
 
-internal class Startup(IWebHostEnvironment environment)
+public class Startup(IWebHostEnvironment environment)
 {
-    internal void ConfigureServices(IServiceCollection services)
+    public void ConfigureServices(IServiceCollection services)
     {
         var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         var config = new ConfigurationBuilder()
@@ -47,7 +47,7 @@ internal class Startup(IWebHostEnvironment environment)
         };
     }
 
-    internal void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         //app.UseResponseCompression();
         app.UseHangfireDashboard("/hangfire");

@@ -12,9 +12,9 @@ using System.IO.Compression;
 
 namespace api;
 
-internal static class StartupExtension
+public static class StartupExtension
 {
-    internal static void AddStartupServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
+    public static void AddStartupServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
     {
         services.AddControllers();
         services.AddLogging();
