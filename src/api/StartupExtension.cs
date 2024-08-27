@@ -7,6 +7,8 @@ using System.Text;
 using Hangfire;
 using Hangfire.PostgreSql;
 using JsonLocalizer;
+using Microsoft.AspNetCore.ResponseCompression;
+using System.IO.Compression;
 
 namespace api;
 
@@ -18,6 +20,18 @@ internal static class StartupExtension
         services.AddLogging();
         services.AddHttpClient();
         services.AddEndpointsApiExplorer();
+
+        //services.AddResponseCompression(options =>
+        //{
+        //    options.EnableForHttps = true;
+        //    options.Providers.Add<BrotliCompressionProvider>();
+        //    options.Providers.Add<GzipCompressionProvider>();
+        //});
+
+        //services.Configure<BrotliCompressionProviderOptions>(options =>
+        //{
+        //    options.Level = CompressionLevel.SmallestSize;
+        //});
 
         services.AddJsonLocalizer(env, options =>
         {

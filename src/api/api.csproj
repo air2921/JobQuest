@@ -31,10 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\application\application.csproj" />
     <ProjectReference Include="..\background\background.csproj" />
     <ProjectReference Include="..\infrastructure\infrastructure.csproj" />

@@ -6,6 +6,7 @@ using Serilog;
 using Serilog.Sinks.Elasticsearch;
 using infrastructure;
 using application;
+using api.Middlewares;
 
 namespace api;
 
@@ -48,21 +49,8 @@ internal class Startup(IWebHostEnvironment environment)
 
     internal void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        using var scope = app.ApplicationServices.CreateScope();
-        var authService = scope.ServiceProvider.GetRequiredService<DeleteExpiredAuth>();
-        var recoveryService = scope.ServiceProvider.GetRequiredService<DeleteExpiredRecovery>();
-
-        app.UseHangfireDashboard();
-
-        RecurringJob.AddOrUpdate(
-            "DeleteExpiredAuthJob",
-            () => authService.DeleteExpired(),
-            Cron.Daily);
-
-        RecurringJob.AddOrUpdate(
-            "DeleteExpiredRecoveryJob",
-            () => recoveryService.DeleteExpired(),
-            Cron.Daily);
+        //app.UseResponseCompression();
+        app.UseHangfireDashboard("/hangfire");
 
         if (env.IsDevelopment())
         {
@@ -78,11 +66,11 @@ internal class Startup(IWebHostEnvironment environment)
         app.UseRouting();
         app.UseSession();
         app.UseCors("AllowSpecificOrigin");
-        //app.UseBearer();
+        app.UseBearer();
         app.UseAuthentication();
         app.UseAuthorization();
-        //app.UseXSRF();
-        //app.UseExceptionHandle();
+        app.UseXsrfProtection();
+        app.UseExceptionCatcher();
 
         app.UseEndpoints(endpoint =>
         {
