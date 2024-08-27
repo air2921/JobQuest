@@ -36,7 +36,7 @@ public class RegisterWk(
                 Body = localizer.Translate(Mail.REGISTRATION_CONFIRM_BODY) + code
             });
 
-            var uniqueToken = generate.GuidCombine(3);
+            var uniqueToken = generate.GuidCombine(3, true);
             await dataCache.SetAsync(
                 uniqueToken,
                 new UserObject(dto.Email, hashUtility.Hash(dto.Password),
