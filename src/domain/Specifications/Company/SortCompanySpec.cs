@@ -22,7 +22,7 @@ public class SortCompanySpec : SortCollectionSpec<CompanyModel>
 
         if (!string.IsNullOrWhiteSpace(DTO.CompanyName))
         {
-            Query.Where(x => x.CompanyName.Contains(DTO.CompanyName));
+            Query.Where(x => x.CompanyName.Contains(DTO.CompanyName, StringComparison.InvariantCultureIgnoreCase));
             Query.OrderBy(x => Math.Abs(x.CompanyName.IndexOf(DTO.CompanyName) - x.CompanyName.Length));
         }
 

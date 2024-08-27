@@ -15,7 +15,7 @@ public class MessageModel
     public string Message { get; set; } = null!;
 
     [Column]
-    public bool IsRead { get; set; }
+    public bool IsRead { get; set; } = false;
 
     [Column]
     public DateTime SentAt { get; set; } = DateTime.UtcNow;
