@@ -2,6 +2,8 @@
 
 public static class Message
 {
+    public const string ERROR_WITH_JOKE = "unexpected_error";
+
     public const string TIMED_OUT = "timed_out";
     public const string NOT_FOUND = "not_found";
     public const string ERROR = "error";

@@ -1,6 +1,9 @@
-﻿namespace api.Middlewares;
+﻿using domain.Localize;
+using JsonLocalizer;
 
-internal class ExceptionCatcherMiddleware(RequestDelegate next, ILogger<ExceptionCatcherMiddleware> logger)
+namespace api.Middlewares;
+
+internal class ExceptionCatcherMiddleware(RequestDelegate next, ILogger<ExceptionCatcherMiddleware> logger, ILocalizer localizer)
 {
     public async Task Invoke(HttpContext context)
     {
@@ -14,7 +17,7 @@ internal class ExceptionCatcherMiddleware(RequestDelegate next, ILogger<Exceptio
 
             context.Response.StatusCode = 500;
             context.Response.ContentType = "application/json";
-            await context.Response.WriteAsJsonAsync(new { message = "Unexpected error. Don't worry, we already working on it" });
+            await context.Response.WriteAsJsonAsync(new { message = localizer.Translate(Message.ERROR_WITH_JOKE) });
             return;
         }
     }
