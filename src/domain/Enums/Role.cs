@@ -3,6 +3,6 @@
 public enum Role
 {
     Employer,
-    Candidate,
+    Applicant,
     Admin
 }

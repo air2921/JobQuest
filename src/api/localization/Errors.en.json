@@ -50,5 +50,9 @@
   {
     "key": "s3_error_delete",
     "value": "Unknown error when deleting data"
+  },
+  {
+    "key": "incorrect_code",
+    "value": "Confirmation code is incorrect"
   }
 ]

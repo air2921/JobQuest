@@ -10,6 +10,7 @@ using System;
 using System.Threading.Tasks;
 using JsonLocalizer;
 using domain.Localize;
+using System.Threading;
 
 namespace infrastructure.EmailSender;
 
@@ -19,7 +20,7 @@ public class Sender(
     ISmtpClientWrapper smtpClient,
     ILocalizer localizer) : ISender<EmailDTO>
 {
-    public async Task SendMessage(EmailDTO dto)
+    public async Task SendMessage(EmailDTO dto, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -32,7 +33,7 @@ public class Sender(
                 Text = dto.Body
             };
 
-            await smtpClient.EmailSendAsync(emailMessage);
+            await smtpClient.EmailSendAsync(emailMessage, cancellationToken);
         }
         catch (SmtpClientException)
         {

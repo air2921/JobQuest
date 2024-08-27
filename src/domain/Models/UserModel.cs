@@ -29,7 +29,7 @@ public class UserModel
     public string Role { get; set; } = null!;
 
     [Column]
-    public bool IsBlocked { get; set; }
+    public bool IsBlocked { get; set; } = false;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ICollection<ReviewModel>? Reviews { get; set; }

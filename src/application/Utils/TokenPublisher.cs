@@ -19,7 +19,6 @@ public class TokenPublisher(IConfiguration configuration, IGenerate generate)
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.Name, dto.Username),
             new Claim(ClaimTypes.NameIdentifier, dto.UserId.ToString()),
             new Claim(ClaimTypes.Role, dto.Role)
         };
