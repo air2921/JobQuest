@@ -6,5 +6,9 @@
   {
     "key": "employer",
     "value": "Dear employer"
+  },
+  {
+    "key": "user",
+    "value": "Dear user"
   }
 ]

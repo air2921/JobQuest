@@ -8,9 +8,12 @@ public class Generate : IGenerate
 {
     private static readonly Random _rnd = new();
 
+    private const int MIN = 0;
+    private const int MAX = 11;
+
     public string GuidCombine(int count, bool useNoHyphensFormat = false)
     {
-        if (count <= 0 || count >= 11)
+        if (count <= MIN || count >= MAX)
             throw new NotSupportedException($"Combine of {count} guid is not supported");
 
         var builder = new StringBuilder(useNoHyphensFormat ? 32 : 36 * count);
@@ -22,7 +25,7 @@ public class Generate : IGenerate
 
     public int GenerateCode(int length)
     {
-        if (length <= 0 || length >= 11)
+        if (length <= MIN || length >= MAX)
             throw new NotSupportedException($"Lenght {length} is not supported");
 
         var builder = new StringBuilder(length);
