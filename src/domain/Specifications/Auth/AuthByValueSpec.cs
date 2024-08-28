@@ -11,6 +11,9 @@ public class AuthByValueSpec : IncludeSpec<AuthModel>
         Value = value;
 
         Query.Where(x => x.Value.Equals(Value));
+
+        if (Expressions is not null)
+            IncludeEntities(Expressions);
     }
 
     public string Value { get; private set; }

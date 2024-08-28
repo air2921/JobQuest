@@ -10,6 +10,9 @@ public class UserByEmailSpec : IncludeSpec<UserModel>
         Email = email.ToLowerInvariant();
 
         Query.Where(x => x.Email.Equals(Email));
+
+        if (Expressions is not null)
+            IncludeEntities(Expressions);
     }
 
     public string Email { get; private set; }
