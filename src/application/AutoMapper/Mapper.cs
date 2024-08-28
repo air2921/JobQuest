@@ -13,5 +13,6 @@ public class Mapper : Profile
         CreateMap<ExperienceDTO, ExperienceModel>();
         CreateMap<EducationDTO, EducationModel>();
         CreateMap<VacancyDTO, VacancyModel>();
+        CreateMap<ReviewDTO, ReviewModel>();
     }
 }

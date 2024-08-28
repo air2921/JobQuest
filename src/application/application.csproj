@@ -23,8 +23,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Workflows\Core\" />
-  </ItemGroup>
-
 </Project>

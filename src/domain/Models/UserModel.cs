@@ -42,8 +42,8 @@ public class UserModel
     public ICollection<ReviewModel>? Reviews { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    [JsonPropertyName("companies")]
-    public ICollection<CompanyModel>? Companies { get; set; }
+    [JsonPropertyName("company")]
+    public CompanyModel? Company { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("resumes")]

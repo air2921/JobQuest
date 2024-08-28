@@ -1,5 +1,4 @@
 ﻿using application.Utils;
-using common.Exceptions;
 using domain.Abstractions;
 using domain.Models;
 using domain.Specifications.Auth;

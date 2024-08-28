@@ -43,8 +43,8 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<CompanyModel>()
             .HasOne(r => r.User)
-            .WithMany(r => r.Companies)
-            .HasForeignKey(r => r.UserId)
+            .WithOne(r => r.Company)
+            .HasForeignKey<CompanyModel>(r => r.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<ResumeModel>()

@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using domain.Abstractions;
 using common.DTO;
 using common;
+using System.Collections.Generic;
 
 namespace application.Utils;
 
@@ -17,11 +18,14 @@ public class TokenPublisher(IConfiguration configuration, IGenerate generate)
         var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration[App.SECRET_KEY]!));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        var claims = new[]
+        var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, dto.UserId.ToString()),
-            new Claim(ClaimTypes.Role, dto.Role)
+            new(ClaimTypes.NameIdentifier, dto.UserId.ToString()),
+            new(ClaimTypes.Role, dto.Role)
         };
+
+        if (dto.CompanyId.HasValue && dto.CompanyId is not null)
+            claims.Add(new Claim(ClaimTypes.UserData, dto.CompanyId.Value.ToString()));
 
         var token = new JwtSecurityToken(
             issuer: configuration[App.ISSUER]!,
