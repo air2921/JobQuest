@@ -7,8 +7,7 @@ using System.Text;
 using Hangfire;
 using Hangfire.PostgreSql;
 using JsonLocalizer;
-using Microsoft.AspNetCore.ResponseCompression;
-using System.IO.Compression;
+using api.Utils;
 
 namespace api;
 
@@ -17,6 +16,8 @@ public static class StartupExtension
     public static void AddStartupServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
     {
         services.AddControllers();
+        services.AddSignalR();
+        services.AddHttpContextAccessor();
         services.AddLogging();
         services.AddHttpClient();
         services.AddEndpointsApiExplorer();
@@ -148,5 +149,7 @@ public static class StartupExtension
 
         services.AddAntiforgery(options => { options.HeaderName = Immutable.XSRF_HEADER_NAME; });
         services.AddMvc();
+
+        services.AddScoped<IUserInfo, UserInfo>();
     }
 }

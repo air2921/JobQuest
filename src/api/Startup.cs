@@ -7,6 +7,7 @@ using Serilog.Sinks.Elasticsearch;
 using infrastructure;
 using application;
 using api.Middlewares;
+using api.Hubs;
 
 namespace api;
 
@@ -75,6 +76,7 @@ public class Startup(IWebHostEnvironment environment)
         app.UseEndpoints(endpoint =>
         {
             endpoint.MapControllers();
+            endpoint.MapHub<ChatHub>("/chats");
         });
     }
 }
