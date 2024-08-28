@@ -1,6 +1,8 @@
-﻿using application.Utils;
+﻿using application.Components;
+using application.Utils;
 using common.DTO;
 using common.Exceptions;
+using datahub.Redis;
 using domain.Abstractions;
 using domain.Localize;
 using domain.Models;
@@ -17,7 +19,8 @@ public class LoginWk(
     ISender<EmailDTO> sender,
     IHashUtility hashUtility,
     IGenerate generate,
-    IDataCache dataCache,
+    IDataCache<ConnectionPrimary> dataCache,
+    AttemptValidator attemptValidator,
     TokenPublisher tokenPublisher,
     ILocalizer localizer)
 {
@@ -27,14 +30,21 @@ public class LoginWk(
 
         try
         {
+            if (!await attemptValidator.IsValidTry(email))
+                return new Response { Status = 403, Message = localizer.Translate(Message.TOO_MANY_ATTEMPTS) };
+
             var user = await userRepository.GetByFilterAsync(new UserByEmailSpec(email));
             if (user is null)
                 return new Response { Status = 404, Message = localizer.Translate(Message.NOT_FOUND) };
 
-            if (user.IsBlocked || !hashUtility.Verify(password, user.PasswordHash))
-                return new Response { 
-                    Status = 403,
-                    Message = user.IsBlocked ? localizer.Translate(Message.FORBIDDEN) : localizer.Translate(Message.INCORRECT_LOGIN)};
+            if (user.IsBlocked)
+                return new Response { Status = 403, Message = localizer.Translate(Message.FORBIDDEN) };
+
+            if (!hashUtility.Verify(password, user.PasswordHash))
+            {
+                await attemptValidator.AddAttempt(email);
+                return new Response { Status = 403, Message = localizer.Translate(Message.INCORRECT_LOGIN) };
+            }
 
             var code = generate.GenerateCode(8);
             await sender.SendMessage(new EmailDTO
@@ -65,12 +75,18 @@ public class LoginWk(
     {
         try
         {
+            if (!await attemptValidator.IsValidTry(token))
+                return new Response { Status = 403, Message = localizer.Translate(Message.TOO_MANY_ATTEMPTS) };
+
             var userObj = await dataCache.GetSingleAsync<UserObject>(token);
             if (userObj is null)
                 return new Response { Status = 404, Message = localizer.Translate(Message.NOT_FOUND) };
 
             if (!code.Equals(userObj.Code))
+            {
+                await attemptValidator.AddAttempt(token);
                 return new Response { Status = 403, Message = localizer.Translate(Message.INCORRECT_CODE) };
+            }
 
             var now = DateTime.UtcNow;
             var refresh = tokenPublisher.RefreshToken();

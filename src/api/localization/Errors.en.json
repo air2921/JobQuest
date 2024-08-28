@@ -1,5 +1,9 @@
 [
   {
+    "key": "too_many_attempts",
+    "value": "Too much unsuccessful attempts. Try again later"
+  },
+  {
     "key": "timed_out",
     "value": "The request timed out"
   },

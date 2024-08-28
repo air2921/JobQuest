@@ -6,33 +6,35 @@ using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace datahub.Redis;
 
-public class DataCache : IDataCache
+public class ConnectionPrimary : IConnection
+{
+    public string ConnectionName { get; init; } = App.REDIS_PRIMARY;
+}
+
+public class ConnectionSecondary : IConnection
+{
+    public string ConnectionName { get; init; } = App.REDIS_SECONDARY;
+}
+
+public class DataCache<T> : IDataCache<T> where T : IConnection
 {
     private static readonly JsonSerializerSettings _jsonSerializerSettings = new() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore };
-
     private readonly RedisContext _context;
-    private readonly ILogger<DataCache> _logger;
+    private readonly ILogger<DataCache<T>> _logger;
+    private readonly IServer _server;
+    private readonly IDatabase _db;
 
-    private IServer _server;
-    private IDatabase _db;
-
-    public DataCache(RedisContext context, ILogger<DataCache> logger)
+    public DataCache(RedisContext context, ILogger<DataCache<T>> logger, T connection)
     {
         _context = context;
         _logger = logger;
-
-        _db = _context.GetDatabase(App.REDIS_PRIMARY);
-        _server = _context.GetServer(App.REDIS_PRIMARY);
-    }
-
-    public void Change(string name)
-    {
-        _db = _context.GetDatabase(name);
-        _server = _context.GetServer(name);
+        _db = _context.GetDatabase(connection.ConnectionName);
+        _server = _context.GetServer(connection.ConnectionName);
     }
 
     public async Task SetAsync(string key, object value, TimeSpan expires)
@@ -46,12 +48,7 @@ public class DataCache : IDataCache
             var dataToSave = JsonConvert.SerializeObject(value, _jsonSerializerSettings);
             await _db.StringSetAsync(key, dataToSave, expires);
 
-            // FormatException at this line, idk whi it happens.
-            // No one variable int this log not null.
-            // Maybe it because of '\n' in log message
-            _logger.LogInformation($"Request to save data in redis cluster\n" +
-                $"Information about saved data:\n" +
-                $"Key: {key}\nValue: {dataToSave ?? "NULL"}\nExpires: {expires}");
+            _logger.LogInformation($"Request to save data in redis\nKey: {key}");
         }
         catch (Exception ex)
         {
@@ -59,24 +56,19 @@ public class DataCache : IDataCache
         }
     }
 
-    public async Task<T?> GetSingleAsync<T>(string key)
+    public async Task<TObject?> GetSingleAsync<TObject>(string key)
     {
         try
         {
             var value = await _db.StringGetAsync(key);
 
-            // FormatException at this line, idk whi it happens.
-            // No one variable int this log not null.
-            // Maybe it because of '\n' in log message
-            _logger.LogInformation($"Request to get data from redis cluster\n" +
-                $"Information about the requested data:\n" +
-                $"Key: {key}\nValue: {GetStringValue(value)}");
+            _logger.LogInformation($"Request to get data from redis\nKey: {key}");
 
             if (!value.HasValue)
                 return default;
 
             var jsonValue = value.ToString();
-            return JsonConvert.DeserializeObject<T>(jsonValue);
+            return JsonConvert.DeserializeObject<TObject>(jsonValue);
         }
         catch (Exception ex)
         {
@@ -85,7 +77,7 @@ public class DataCache : IDataCache
         }
     }
 
-    public async Task<IEnumerable<T>?> GetRangeAsync<T>(string key)
+    public async Task<IEnumerable<TObject>?> GetRangeAsync<TObject>(string key)
     {
         try
         {
@@ -93,7 +85,10 @@ public class DataCache : IDataCache
             if (!value.HasValue)
                 return null;
 
-            return JsonConvert.DeserializeObject<IEnumerable<T>>(value!);
+
+            _logger.LogInformation($"Request to get data from redis\nKey: {key}");
+
+            return JsonConvert.DeserializeObject<IEnumerable<TObject>>(value!);
         }
         catch (Exception ex)
         {
@@ -110,8 +105,10 @@ public class DataCache : IDataCache
 
             foreach (var key in keys)
                 tasks.Add(_db.KeyDeleteAsync(key));
-
             await Task.WhenAll(tasks);
+
+            var allKeys = LogRange(keys);
+            _logger.LogInformation($"Request to delete range data by keys from redis\nKeys: {allKeys}");
         }
         catch (Exception ex)
         {
@@ -128,12 +125,7 @@ public class DataCache : IDataCache
             if (value.HasValue)
                 await _db.KeyDeleteAsync(key);
 
-            // FormatException at this line, idk whi it happens.
-            // No one variable int this log not null.
-            // Maybe it because of '\n' in log message
-            _logger.LogInformation($"Request to delete data by key from redis cluster\n" +
-                $"Information about deleted data\n" +
-                $"Key: {key}\nValue: {GetStringValue(value)}");
+            _logger.LogInformation($"Request to delete data by key from redis\nKey: {key}");
         }
         catch (Exception ex)
         {
@@ -155,6 +147,8 @@ public class DataCache : IDataCache
                 .ToList();
 
             await Task.WhenAll(tasks);
+
+            _logger.LogInformation($"Request to delete range data by key pattern\n Pattern: {pattern}");
         }
         catch (Exception ex)
         {
@@ -162,14 +156,12 @@ public class DataCache : IDataCache
         }
     }
 
-    private string GetStringValue(RedisValue? redisValue)
+    private static string LogRange(IEnumerable<string> keys)
     {
-        string? dataToReturn = null;
+        var builder = new StringBuilder(keys.Sum(x => x.Length));
+        foreach (var key in keys)
+            builder.AppendLine(key);
 
-        if (redisValue.HasValue)
-            dataToReturn = redisValue;
-
-        var temp = dataToReturn is not null ? dataToReturn : "Requested value is null";
-        return temp;
+        return builder.ToString();
     }
 }

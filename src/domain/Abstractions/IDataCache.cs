@@ -4,13 +4,17 @@ using System.Threading.Tasks;
 
 namespace domain.Abstractions;
 
-public interface IDataCache
+public interface IDataCache<T> where T : IConnection
 {
-    void Change(string name);
     Task SetAsync(string key, object value, TimeSpan expires);
-    Task<T?> GetSingleAsync<T>(string key);
-    Task<IEnumerable<T>?> GetRangeAsync<T>(string key);
+    Task<TObject?> GetSingleAsync<TObject>(string key);
+    Task<IEnumerable<TObject>?> GetRangeAsync<TObject>(string key);
     Task DeleteSingleAsync(string key);
     Task DeleteRangeAsync(IEnumerable<string> keys);
     Task DeleteRangeByPatternAsync(string pattern);
+}
+
+public interface IConnection
+{
+    public string ConnectionName { get; init; }
 }

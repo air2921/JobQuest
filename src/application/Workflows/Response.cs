@@ -6,7 +6,7 @@ public class Response
 
     public int Status
     {
-        get { return _status; }
+        get => _status;
         internal set
         {
             if (value >= 200 && value <= 399)
@@ -17,6 +17,6 @@ public class Response
     }
 
     public bool IsSuccess { get; private set; }
-    public string Message { get; set; } = string.Empty;
+    public string Message { get; internal set; } = string.Empty;
     public object? ObjectData { get; internal set; }
 }

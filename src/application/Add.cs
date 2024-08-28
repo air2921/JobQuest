@@ -26,5 +26,6 @@ public static class Add
         });
 
         services.AddScoped<SessionComponent>();
+        services.AddScoped<AttemptValidator>();
     }
 }

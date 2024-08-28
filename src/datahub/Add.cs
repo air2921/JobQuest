@@ -37,7 +37,8 @@ public static class Add
 
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IDatabaseTransaction, DatabaseTransaction>();
-        services.AddScoped<IDataCache, DataCache>();
+        services.AddSingleton<IDataCache<ConnectionPrimary>, DataCache<ConnectionPrimary>>();
+        services.AddSingleton<IDataCache<ConnectionSecondary>, DataCache<ConnectionSecondary>>();
 
         services.AddHostedService<RedisCleanupService>();
     }

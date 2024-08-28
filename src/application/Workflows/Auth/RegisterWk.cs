@@ -1,5 +1,7 @@
-﻿using common.DTO;
+﻿using application.Components;
+using common.DTO;
 using common.Exceptions;
+using datahub.Redis;
 using domain.Abstractions;
 using domain.Enums;
 using domain.Localize;
@@ -13,7 +15,8 @@ namespace application.Workflows.Auth;
 
 public class RegisterWk(
     IRepository<UserModel> repository,
-    IDataCache dataCache,
+    IDataCache<ConnectionPrimary> dataCache,
+    AttemptValidator attemptValidator,
     ISender<EmailDTO> sender,
     IGenerate generate,
     IHashUtility hashUtility,
@@ -60,12 +63,18 @@ public class RegisterWk(
     {
         try
         {
+            if (!await attemptValidator.IsValidTry(token))
+                return new Response { Status = 403, Message = localizer.Translate(Message.TOO_MANY_ATTEMPTS) };
+
             var userObj = await dataCache.GetSingleAsync<UserObject>(token);
             if (userObj is null)
                 return new Response { Status = 404, Message = localizer.Translate(Message.NOT_FOUND) };
 
             if (!code.Equals(userObj.Code))
+            {
+                await attemptValidator.AddAttempt(token);
                 return new Response { Status = 403, Message = localizer.Translate(Message.INCORRECT_CODE) };
+            }
 
             await repository.AddAsync(new UserModel
             {
