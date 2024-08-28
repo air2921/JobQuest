@@ -32,10 +32,16 @@ public class Startup(IWebHostEnvironment environment)
            .WriteTo.Elasticsearch(ConfigurationElasticSink(config))
            .CreateLogger();
 
-        services.AddBackground(Log.Logger);
-        services.AddDataHub(config, Log.Logger);
-        services.AddApplication(config, Log.Logger);
-        services.AddInfrastructure(config, Log.Logger);
+        services.AddLogging(log =>
+        {
+            log.ClearProviders();
+            log.AddSerilog(Log.Logger);
+        });
+
+        services.AddBackground();
+        services.AddDataHub(config);
+        services.AddApplication(config);
+        services.AddInfrastructure(config);
         services.AddStartupServices(config, environment);
     }
 

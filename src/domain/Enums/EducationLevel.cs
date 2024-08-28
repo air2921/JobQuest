@@ -2,6 +2,7 @@
 
 public enum EducationLevel
 {
+    None = 0,
     Secondary = 101,
     Vocational = 102,
     IncompleteHigher = 201,

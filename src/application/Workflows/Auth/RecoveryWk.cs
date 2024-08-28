@@ -51,8 +51,7 @@ public class RecoveryWk(
             return new Response
             {
                 Status = 201,
-                Message = localizer.Translate(Message.MAIL_SENT),
-                ObjectData = new { uniqueToken }
+                Message = localizer.Translate(Message.MAIL_SENT)
             };
         }
         catch (Exception ex) when (ex is EntityException || ex is SmtpClientException)

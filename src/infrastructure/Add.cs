@@ -8,21 +8,13 @@ using JsonLocalizer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Serilog;
 
 namespace infrastructure;
 
 public static class Add
 {
-    public static void AddInfrastructure(this IServiceCollection services,
-        IConfiguration config, Serilog.ILogger logger)
+    public static void AddInfrastructure(this IServiceCollection services, IConfiguration config)
     {
-        services.AddLogging(log =>
-        {
-            log.ClearProviders();
-            log.AddSerilog(logger);
-        });
-
         services.AddScoped(provider =>
         {
             return new S3ClientProvider(config);

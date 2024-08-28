@@ -13,15 +13,8 @@ namespace datahub;
 
 public static class Add
 {
-    public static void AddDataHub(this IServiceCollection services,
-        IConfiguration config, Serilog.ILogger logger)
+    public static void AddDataHub(this IServiceCollection services, IConfiguration config)
     {
-        services.AddLogging(log =>
-        {
-            log.ClearProviders();
-            log.AddSerilog(logger);
-        });
-
         services.AddDbContext<AppDbContext>(options =>
         {
             options.UseNpgsql(config.GetConnectionString(App.MAIN_DB))
