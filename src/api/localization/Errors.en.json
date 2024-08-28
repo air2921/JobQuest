@@ -4,6 +4,10 @@
     "value": "The request timed out"
   },
   {
+    "key": "unexpected_error",
+    "value": "An unexpected error occurred.\nWe are already working on this\nIt seems that our developers also did not expect this turn of events and may be planning a meeting with the coffee machine"
+  },
+  {
     "key": "not_found",
     "value": "The requested resource was not found"
   },

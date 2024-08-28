@@ -7,17 +7,32 @@ using System.Text;
 using Hangfire;
 using Hangfire.PostgreSql;
 using JsonLocalizer;
+using api.Utils;
 
 namespace api;
 
-internal static class StartupExtension
+public static class StartupExtension
 {
-    internal static void AddStartupServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
+    public static void AddStartupServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
     {
         services.AddControllers();
+        services.AddSignalR();
+        services.AddHttpContextAccessor();
         services.AddLogging();
         services.AddHttpClient();
         services.AddEndpointsApiExplorer();
+
+        //services.AddResponseCompression(options =>
+        //{
+        //    options.EnableForHttps = true;
+        //    options.Providers.Add<BrotliCompressionProvider>();
+        //    options.Providers.Add<GzipCompressionProvider>();
+        //});
+
+        //services.Configure<BrotliCompressionProviderOptions>(options =>
+        //{
+        //    options.Level = CompressionLevel.SmallestSize;
+        //});
 
         services.AddJsonLocalizer(env, options =>
         {
@@ -134,5 +149,7 @@ internal static class StartupExtension
 
         services.AddAntiforgery(options => { options.HeaderName = Immutable.XSRF_HEADER_NAME; });
         services.AddMvc();
+
+        services.AddScoped<IUserInfo, UserInfo>();
     }
 }

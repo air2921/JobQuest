@@ -2,6 +2,7 @@
 using domain.SpecDTO;
 using domain.Models;
 using System.Linq;
+using System;
 
 namespace domain.Specifications.Education;
 

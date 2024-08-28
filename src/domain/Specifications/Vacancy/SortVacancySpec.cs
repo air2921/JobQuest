@@ -49,7 +49,7 @@ public class SortVacancySpec : SortCollectionSpec<VacancyModel>
 
         if (DTO.Name is not null)
         {
-            Query.Where(x => x.VacancyName.Contains(DTO.Name));
+            Query.Where(x => x.VacancyName.Contains(DTO.Name, StringComparison.InvariantCultureIgnoreCase));
             Query.OrderBy(x => Math.Abs(x.VacancyName.IndexOf(DTO.Name) - x.VacancyName.Length));
         }
 

@@ -11,51 +11,64 @@ namespace domain.Models;
 public class ReviewModel
 {
     [Key]
+    [JsonPropertyName("review_id")]
     public int ReviewId { get; set; }
 
     [Column]
+    [JsonPropertyName("job_title")]
     public string JobTitle { get; set; } = null!;
 
     [Column]
+    [JsonPropertyName("created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [Column]
     [Grade]
+    [JsonPropertyName("duration_of_work")]
     public int DurationOfWork { get; set; }
 
     [Column]
     [Grade]
+    [JsonPropertyName("hiring_process_grade")]
     public int HiringProcessGrade { get; set; }
 
     [Column]
     [Grade]
+    [JsonPropertyName("management_grade")]
     public int ManagementGrade { get; set; }
 
     [Column]
     [Grade]
+    [JsonPropertyName("salary_grade")]
     public int SalaryGrade { get; set; }
 
     [Column]
     [Grade]
+    [JsonPropertyName("work_conditions_grade")]
     public int WorkConditionsGrade { get; set; }
 
     [Column]
     [Grade]
+    [JsonPropertyName("rest_conditions_grade")]
     public int RestConditionsGrade { get; set; }
 
     [Column]
     [Grade]
+    [JsonPropertyName("work_place_grade")]
     public int WorkPlaceGrade { get; set; }
 
     [Column]
     [Grade]
+    [JsonPropertyName("team_grade")]
     public int TeamGrade { get; set; }
 
     [Column]
     [Grade]
+    [JsonPropertyName("growth_opportunities_grade")]
     public int GrowthOpportunitiesGrade { get; set; }
 
     [NotMapped]
+    [JsonPropertyName("overall_grade")]
     public double OverallGrade
     {
         get
@@ -69,20 +82,26 @@ public class ReviewModel
     }
 
     [Column]
+    [JsonPropertyName("is_recommended")]
     public bool IsRecomended { get; set; }
 
     [Column]
+    [JsonPropertyName("description")]
     public string? Description { get; set; }
 
     [ForeignKey("UserId")]
+    [JsonPropertyName("user_id")]
     public int UserId { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    [JsonPropertyName("user")]
     public UserModel? User { get; set; }
 
     [ForeignKey("CompanyId")]
+    [JsonPropertyName("company_id")]
     public int CompanyId { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    [JsonPropertyName("company")]
     public CompanyModel? Company { get; set; }
 }

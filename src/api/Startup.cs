@@ -6,12 +6,14 @@ using Serilog;
 using Serilog.Sinks.Elasticsearch;
 using infrastructure;
 using application;
+using api.Middlewares;
+using api.Hubs;
 
 namespace api;
 
-internal class Startup(IWebHostEnvironment environment)
+public class Startup(IWebHostEnvironment environment)
 {
-    internal void ConfigureServices(IServiceCollection services)
+    public void ConfigureServices(IServiceCollection services)
     {
         var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         var config = new ConfigurationBuilder()
@@ -46,23 +48,10 @@ internal class Startup(IWebHostEnvironment environment)
         };
     }
 
-    internal void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        using var scope = app.ApplicationServices.CreateScope();
-        var authService = scope.ServiceProvider.GetRequiredService<DeleteExpiredAuth>();
-        var recoveryService = scope.ServiceProvider.GetRequiredService<DeleteExpiredRecovery>();
-
-        app.UseHangfireDashboard();
-
-        RecurringJob.AddOrUpdate(
-            "DeleteExpiredAuthJob",
-            () => authService.DeleteExpired(),
-            Cron.Daily);
-
-        RecurringJob.AddOrUpdate(
-            "DeleteExpiredRecoveryJob",
-            () => recoveryService.DeleteExpired(),
-            Cron.Daily);
+        //app.UseResponseCompression();
+        app.UseHangfireDashboard("/hangfire");
 
         if (env.IsDevelopment())
         {
@@ -78,15 +67,16 @@ internal class Startup(IWebHostEnvironment environment)
         app.UseRouting();
         app.UseSession();
         app.UseCors("AllowSpecificOrigin");
-        //app.UseBearer();
+        app.UseBearer();
         app.UseAuthentication();
         app.UseAuthorization();
-        //app.UseXSRF();
-        //app.UseExceptionHandle();
+        app.UseXsrfProtection();
+        app.UseExceptionCatcher();
 
         app.UseEndpoints(endpoint =>
         {
             endpoint.MapControllers();
+            endpoint.MapHub<ChatHub>("/chats");
         });
     }
 }

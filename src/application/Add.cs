@@ -1,4 +1,5 @@
-﻿using application.Utils;
+﻿using application.Components;
+using application.Utils;
 using domain.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,5 +24,7 @@ public static class Add
             var generator = provider.GetRequiredService<IGenerate>();
             return new TokenPublisher(configuration, generator);
         });
+
+        services.AddScoped<SessionComponent>();
     }
 }
