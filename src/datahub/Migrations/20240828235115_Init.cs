@@ -313,9 +313,9 @@ namespace datahub.Migrations
                 {
                     LanguageResumeId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Level = table.Column<int>(type: "integer", nullable: false),
                     LanguageId = table.Column<int>(type: "integer", nullable: false),
-                    ResumeId = table.Column<int>(type: "integer", nullable: false),
-                    Level = table.Column<int>(type: "integer", nullable: false)
+                    ResumeId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -450,7 +450,8 @@ namespace datahub.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Companies_UserId",
                 table: "Companies",
-                column: "UserId");
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Educations_ResumeId",

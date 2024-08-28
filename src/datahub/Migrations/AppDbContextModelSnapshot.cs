@@ -191,7 +191,8 @@ namespace datahub.Migrations
 
                     b.HasKey("CompanyId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Companies");
 
@@ -853,8 +854,8 @@ namespace datahub.Migrations
             modelBuilder.Entity("domain.Models.CompanyModel", b =>
                 {
                     b.HasOne("domain.Models.UserModel", "User")
-                        .WithMany("Companies")
-                        .HasForeignKey("UserId")
+                        .WithOne("Company")
+                        .HasForeignKey("domain.Models.CompanyModel", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1032,7 +1033,7 @@ namespace datahub.Migrations
                 {
                     b.Navigation("Auths");
 
-                    b.Navigation("Companies");
+                    b.Navigation("Company");
 
                     b.Navigation("Favorites");
 

@@ -12,7 +12,7 @@ using datahub.Entity_Framework;
 namespace datahub.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240827164302_Init")]
+    [Migration("20240828235115_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -194,7 +194,8 @@ namespace datahub.Migrations
 
                     b.HasKey("CompanyId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Companies");
 
@@ -856,8 +857,8 @@ namespace datahub.Migrations
             modelBuilder.Entity("domain.Models.CompanyModel", b =>
                 {
                     b.HasOne("domain.Models.UserModel", "User")
-                        .WithMany("Companies")
-                        .HasForeignKey("UserId")
+                        .WithOne("Company")
+                        .HasForeignKey("domain.Models.CompanyModel", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1035,7 +1036,7 @@ namespace datahub.Migrations
                 {
                     b.Navigation("Auths");
 
-                    b.Navigation("Companies");
+                    b.Navigation("Company");
 
                     b.Navigation("Favorites");
 

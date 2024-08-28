@@ -28,6 +28,16 @@ public static class Add
             return new RedisContext(config);
         });
 
+        services.AddSingleton(provider =>
+        {
+            return new ConnectionPrimary();
+        });
+
+        services.AddSingleton(provider =>
+        {
+            return new ConnectionPrimary();
+        });
+
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IDatabaseTransaction, DatabaseTransaction>();
         services.AddSingleton<IDataCache<ConnectionPrimary>, DataCache<ConnectionPrimary>>();
