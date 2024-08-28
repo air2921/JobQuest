@@ -15,22 +15,28 @@ public class EducationModel
     private bool _isPresentTime;
 
     [Key]
+    [JsonPropertyName("education_id")]
     public int EducationId { get; set; }
 
     [Column]
     [Education]
+    [JsonPropertyName("level")]
     public int Level { get; set; }
 
     [Column]
+    [JsonPropertyName("institution")]
     public string Institution { get; set; } = null!;
 
     [Column]
+    [JsonPropertyName("specialty")]
     public string Specialty { get; set; } = null!;
 
     [Column]
+    [JsonPropertyName("date_of_enrollment")]
     public DateTime DateOfEnrollment { get; set; }
 
     [Column]
+    [JsonPropertyName("date_of_graduation")]
     public DateTime? DateOfGraduation
     {
         get => _dateOfGraduation;
@@ -45,6 +51,7 @@ public class EducationModel
     }
 
     [Column]
+    [JsonPropertyName("is_present_time")]
     public bool IsPresentTime
     {
         get => _isPresentTime;
@@ -59,8 +66,10 @@ public class EducationModel
     }
 
     [ForeignKey("ResumeId")]
+    [JsonPropertyName("resume_id")]
     public int ResumeId { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    [JsonPropertyName("resume")]
     public ResumeModel? Resume { get; set; }
 }

@@ -9,20 +9,26 @@ namespace domain.Models;
 public class FavoriteModel
 {
     [Key]
+    [JsonPropertyName("favorite_id")]
     public int FavoriteId { get; set; }
 
     [Column]
+    [JsonPropertyName("created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [ForeignKey("UserId")]
+    [JsonPropertyName("user_id")]
     public int UserId { get; set; }
 
     [ForeignKey("VacancyId")]
+    [JsonPropertyName("vacancy_id")]
     public int VacancyId { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    [JsonPropertyName("user")]
     public UserModel? User { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    [JsonPropertyName("vacancy")]
     public VacancyModel? Vacancy { get; set; }
 }

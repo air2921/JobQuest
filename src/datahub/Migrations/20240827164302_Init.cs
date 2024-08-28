@@ -13,6 +13,19 @@ namespace datahub.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Languages",
+                columns: table => new
+                {
+                    LanguageId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    LanguageName = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Languages", x => x.LanguageId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -295,20 +308,26 @@ namespace datahub.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Languages",
+                name: "LanguageResumes",
                 columns: table => new
                 {
-                    LanguageKey = table.Column<int>(type: "integer", nullable: false)
+                    LanguageResumeId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    LanguageName = table.Column<string>(type: "text", nullable: false),
-                    Level = table.Column<int>(type: "integer", nullable: false),
-                    ResumeId = table.Column<int>(type: "integer", nullable: false)
+                    LanguageId = table.Column<int>(type: "integer", nullable: false),
+                    ResumeId = table.Column<int>(type: "integer", nullable: false),
+                    Level = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Languages", x => x.LanguageKey);
+                    table.PrimaryKey("PK_LanguageResumes", x => x.LanguageResumeId);
                     table.ForeignKey(
-                        name: "FK_Languages_Resumes_ResumeId",
+                        name: "FK_LanguageResumes_Languages_LanguageId",
+                        column: x => x.LanguageId,
+                        principalTable: "Languages",
+                        principalColumn: "LanguageId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LanguageResumes_Resumes_ResumeId",
                         column: x => x.ResumeId,
                         principalTable: "Resumes",
                         principalColumn: "ResumeId",
@@ -454,8 +473,13 @@ namespace datahub.Migrations
                 column: "VacancyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Languages_ResumeId",
-                table: "Languages",
+                name: "IX_LanguageResumes_LanguageId",
+                table: "LanguageResumes",
+                column: "LanguageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LanguageResumes_ResumeId",
+                table: "LanguageResumes",
                 column: "ResumeId");
 
             migrationBuilder.CreateIndex(
@@ -535,7 +559,7 @@ namespace datahub.Migrations
                 name: "Favorites");
 
             migrationBuilder.DropTable(
-                name: "Languages");
+                name: "LanguageResumes");
 
             migrationBuilder.DropTable(
                 name: "Messages");
@@ -548,6 +572,9 @@ namespace datahub.Migrations
 
             migrationBuilder.DropTable(
                 name: "Reviews");
+
+            migrationBuilder.DropTable(
+                name: "Languages");
 
             migrationBuilder.DropTable(
                 name: "Chats");

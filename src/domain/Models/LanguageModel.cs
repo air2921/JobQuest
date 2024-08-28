@@ -1,4 +1,5 @@
 ﻿using domain.Attributes;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -9,19 +10,14 @@ namespace domain.Models;
 public class LanguageModel
 {
     [Key]
-    public int LanguageKey { get; set; }
+    [JsonPropertyName("language_id")]
+    public int LanguageId { get; set; }
 
     [Column]
     [Language]
+    [JsonPropertyName("language_name")]
     public string LanguageName { get; set; } = null!;
 
-    [Column]
-    [LanguageLevel]
-    public int Level { get; set; }
-
-    [ForeignKey("ResumeId")]
-    public int ResumeId { get; set; }
-
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public ResumeModel? Resume { get; set; }
+    [JsonIgnore]
+    public ICollection<LanguageResumeModel>? LanguageResumes { get; set; }
 }

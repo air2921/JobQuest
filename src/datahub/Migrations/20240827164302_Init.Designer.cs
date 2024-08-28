@@ -12,7 +12,7 @@ using datahub.Entity_Framework;
 namespace datahub.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240825191538_Init")]
+    [Migration("20240827164302_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -29,22 +29,27 @@ namespace datahub.Migrations
                 {
                     b.Property<int>("TokenId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "token_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TokenId"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "created_at");
 
                     b.Property<DateTime>("Expires")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "expires");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "user_id");
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "value");
 
                     b.HasKey("TokenId");
 
@@ -53,24 +58,30 @@ namespace datahub.Migrations
                     b.HasIndex("Value");
 
                     b.ToTable("Auths");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "auths");
                 });
 
             modelBuilder.Entity("domain.Models.Chat.ChatModel", b =>
                 {
                     b.Property<int>("ChatId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "chat_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ChatId"));
 
                     b.Property<int>("CandidateId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "candidate_id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "created_at");
 
                     b.Property<int>("EmployerId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "employer_id");
 
                     b.HasKey("ChatId");
 
@@ -79,34 +90,43 @@ namespace datahub.Migrations
                     b.HasIndex("EmployerId");
 
                     b.ToTable("Chats");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "chat");
                 });
 
             modelBuilder.Entity("domain.Models.Chat.MessageModel", b =>
                 {
                     b.Property<int>("MessageId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "message_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MessageId"));
 
                     b.Property<int>("CandidateId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "candidate_id");
 
                     b.Property<int>("ChatId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "chat_id");
 
                     b.Property<int>("EmployerId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "employer_id");
 
                     b.Property<bool>("IsRead")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasAnnotation("Relational:JsonPropertyName", "is_read");
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "message");
 
                     b.Property<DateTime>("SentAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "sent_at");
 
                     b.HasKey("MessageId");
 
@@ -117,154 +137,195 @@ namespace datahub.Migrations
                     b.HasIndex("EmployerId");
 
                     b.ToTable("Messages");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "sent_messages_as_candidate");
                 });
 
             modelBuilder.Entity("domain.Models.CompanyModel", b =>
                 {
                     b.Property<int>("CompanyId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "company_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CompanyId"));
 
                     b.Property<string>("CompanyName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "company_name");
 
                     b.Property<string>("Email")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "email");
 
                     b.Property<string>("Github")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "github");
 
                     b.Property<string>("LinkedIn")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "linkedin");
 
                     b.Property<string>("Location")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "location");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "phone_number");
 
                     b.Property<DateTime>("RegisterDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "register_date");
 
                     b.Property<string>("Telegram")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "telegram");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "user_id");
 
                     b.Property<string>("WebSite")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "website");
 
                     b.HasKey("CompanyId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Companies");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "company");
                 });
 
             modelBuilder.Entity("domain.Models.EducationModel", b =>
                 {
                     b.Property<int>("EducationId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "education_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("EducationId"));
 
                     b.Property<DateTime>("DateOfEnrollment")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "date_of_enrollment");
 
                     b.Property<DateTime?>("DateOfGraduation")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "date_of_graduation");
 
                     b.Property<string>("Institution")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "institution");
 
                     b.Property<bool>("IsPresentTime")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasAnnotation("Relational:JsonPropertyName", "is_present_time");
 
                     b.Property<int>("Level")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "level");
 
                     b.Property<int>("ResumeId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "resume_id");
 
                     b.Property<string>("Specialty")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "specialty");
 
                     b.HasKey("EducationId");
 
                     b.HasIndex("ResumeId");
 
                     b.ToTable("Educations");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "educations");
                 });
 
             modelBuilder.Entity("domain.Models.ExperienceModel", b =>
                 {
                     b.Property<int>("ExperienceId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "experience_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ExperienceId"));
 
                     b.Property<string>("Company")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "company");
 
                     b.Property<string>("Duties")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "duties");
 
                     b.Property<DateTime?>("EndOfWork")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "end_of_work");
 
                     b.Property<bool>("IsPresentTime")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasAnnotation("Relational:JsonPropertyName", "is_present_time");
 
                     b.Property<string>("Location")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "location");
 
                     b.Property<int>("ResumeId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "resume_id");
 
                     b.Property<string>("SpecialityName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "speciality_name");
 
                     b.Property<DateTime>("StartOfWork")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "start_of_work");
 
                     b.Property<string>("WebSite")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "website");
 
                     b.HasKey("ExperienceId");
 
                     b.HasIndex("ResumeId");
 
                     b.ToTable("Experience");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "experiences");
                 });
 
             modelBuilder.Entity("domain.Models.FavoriteModel", b =>
                 {
                     b.Property<int>("FavoriteId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "favorite_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FavoriteId"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "created_at");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "user_id");
 
                     b.Property<int>("VacancyId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "vacancy_id");
 
                     b.HasKey("FavoriteId");
 
@@ -273,56 +334,92 @@ namespace datahub.Migrations
                     b.HasIndex("VacancyId");
 
                     b.ToTable("Favorites");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "favorites");
                 });
 
             modelBuilder.Entity("domain.Models.LanguageModel", b =>
                 {
-                    b.Property<int>("LanguageKey")
+                    b.Property<int>("LanguageId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "language_id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LanguageKey"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LanguageId"));
 
                     b.Property<string>("LanguageName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "language_name");
+
+                    b.HasKey("LanguageId");
+
+                    b.ToTable("Languages");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "language");
+                });
+
+            modelBuilder.Entity("domain.Models.LanguageResumeModel", b =>
+                {
+                    b.Property<int>("LanguageResumeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "language_resume_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LanguageResumeId"));
+
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "language_id");
 
                     b.Property<int>("Level")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "level");
 
                     b.Property<int>("ResumeId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "resume_id");
 
-                    b.HasKey("LanguageKey");
+                    b.HasKey("LanguageResumeId");
+
+                    b.HasIndex("LanguageId");
 
                     b.HasIndex("ResumeId");
 
-                    b.ToTable("Languages");
+                    b.ToTable("LanguageResumes");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "language_resumes");
                 });
 
             modelBuilder.Entity("domain.Models.RecoveryModel", b =>
                 {
                     b.Property<int>("TokenId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "token_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TokenId"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "created_at");
 
                     b.Property<DateTime>("Expires")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "expires");
 
                     b.Property<bool>("IsUsed")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasAnnotation("Relational:JsonPropertyName", "is_used");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "user_id");
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "value");
 
                     b.HasKey("TokenId");
 
@@ -331,33 +428,42 @@ namespace datahub.Migrations
                     b.HasIndex("Value");
 
                     b.ToTable("Recoveries");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "recoveries");
                 });
 
             modelBuilder.Entity("domain.Models.ResponseModel", b =>
                 {
                     b.Property<int>("ResponseId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "response_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ResponseId"));
 
                     b.Property<int?>("Reason")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "reason");
 
                     b.Property<string>("ReasonDescription")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "reason_description");
 
                     b.Property<DateTime>("ResponseOfDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "response_of_date");
 
                     b.Property<int>("ResumeId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "resume_id");
 
                     b.Property<int>("Status")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "status");
 
                     b.Property<int>("VacancyId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "vacancy_id");
 
                     b.HasKey("ResponseId");
 
@@ -366,161 +472,208 @@ namespace datahub.Migrations
                     b.HasIndex("VacancyId");
 
                     b.ToTable("Responses");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "responses");
                 });
 
             modelBuilder.Entity("domain.Models.ResumeModel", b =>
                 {
                     b.Property<int>("ResumeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "resume_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ResumeId"));
 
                     b.Property<string>("About")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "about");
 
                     b.Property<string>("Citizenship")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "citizenship");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "created_at");
 
                     b.Property<DateTime>("DateOfBirthday")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "date_of_birthday");
 
                     b.Property<string>("Email")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "email");
 
                     b.Property<int>("Employment")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "employment");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "first_name");
 
                     b.Property<string>("Github")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "github");
 
                     b.Property<string>("ImageKey")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "image_key");
 
                     b.Property<bool>("IsMale")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasAnnotation("Relational:JsonPropertyName", "is_male");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "last_name");
 
                     b.Property<string>("LinkedIn")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "linkedin");
 
                     b.Property<string>("Location")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "location");
 
                     b.Property<int>("MaxSalary")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "max_salary");
 
                     b.Property<int>("MinSalary")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "min_salary");
 
                     b.Property<string>("Patronymic")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "patronymic");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "phone_number");
 
                     b.Property<string>("ResumeName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "resume_name");
 
                     b.Property<string[]>("Skills")
-                        .HasColumnType("text[]");
+                        .HasColumnType("text[]")
+                        .HasAnnotation("Relational:JsonPropertyName", "skills");
 
                     b.Property<string>("SpecialityName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "speciality_name");
 
                     b.Property<int>("Status")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "status");
 
                     b.Property<string>("Telegram")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "telegram");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "user_id");
 
                     b.Property<string>("WebSite")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "website");
 
                     b.Property<string>("WorkPermit")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "work_permit");
 
                     b.Property<int>("WorkSchedule")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "work_schedule");
 
                     b.HasKey("ResumeId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Resumes");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "resumes");
                 });
 
             modelBuilder.Entity("domain.Models.ReviewModel", b =>
                 {
                     b.Property<int>("ReviewId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "review_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ReviewId"));
 
                     b.Property<int>("CompanyId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "company_id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "created_at");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "description");
 
                     b.Property<int>("DurationOfWork")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "duration_of_work");
 
                     b.Property<int>("GrowthOpportunitiesGrade")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "growth_opportunities_grade");
 
                     b.Property<int>("HiringProcessGrade")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "hiring_process_grade");
 
                     b.Property<bool>("IsRecomended")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasAnnotation("Relational:JsonPropertyName", "is_recommended");
 
                     b.Property<string>("JobTitle")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "job_title");
 
                     b.Property<int>("ManagementGrade")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "management_grade");
 
                     b.Property<int>("RestConditionsGrade")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "rest_conditions_grade");
 
                     b.Property<int>("SalaryGrade")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "salary_grade");
 
                     b.Property<int>("TeamGrade")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "team_grade");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "user_id");
 
                     b.Property<int>("WorkConditionsGrade")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "work_conditions_grade");
 
                     b.Property<int>("WorkPlaceGrade")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "work_place_grade");
 
                     b.HasKey("ReviewId");
 
@@ -529,93 +682,118 @@ namespace datahub.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Reviews");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "reviews");
                 });
 
             modelBuilder.Entity("domain.Models.UserModel", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "user_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserId"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "created_at");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "email");
 
                     b.Property<bool>("IsBlocked")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasAnnotation("Relational:JsonPropertyName", "is_blocked");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "password_hash");
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "role");
 
                     b.HasKey("UserId");
 
                     b.HasIndex("Email");
 
                     b.ToTable("Users");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "user");
                 });
 
             modelBuilder.Entity("domain.Models.VacancyModel", b =>
                 {
                     b.Property<int>("VacancyId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "vacancy_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("VacancyId"));
 
                     b.Property<string>("About")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "about");
 
                     b.Property<int>("CompanyId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "company_id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "created_at");
 
                     b.Property<int>("EducationLevel")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "education_level");
 
                     b.Property<int>("Employment")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "employment");
 
                     b.Property<int>("Experience")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "experience");
 
                     b.Property<bool>("IsOpened")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasAnnotation("Relational:JsonPropertyName", "is_opened");
 
                     b.Property<string>("Location")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "location");
 
                     b.Property<int>("MaxSalary")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "max_salary");
 
                     b.Property<int>("MinSalary")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "min_salary");
 
                     b.Property<string>("VacancyName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "vacancy_name");
 
                     b.Property<int>("WorkSchedule")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "work_schedule");
 
                     b.HasKey("VacancyId");
 
                     b.HasIndex("CompanyId");
 
                     b.ToTable("Vacancies");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "vacancy");
                 });
 
             modelBuilder.Entity("domain.Models.AuthModel", b =>
@@ -727,13 +905,21 @@ namespace datahub.Migrations
                     b.Navigation("Vacancy");
                 });
 
-            modelBuilder.Entity("domain.Models.LanguageModel", b =>
+            modelBuilder.Entity("domain.Models.LanguageResumeModel", b =>
                 {
+                    b.HasOne("domain.Models.LanguageModel", "Language")
+                        .WithMany("LanguageResumes")
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("domain.Models.ResumeModel", "Resume")
-                        .WithMany("Languages")
+                        .WithMany("LanguageResumes")
                         .HasForeignKey("ResumeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Language");
 
                     b.Navigation("Resume");
                 });
@@ -825,6 +1011,11 @@ namespace datahub.Migrations
                     b.Navigation("Vacancies");
                 });
 
+            modelBuilder.Entity("domain.Models.LanguageModel", b =>
+                {
+                    b.Navigation("LanguageResumes");
+                });
+
             modelBuilder.Entity("domain.Models.ResumeModel", b =>
                 {
                     b.Navigation("CandidateChats");
@@ -833,7 +1024,7 @@ namespace datahub.Migrations
 
                     b.Navigation("Experiences");
 
-                    b.Navigation("Languages");
+                    b.Navigation("LanguageResumes");
 
                     b.Navigation("Responses");
 

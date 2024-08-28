@@ -14,25 +14,32 @@ public class ExperienceModel
     private bool _isPresentTime;
 
     [Key]
+    [JsonPropertyName("experience_id")]
     public int ExperienceId { get; set; }
 
     [Column]
+    [JsonPropertyName("speciality_name")]
     public string SpecialityName { get; set; } = null!;
 
     [Column]
+    [JsonPropertyName("company")]
     public string Company { get; set; } = null!;
 
     [Column]
+    [JsonPropertyName("location")]
     public string Location { get; set; } = null!;
 
     [Column]
     [Attributes.Url(nullValidate: false)]
+    [JsonPropertyName("website")]
     public string? WebSite { get; set; }
 
     [Column]
+    [JsonPropertyName("start_of_work")]
     public DateTime StartOfWork { get; set; }
 
     [Column]
+    [JsonPropertyName("end_of_work")]
     public DateTime? EndOfWork
     {
         get => _endOfWork;
@@ -47,6 +54,7 @@ public class ExperienceModel
     }
 
     [Column]
+    [JsonPropertyName("is_present_time")]
     public bool IsPresentTime
     {
         get => _isPresentTime;
@@ -61,6 +69,7 @@ public class ExperienceModel
     }
 
     [NotMapped]
+    [JsonPropertyName("experience_count_in_months")]
     public int ExperienceCountInMounts
     {
         get
@@ -76,11 +85,14 @@ public class ExperienceModel
     }
 
     [Column]
+    [JsonPropertyName("duties")]
     public string? Duties { get; set; }
 
     [ForeignKey("ResumeId")]
+    [JsonPropertyName("resume_id")]
     public int ResumeId { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    [JsonPropertyName("resume")]
     public ResumeModel? Resume { get; set; }
 }
