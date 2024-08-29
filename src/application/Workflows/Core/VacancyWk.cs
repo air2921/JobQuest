@@ -38,7 +38,8 @@ public class VacancyWk(
     {
         try
         {
-            var vacancy = await repository.GetByIdAsync(id);
+            var spec = new VacancyByIdSpec(id) { Expressions = [x => x.Company] };
+            var vacancy = await repository.GetByFilterAsync(spec);
 
             return Response(200, new { vacancy });
         }
@@ -135,7 +136,8 @@ public class VacancyWk(
     {
         try
         {
-            var entity = await repository.GetByIdAsync(vacancyId);
+            var spec = new VacancyByIdSpec(vacancyId) { Expressions = [x => x.Company] };
+            var entity = await repository.GetByFilterAsync(spec);
             if (entity is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
