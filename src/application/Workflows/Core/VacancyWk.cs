@@ -140,8 +140,7 @@ public class VacancyWk(
     {
         try
         {
-            var spec = new VacancyByIdSpec(vacancyId) { Expressions = [x => x.Company] };
-            var entity = await repository.GetByIdWithInclude(spec);
+            var entity = await repository.GetByIdAsync(vacancyId);
             if (entity is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
