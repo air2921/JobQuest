@@ -23,7 +23,7 @@ public class VacancyWk(
     {
         try
         {
-            var spec = new SortVacancySpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto };
+            var spec = new SortVacancySpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto, Expressions = [x => x.Company] };
             var vacancies = await repository.GetRangeAsync(spec);
 
             return Response(200, new { vacancies });

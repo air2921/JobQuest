@@ -2,22 +2,22 @@
 
 public class Responder
 {
-    public Response Response(int statusCode)
+    protected Response Response(int statusCode)
     {
         return new Response { Status = statusCode };
     }
 
-    public Response Response(int statusCode, string message)
+    protected Response Response(int statusCode, string message)
     {
         return new Response { Status = statusCode, Message = message };
     }
 
-    public Response Response(int statusCode, object objectData)
+    protected Response Response(int statusCode, object objectData)
     {
         return new Response { Status = statusCode, ObjectData = objectData };
     }
 
-    public Response Response(int statusCode, string message, object objectData)
+    protected Response Response(int statusCode, string message, object objectData)
     {
         return new Response { Status = statusCode, Message = message, ObjectData = objectData };
     }
