@@ -1,10 +1,11 @@
 ﻿using Ardalis.Specification;
+using domain.Abstractions;
 using domain.Models;
 using System.Linq;
 
 namespace domain.Specifications.Experience;
 
-public class ExperienceByIdSpec : IncludeSpec<ExperienceModel>
+public class ExperienceByIdSpec : IncludeSpec<ExperienceModel>, IEntityById<ExperienceModel>
 {
     public ExperienceByIdSpec(int id)
     {

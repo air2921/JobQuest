@@ -5,30 +5,33 @@ using domain.Abstractions;
 using domain.Localize;
 using domain.Models;
 using domain.SpecDTO;
-using domain.Specifications.Vacancy;
+using domain.Specifications.Resume;
 using JsonLocalizer;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace application.Workflows.Core;
 
-public class VacancyWk(
-    IRepository<VacancyModel> repository,
+public class ResumeWK(
+    IRepository<ResumeModel> repository,
+    IS3Service s3,
     IDatabaseTransaction databaseTransaction,
     ILocalizer localizer,
     IMapper mapper) : Responder
 {
-    public async Task<Response> GetRange(SortVacancyDTO dto)
+    public async Task<Response> GetRange(SortResumeDTO dto)
     {
         try
         {
-            var spec = new SortVacancySpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto, Expressions = [x => x.Company] };
-            var vacancies = await repository.GetRangeAsync(spec);
-            if (vacancies is null)
+            var spec = new SortResumeSpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto };
+            var resumes = await repository.GetRangeAsync();
+            if (resumes is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
-            return Response(200, new { vacancies });
+            return Response(200, new { resumes });
         }
         catch (EntityException ex)
         {
@@ -40,50 +43,56 @@ public class VacancyWk(
     {
         try
         {
-            var spec = new VacancyByIdSpec(id) { Expressions = [x => x.Company] };
-            var vacancy = await repository.GetByIdWithInclude(spec);
-            if (vacancy is null)
+            var resume = await repository.GetByIdAsync(id);
+            if (resume is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
-            return Response(200, new { vacancy });
+            Stream? image = null;
+            if (resume.ImageKey is not null)
+                image = await s3.Download(resume.ImageKey);
+
+            object obj = image is not null ? new { resume, image } : new { resume }; 
+            return Response(200, obj);
         }
-        catch (EntityException ex)
+        catch (Exception ex) when (ex is EntityException || ex is S3Exception)
         {
             return Response(500, ex.Message);
         }
     }
 
-    public async Task<Response> RemoveSingle(int id, int companyId)
+    public async Task<Response> RemoveSingle(int id, int userId)
     {
         using var transaction = databaseTransaction.Begin();
 
         try
         {
             var entity = await repository.DeleteAsync(id);
-            if (entity is null || entity.CompanyId != companyId)
+            if (entity is null || entity.UserId != userId)
             {
                 transaction.Rollback();
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
             }
 
-            transaction.Commit();
+            if (entity.ImageKey is not null)
+                await s3.Delete(entity.ImageKey);
+
             return Response(204);
         }
-        catch (EntityException ex)
+        catch (Exception ex) when (ex is EntityException || ex is S3Exception)
         {
             transaction.Rollback();
             return Response(500, ex.Message);
         }
     }
 
-    public async Task<Response> RemoveRange(IEnumerable<int> identifiers, int companyId)
+    public async Task<Response> RemoveRange(IEnumerable<int> identifiers, int userId)
     {
         using var transaction = databaseTransaction.Begin();
 
         try
         {
             var entities = await repository.DeleteRangeAsync(identifiers);
-            if(entities.Any(e => e is null || e.CompanyId != companyId))
+            if (entities.Any(e => e is null || e.UserId != userId))
             {
                 transaction.Rollback();
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
@@ -99,31 +108,41 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Response> AddSingle(VacancyDTO dto)
+    public async Task<Response> AddSingle(ResumeDTO dto, Stream? file = null, string? fileName = null)
     {
+        using var transaction = databaseTransaction.Begin();
+
         try
         {
-            var model = mapper.Map<VacancyModel>(dto);
-            model.CompanyId = dto.CompanyId;
+            var model = mapper.Map<ResumeModel>(dto);
+            model.UserId = dto.UserId;
+
+            if (file is not null && fileName is not null)
+            {
+                model.ImageKey = fileName;
+                await s3.Upload(file, fileName);
+            }
+
             await repository.AddAsync(model);
             return Response(201);
         }
-        catch (EntityException ex)
+        catch (Exception ex) when (ex is EntityException || ex is S3Exception)
         {
+            transaction.Rollback();
             return Response(500, ex.Message);
         }
     }
 
-    public async Task<Response> AddRange(IEnumerable<VacancyDTO> dtos)
+    public async Task<Response> AddRange(IEnumerable<ResumeDTO> dtos)
     {
         try
         {
-            var entities = new List<VacancyModel>();
+            var entities = new List<ResumeModel>();
 
             foreach (var dto in dtos)
             {
-                var model = mapper.Map<VacancyModel>(dto);
-                model.CompanyId = dto.CompanyId;
+                var model = mapper.Map<ResumeModel>(dto);
+                model.UserId = dto.UserId;
                 entities.Add(model);
             }
 
@@ -136,24 +155,35 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Response> Update(VacancyDTO dto, int vacancyId, int companyId)
+    public async Task<Response> Update(ResumeDTO dto, int resumeId, int userId, Stream? file = null, string? fileName = null)
     {
+        using var transaction = databaseTransaction.Begin();
+
         try
         {
-            var spec = new VacancyByIdSpec(vacancyId) { Expressions = [x => x.Company] };
-            var entity = await repository.GetByIdWithInclude(spec);
+            var entity = await repository.GetByIdAsync(resumeId);
             if (entity is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
-            if (entity.CompanyId != companyId)
+            if (entity.UserId != userId)
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
+
+            if (file is not null && fileName is not null)
+            {
+                if (entity.ImageKey is not null)
+                    await s3.Delete(entity.ImageKey);
+
+                entity.ImageKey = fileName;
+                await s3.Upload(file, fileName);
+            }
 
             entity = mapper.Map(dto, entity);
             await repository.UpdateAsync(entity);
             return Response(200, new { entity });
         }
-        catch (EntityException ex)
+        catch (Exception ex) when (ex is EntityException || ex is S3Exception)
         {
+            transaction.Rollback();
             return Response(500, ex.Message);
         }
     }

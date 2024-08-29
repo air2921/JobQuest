@@ -1,11 +1,11 @@
 ﻿using Ardalis.Specification;
+using domain.Abstractions;
 using domain.Models;
-using System;
 using System.Linq;
 
 namespace domain.Specifications.Recovery;
 
-public class RecoveryByIdSpec : IncludeSpec<RecoveryModel>
+public class RecoveryByIdSpec : IncludeSpec<RecoveryModel>, IEntityById<RecoveryModel>
 {
     public RecoveryByIdSpec(int id)
     {

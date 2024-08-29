@@ -1,11 +1,11 @@
 ﻿using Ardalis.Specification;
+using domain.Abstractions;
 using domain.Models;
-using System;
 using System.Linq;
 
 namespace domain.Specifications.Company;
 
-public class CompanyByIdSpec : IncludeSpec<CompanyModel>
+public class CompanyByIdSpec : IncludeSpec<CompanyModel>, IEntityById<CompanyModel>
 {
     public CompanyByIdSpec(int id)
     {

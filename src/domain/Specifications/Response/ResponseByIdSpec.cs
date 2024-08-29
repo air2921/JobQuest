@@ -1,14 +1,11 @@
 ﻿using Ardalis.Specification;
+using domain.Abstractions;
 using domain.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace domain.Specifications.Response;
 
-public class ResponseByIdSpec : IncludeSpec<ResponseModel>
+public class ResponseByIdSpec : IncludeSpec<ResponseModel>, IEntityById<ResponseModel>
 {
     public ResponseByIdSpec(int id)
     {

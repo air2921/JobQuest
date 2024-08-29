@@ -1,16 +1,11 @@
 ﻿using Ardalis.Specification;
+using domain.Abstractions;
 using domain.Models.Chat;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace domain.Specifications.Message;
 
-public class MessageByIdSpec : IncludeSpec<MessageModel>
+public class MessageByIdSpec : IncludeSpec<MessageModel>, IEntityById<MessageModel>
 {
     public MessageByIdSpec(int id)
     {

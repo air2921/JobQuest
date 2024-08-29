@@ -1,11 +1,11 @@
 ﻿using Ardalis.Specification;
+using domain.Abstractions;
 using domain.Models.Chat;
-using System;
 using System.Linq;
 
 namespace domain.Specifications.Chat;
 
-public class ChatByIdSpec : IncludeSpec<ChatModel>
+public class ChatByIdSpec : IncludeSpec<ChatModel>, IEntityById<ChatModel>
 {
     public ChatByIdSpec(int id)
     {

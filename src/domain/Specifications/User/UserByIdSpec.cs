@@ -1,14 +1,11 @@
 ﻿using Ardalis.Specification;
+using domain.Abstractions;
 using domain.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace domain.Specifications.User;
 
-public class UserByIdSpec : IncludeSpec<UserModel>
+public class UserByIdSpec : IncludeSpec<UserModel>, IEntityById<UserModel>
 {
     public UserByIdSpec(int id)
     {

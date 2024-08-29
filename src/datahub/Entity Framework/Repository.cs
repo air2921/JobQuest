@@ -117,6 +117,30 @@ public class Repository<T> : IRepository<T> where T : class
         }
     }
 
+    public async Task<T?> GetByIdWithInclude(IEntityById<T> specification, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(GET_BY_FILTER_AWAITING));
+            cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+
+            IQueryable<T> query = _dbSet;
+            query = SpecificationEvaluator.Default.GetQuery(query, specification);
+
+            return await query.FirstOrDefaultAsync(cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            throw new EntityException(_localizer.Translate(Messages.TIMED_OUT));
+        }
+        catch (Exception ex)
+        {
+            var specName = specification?.GetType().FullName ?? "null";
+            _logger.LogCritical(ex.ToString(), _tName, specName);
+            throw new EntityException(_localizer.Translate(Messages.ERROR));
+        }
+    }
+
     public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         try

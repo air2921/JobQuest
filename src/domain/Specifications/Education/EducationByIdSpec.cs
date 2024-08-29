@@ -1,10 +1,11 @@
 ﻿using Ardalis.Specification;
+using domain.Abstractions;
 using domain.Models;
 using System.Linq;
 
 namespace domain.Specifications.Education;
 
-public class EducationByIdSpec : IncludeSpec<EducationModel>
+public class EducationByIdSpec : IncludeSpec<EducationModel>, IEntityById<EducationModel>
 {
     public EducationByIdSpec(int id)
     {
