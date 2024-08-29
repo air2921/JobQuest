@@ -22,11 +22,8 @@ public class SessionComponent(
         if (model is null || model.User is null)
             return Response(404);
 
-        var company = companyRepository.GetByFilterAsync(new CompanyByRelationSpec(model.UserId));
-
-        int? companyId = null;
-        if (company is not null)
-            companyId = company.Id;
+        var company = await companyRepository.GetByFilterAsync(new CompanyByRelationSpec(model.UserId));
+        int? companyId = company?.CompanyId;
 
         var jwt = tokenPublisher.JsonWebToken(new JwtDTO
         {

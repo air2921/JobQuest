@@ -19,7 +19,7 @@ public class VacancyWk(
     ILocalizer localizer,
     IMapper mapper) : Responder
 {
-    public async Task<Responder> GetRange(SortVacancyDTO dto)
+    public async Task<Response> GetRange(SortVacancyDTO dto)
     {
         try
         {
@@ -34,7 +34,7 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Responder> GetSingle(int id)
+    public async Task<Response> GetSingle(int id)
     {
         try
         {
@@ -48,7 +48,7 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Responder> RemoveSingle(int id, int companyId)
+    public async Task<Response> RemoveSingle(int id, int companyId)
     {
         using var transaction = databaseTransaction.Begin();
 
@@ -71,7 +71,7 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Responder> RemoveRange(IEnumerable<int> identifiers, int companyId)
+    public async Task<Response> RemoveRange(IEnumerable<int> identifiers, int companyId)
     {
         using var transaction = databaseTransaction.Begin();
 
@@ -94,7 +94,7 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Responder> AddSingle(VacancyDTO dto)
+    public async Task<Response> AddSingle(VacancyDTO dto)
     {
         try
         {
@@ -109,7 +109,7 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Responder> AddRange(IEnumerable<VacancyDTO> dtos)
+    public async Task<Response> AddRange(IEnumerable<VacancyDTO> dtos)
     {
         try
         {
@@ -131,7 +131,7 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Responder> Update(VacancyDTO dto, int vacancyId, int companyId)
+    public async Task<Response> Update(VacancyDTO dto, int vacancyId, int companyId)
     {
         try
         {

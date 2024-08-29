@@ -6,6 +6,7 @@ using datahub.Redis;
 using domain.Abstractions;
 using domain.Localize;
 using domain.Models;
+using domain.Specifications.Company;
 using domain.Specifications.User;
 using JsonLocalizer;
 using System;
@@ -16,6 +17,7 @@ namespace application.Workflows.Auth;
 public class LoginWk(
     IRepository<UserModel> userRepository,
     IRepository<AuthModel> authRepository,
+    IRepository<CompanyModel> companyRepository,
     ISender<EmailDTO> sender,
     IHashUtility hashUtility,
     IGenerate generate,
@@ -93,6 +95,9 @@ public class LoginWk(
                 Value = refresh
             });
 
+            var company = await companyRepository.GetByFilterAsync(new CompanyByRelationSpec(userObj.UserId));
+            int? companyId = company?.CompanyId;
+
             return Response(200, new
             {
                 refresh,
@@ -100,6 +105,7 @@ public class LoginWk(
                 {
                     Expires = Immutable.JwtExpires,
                     Role = userObj.Role,
+                    CompanyId = companyId,
                     UserId = userObj.UserId
                 })
             });
