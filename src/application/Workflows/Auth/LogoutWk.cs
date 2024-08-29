@@ -10,7 +10,7 @@ namespace application.Workflows.Auth;
 
 public class LogoutWk(
     IRepository<AuthModel> repository,
-    ILocalizer localizer)
+    ILocalizer localizer) : Responder
 {
     public async Task<Response> Logout(string refresh)
     {
@@ -18,13 +18,13 @@ public class LogoutWk(
         {
             var model = await repository.DeleteByFilterAsync(new AuthByValueSpec(refresh));
             if (model is null)
-                return new Response { Status = 404, Message = localizer.Translate(Message.NOT_FOUND) };
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
-            return new Response { Status = 204 };
+            return Response(404);
         }
         catch (EntityException ex)
         {
-            return new Response { Status = 500, Message = ex.Message };
+            return Response(500, ex.Message);
         }
     }
 }

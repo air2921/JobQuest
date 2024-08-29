@@ -33,7 +33,7 @@ public class S3Service(S3ClientProvider s3provider, ILogger<S3Service> logger, I
         catch (Exception ex)
         {
             logger.LogError(ex.Message, key);
-            throw new S3Exception(localizer.Translate(Message.S3_ERROR_POST));
+            throw new S3Exception(localizer.Translate(Messages.S3_ERROR_POST));
         }
     }
 
@@ -52,7 +52,7 @@ public class S3Service(S3ClientProvider s3provider, ILogger<S3Service> logger, I
         catch (Exception ex)
         {
             logger.LogError(ex.Message, key);
-            throw new S3Exception(localizer.Translate(Message.S3_ERROR_GET));
+            throw new S3Exception(localizer.Translate(Messages.S3_ERROR_GET));
         }
     }
 
@@ -102,7 +102,7 @@ public class S3Service(S3ClientProvider s3provider, ILogger<S3Service> logger, I
         catch (Exception ex)
         {
             logger.LogError(ex.Message, key);
-            throw new S3Exception(localizer.Translate(Message.S3_ERROR_DELETE));
+            throw new S3Exception(localizer.Translate(Messages.S3_ERROR_DELETE));
         }
     }
 }

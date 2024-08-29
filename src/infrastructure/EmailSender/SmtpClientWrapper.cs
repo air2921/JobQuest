@@ -33,7 +33,7 @@ public class SmtpClientWrapper(
         catch (Exception ex) when (ex is AuthenticationException || ex is SocketException)
         {
             logger.LogError(ex.ToString(), nameof(EmailSendAsync));
-            throw new SmtpClientException(localizer.Translate(Message.MAIL_ERROR));
+            throw new SmtpClientException(localizer.Translate(Messages.MAIL_ERROR));
         }
         catch (OperationCanceledException)
         {

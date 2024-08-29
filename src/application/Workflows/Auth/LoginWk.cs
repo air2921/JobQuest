@@ -22,7 +22,7 @@ public class LoginWk(
     IDataCache<ConnectionPrimary> dataCache,
     AttemptValidator attemptValidator,
     TokenPublisher tokenPublisher,
-    ILocalizer localizer)
+    ILocalizer localizer) : Responder
 {
     public async Task<Response> Initiate(string email, string password)
     {
@@ -31,19 +31,19 @@ public class LoginWk(
         try
         {
             if (!await attemptValidator.IsValidTry(email))
-                return new Response { Status = 403, Message = localizer.Translate(Message.TOO_MANY_ATTEMPTS) };
+                return Response(403, localizer.Translate(Messages.TOO_MANY_ATTEMPTS));
 
             var user = await userRepository.GetByFilterAsync(new UserByEmailSpec(email));
             if (user is null)
-                return new Response { Status = 404, Message = localizer.Translate(Message.NOT_FOUND) };
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
             if (user.IsBlocked)
-                return new Response { Status = 403, Message = localizer.Translate(Message.FORBIDDEN) };
+                return Response(403, localizer.Translate(Messages.FORBIDDEN));
 
             if (!hashUtility.Verify(password, user.PasswordHash))
             {
                 await attemptValidator.AddAttempt(email);
-                return new Response { Status = 403, Message = localizer.Translate(Message.INCORRECT_LOGIN) };
+                return Response(401, localizer.Translate(Messages.INCORRECT_LOGIN));
             }
 
             var code = generate.GenerateCode(8);
@@ -58,16 +58,11 @@ public class LoginWk(
             var uniqueToken = generate.GuidCombine(3, true);
             await dataCache.SetAsync(uniqueToken, new UserObject(code, user.UserId, user.Role), TimeSpan.FromMinutes(10));
 
-            return new Response
-            {
-                Status = 200,
-                Message = localizer.Translate(Message.MAIL_SENT),
-                ObjectData = new { uniqueToken }
-            };
+            return Response(200, localizer.Translate(Messages.MAIL_SENT), new { uniqueToken });
         }
         catch (Exception ex) when (ex is EntityException || ex is SmtpClientException)
         {
-            return new Response { Status = 500, Message = ex.Message };
+            return Response(500, ex.Message);
         }
     }
 
@@ -76,16 +71,16 @@ public class LoginWk(
         try
         {
             if (!await attemptValidator.IsValidTry(token))
-                return new Response { Status = 403, Message = localizer.Translate(Message.TOO_MANY_ATTEMPTS) };
+                return Response(403, localizer.Translate(Messages.TOO_MANY_ATTEMPTS));
 
             var userObj = await dataCache.GetSingleAsync<UserObject>(token);
             if (userObj is null)
-                return new Response { Status = 404, Message = localizer.Translate(Message.NOT_FOUND) };
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
             if (!code.Equals(userObj.Code))
             {
                 await attemptValidator.AddAttempt(token);
-                return new Response { Status = 403, Message = localizer.Translate(Message.INCORRECT_CODE) };
+                return Response(403, localizer.Translate(Messages.INCORRECT_CODE));
             }
 
             var now = DateTime.UtcNow;
@@ -98,24 +93,20 @@ public class LoginWk(
                 Value = refresh
             });
 
-            return new Response
+            return Response(200, new
             {
-                Status = 200,
-                ObjectData = new 
-                { 
-                    refresh,
-                    auth = tokenPublisher.JsonWebToken(new JwtDTO
-                    {
-                        Expires = Immutable.JwtExpires,
-                        Role = userObj.Role,
-                        UserId = userObj.UserId
-                    })
-                }
-            };
+                refresh,
+                auth = tokenPublisher.JsonWebToken(new JwtDTO
+                {
+                    Expires = Immutable.JwtExpires,
+                    Role = userObj.Role,
+                    UserId = userObj.UserId
+                })
+            });
         }
         catch (EntityException ex)
         {
-            return new Response { Status = 500, Message = ex.Message };
+            return Response(500, ex.Message);
         }
     }
 

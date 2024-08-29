@@ -2,7 +2,7 @@
 
 namespace domain.SpecDTO;
 
-public class SortEducationDTO
+public class SortEducationDTO : PaginationDTO
 {
     public int? ResumeId { get; set; }
     public IEnumerable<int>? Levels { get; set; }

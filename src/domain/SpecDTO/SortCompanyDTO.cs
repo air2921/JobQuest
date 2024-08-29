@@ -2,7 +2,7 @@
 
 namespace domain.SpecDTO;
 
-public class SortCompanyDTO
+public class SortCompanyDTO : PaginationDTO
 {
     public double? CompanyGrade { get; set; }
     public int? UserId { get; set; }

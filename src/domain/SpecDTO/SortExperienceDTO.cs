@@ -2,7 +2,7 @@
 
 namespace domain.SpecDTO;
 
-public class SortExperienceDTO
+public class SortExperienceDTO : PaginationDTO
 {
     public int? ResumeId { get; set; }
     public IEnumerable<string>? SpecialityNames { get; set; }

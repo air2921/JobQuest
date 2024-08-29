@@ -12,7 +12,7 @@ namespace application.Components;
 public class SessionComponent(
     IRepository<AuthModel> authRepository,
     IRepository<CompanyModel> companyRepository,
-    TokenPublisher tokenPublisher)
+    TokenPublisher tokenPublisher) : Responder
 {
     public async Task<Response> RefreshJsonWebToken(string refresh)
     {
@@ -20,7 +20,7 @@ public class SessionComponent(
         var model = await authRepository.GetByFilterAsync(spec);
 
         if (model is null || model.User is null)
-            return new Response { Status = 404 };
+            return Response(404);
 
         var company = companyRepository.GetByFilterAsync(new CompanyByRelationSpec(model.UserId));
 
@@ -36,6 +36,6 @@ public class SessionComponent(
             Role = model.User.Role
         });
 
-        return new Response { Status = 200, ObjectData = new { jwt } };
+        return Response(200, new { jwt });
     }
 }

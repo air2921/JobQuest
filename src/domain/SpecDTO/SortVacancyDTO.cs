@@ -2,7 +2,7 @@
 
 namespace domain.SpecDTO;
 
-public class SortVacancyDTO
+public class SortVacancyDTO : PaginationDTO
 {
     public int? CompanyId { get; set; }
     public bool? IsOpened { get; set; }

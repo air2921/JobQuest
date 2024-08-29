@@ -20,7 +20,7 @@ public class RegisterWk(
     ISender<EmailDTO> sender,
     IGenerate generate,
     IHashUtility hashUtility,
-    ILocalizer localizer)
+    ILocalizer localizer) : Responder
 {
     public async Task<Response> Initiate(RegisterDTO dto)
     {
@@ -28,7 +28,7 @@ public class RegisterWk(
         {
             var user = await repository.GetByFilterAsync(new UserByEmailSpec(dto.Email));
             if (user is not null)
-                return new Response { Status = 409, Message = localizer.Translate(Message.USER_CONFLICT) };
+                return Response(409, localizer.Translate(Messages.USER_CONFLICT));
 
             var code = generate.GenerateCode(8);
             await sender.SendMessage(new EmailDTO
@@ -46,16 +46,11 @@ public class RegisterWk(
                 dto.AsEmployer ? Role.Employer.ToString() : Role.Applicant.ToString(), code),
                 TimeSpan.FromMinutes(10));
 
-            return new Response 
-            {
-                Status = 200,
-                Message = localizer.Translate(Message.MAIL_SENT),
-                ObjectData = new { uniqueToken }
-            };
+            return Response(200, localizer.Translate(Messages.MAIL_SENT), new { uniqueToken });
         }
         catch (Exception ex) when (ex is EntityException || ex is SmtpClientException)
         {
-            return new Response { Status = 500, Message = ex.Message };
+            return Response(500, ex.Message);
         }
     }
 
@@ -64,16 +59,16 @@ public class RegisterWk(
         try
         {
             if (!await attemptValidator.IsValidTry(token))
-                return new Response { Status = 403, Message = localizer.Translate(Message.TOO_MANY_ATTEMPTS) };
+                return Response(403, localizer.Translate(Messages.TOO_MANY_ATTEMPTS));
 
             var userObj = await dataCache.GetSingleAsync<UserObject>(token);
             if (userObj is null)
-                return new Response { Status = 404, Message = localizer.Translate(Message.NOT_FOUND) };
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
             if (!code.Equals(userObj.Code))
             {
                 await attemptValidator.AddAttempt(token);
-                return new Response { Status = 403, Message = localizer.Translate(Message.INCORRECT_CODE) };
+                return Response(403, localizer.Translate(Messages.INCORRECT_CODE));
             }
 
             await repository.AddAsync(new UserModel
@@ -83,11 +78,11 @@ public class RegisterWk(
                 Role = userObj.Role,
             });
 
-            return new Response { Status = 201 };
+            return Response(201);
         }
         catch (EntityException ex)
         {
-            return new Response { Status = 500, Message = ex.Message };
+            return Response(500, ex.Message);
         }
     }
 

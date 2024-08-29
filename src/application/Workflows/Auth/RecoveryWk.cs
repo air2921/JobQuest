@@ -17,7 +17,7 @@ public class RecoveryWk(
     ISender<EmailDTO> sender,
     IHashUtility hashUtility,
     IGenerate generate,
-    ILocalizer localizer)
+    ILocalizer localizer) : Responder
 {
     public async Task<Response> Initiate(string email)
     {
@@ -27,10 +27,10 @@ public class RecoveryWk(
         {
             var user = await userRepository.GetByFilterAsync(new UserByEmailSpec(email));
             if (user is null)
-                return new Response { Status = 404, Message = localizer.Translate(Message.NOT_FOUND) };
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
             if (user.IsBlocked)
-                return new Response { Status = 403, Message = localizer.Translate(Message.FORBIDDEN) };
+                return Response(403, localizer.Translate(Messages.FORBIDDEN));
 
             var uniqueToken = generate.GuidCombine(3, true);
             await sender.SendMessage(new EmailDTO
@@ -48,15 +48,11 @@ public class RecoveryWk(
                 Expires = DateTime.UtcNow + TimeSpan.FromHours(12)
             });
 
-            return new Response
-            {
-                Status = 201,
-                Message = localizer.Translate(Message.MAIL_SENT)
-            };
+            return Response(200, localizer.Translate(Messages.MAIL_SENT));
         }
         catch (Exception ex) when (ex is EntityException || ex is SmtpClientException)
         {
-            return new Response { Status = 500, Message = ex.Message };
+            return Response(500, ex.Message);
         }
     }
 
@@ -67,19 +63,19 @@ public class RecoveryWk(
             var spec = new RecoveryByValueSpec(recoveryToken) { Expressions = [x => x.User] };
             var tokenModel = await recoveryRepository.GetByFilterAsync(spec);
             if (tokenModel is null || tokenModel.User is null)
-                return new Response { Status = 404, Message = localizer.Translate(Message.NOT_FOUND) };
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
             if (tokenModel.User.IsBlocked)
-                return new Response { Status = 403, Message = localizer.Translate(Message.FORBIDDEN) };
+                return Response(403, localizer.Translate(Messages.FORBIDDEN));
 
             tokenModel.User.PasswordHash = hashUtility.Hash(password);
             await userRepository.UpdateAsync(tokenModel.User);
 
-            return new Response { Status = 204 };
+            return Response(204);
         }
         catch (EntityException ex)
         {
-            return new Response { Status = 500, Message = ex.Message };
+            return Response(500, ex.Message);
         }
     }
 }

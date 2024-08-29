@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace domain.SpecDTO;
 
-public class SortResumeDTO
+public class SortResumeDTO : PaginationDTO
 {
     public int? UserId { get; set; }
 

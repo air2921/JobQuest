@@ -1,11 +1,10 @@
 ﻿using application.Components;
 using application.Utils;
+using application.Workflows.Auth;
 using AutoMapper;
 using domain.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Serilog;
 
 namespace application;
 
@@ -23,5 +22,10 @@ public static class Add
 
         services.AddScoped<SessionComponent>();
         services.AddScoped<AttemptValidator>();
+
+        services.AddScoped<LoginWk>();
+        services.AddScoped<LogoutWk>();
+        services.AddScoped<RegisterWk>();
+        services.AddScoped<RecoveryWk>();
     }
 }

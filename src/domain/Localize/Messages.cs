@@ -1,6 +1,6 @@
 ﻿namespace domain.Localize;
 
-public static class Message
+public static class Messages
 {
     public const string ERROR_WITH_JOKE = "unexpected_error";
 

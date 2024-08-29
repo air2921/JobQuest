@@ -42,7 +42,7 @@ public class Sender(
         catch (Exception ex)
         {
             logger.LogError(ex.Message, dto.Email);
-            throw new SmtpClientException(localizer.Translate(Message.MAIL_ERROR));
+            throw new SmtpClientException(localizer.Translate(Messages.MAIL_ERROR));
         }
     }
 }

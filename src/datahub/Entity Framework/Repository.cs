@@ -64,7 +64,7 @@ public class Repository<T> : IRepository<T> where T : class
         {
             var specName = specification?.GetType().FullName ?? "null";
             _logger.LogCritical(ex.ToString(), _tName, specName);
-            throw new EntityException(_localizer.Translate(Message.ERROR));
+            throw new EntityException(_localizer.Translate(Messages.ERROR));
         }
     }
 
@@ -83,13 +83,13 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (OperationCanceledException)
         {
-            throw new EntityException(_localizer.Translate(Message.TIMED_OUT));
+            throw new EntityException(_localizer.Translate(Messages.TIMED_OUT));
         }
         catch (Exception ex)
         {
             var specName = specification?.GetType().FullName ?? "null";
             _logger.LogCritical(ex.ToString(), _tName, specName);
-            throw new EntityException(_localizer.Translate(Message.ERROR));
+            throw new EntityException(_localizer.Translate(Messages.ERROR));
         }
     }
 
@@ -107,13 +107,13 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (OperationCanceledException)
         {
-            throw new EntityException(_localizer.Translate(Message.TIMED_OUT));
+            throw new EntityException(_localizer.Translate(Messages.TIMED_OUT));
         }
         catch (Exception ex)
         {
             var specName = specification?.GetType().FullName ?? "null";
             _logger.LogCritical(ex.ToString(), _tName, specName);
-            throw new EntityException(_localizer.Translate(Message.ERROR));
+            throw new EntityException(_localizer.Translate(Messages.ERROR));
         }
     }
 
@@ -128,12 +128,12 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (OperationCanceledException)
         {
-            throw new EntityException(_localizer.Translate(Message.TIMED_OUT));
+            throw new EntityException(_localizer.Translate(Messages.TIMED_OUT));
         }
         catch (Exception ex)
         {
             _logger.LogCritical(ex.ToString(), _tName);
-            throw new EntityException(_localizer.Translate(Message.ERROR));
+            throw new EntityException(_localizer.Translate(Messages.ERROR));
         }
     }
 
@@ -158,12 +158,12 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (OperationCanceledException)
         {
-            throw new EntityException(_localizer.Translate(Message.TIMED_OUT));
+            throw new EntityException(_localizer.Translate(Messages.TIMED_OUT));
         }
         catch (Exception ex)
         {
             _logger.LogCritical(ex.ToString(), _tName);
-            throw new EntityException(_localizer.Translate(Message.ERROR));
+            throw new EntityException(_localizer.Translate(Messages.ERROR));
         }
     }
 
@@ -179,12 +179,12 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (OperationCanceledException)
         {
-            throw new EntityException(_localizer.Translate(Message.TIMED_OUT));
+            throw new EntityException(_localizer.Translate(Messages.TIMED_OUT));
         }
         catch (Exception ex)
         {
             _logger.LogCritical(ex.ToString(), _tName);
-            throw new EntityException(_localizer.Translate(Message.ERROR));
+            throw new EntityException(_localizer.Translate(Messages.ERROR));
         }
     }
 
@@ -210,12 +210,12 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (OperationCanceledException)
         {
-            throw new EntityException(_localizer.Translate(Message.TIMED_OUT));
+            throw new EntityException(_localizer.Translate(Messages.TIMED_OUT));
         }
         catch (Exception ex)
         {
             _logger.LogCritical(ex.ToString(), _tName);
-            throw new EntityException(_localizer.Translate(Message.ERROR));
+            throw new EntityException(_localizer.Translate(Messages.ERROR));
         }
     }
 
@@ -245,12 +245,12 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (OperationCanceledException)
         {
-            throw new EntityException(_localizer.Translate(Message.TIMED_OUT));
+            throw new EntityException(_localizer.Translate(Messages.TIMED_OUT));
         }
         catch (Exception ex)
         {
             _logger.LogCritical(ex.ToString(), _tName);
-            throw new EntityException(_localizer.Translate(Message.ERROR));
+            throw new EntityException(_localizer.Translate(Messages.ERROR));
         }
     }
 
@@ -275,13 +275,13 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (OperationCanceledException)
         {
-            throw new EntityException(_localizer.Translate(Message.TIMED_OUT));
+            throw new EntityException(_localizer.Translate(Messages.TIMED_OUT));
         }
         catch (Exception ex)
         {
             var specName = specification?.GetType().FullName ?? "null";
             _logger.LogCritical(ex.ToString(), _tName, specName);
-            throw new EntityException(_localizer.Translate(Message.ERROR));
+            throw new EntityException(_localizer.Translate(Messages.ERROR));
         }
     }
 
@@ -304,12 +304,12 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (OperationCanceledException)
         {
-            throw new EntityException(_localizer.Translate(Message.TIMED_OUT));
+            throw new EntityException(_localizer.Translate(Messages.TIMED_OUT));
         }
         catch (Exception ex)
         {
             _logger.LogCritical(ex.ToString(), _tName);
-            throw new EntityException(_localizer.Translate(Message.ERROR));
+            throw new EntityException(_localizer.Translate(Messages.ERROR));
         }
     }
 

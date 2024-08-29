@@ -17,7 +17,7 @@ internal class ExceptionCatcherMiddleware(RequestDelegate next, ILogger<Exceptio
 
             context.Response.StatusCode = 500;
             context.Response.ContentType = "application/json";
-            await context.Response.WriteAsJsonAsync(new { message = localizer.Translate(Message.ERROR_WITH_JOKE) });
+            await context.Response.WriteAsJsonAsync(new { message = localizer.Translate(Messages.ERROR_WITH_JOKE) });
             return;
         }
     }

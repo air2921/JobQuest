@@ -7,77 +7,148 @@ using domain.Models;
 using domain.SpecDTO;
 using domain.Specifications.Vacancy;
 using JsonLocalizer;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace application.Workflows.Core;
 
 public class VacancyWk(
     IRepository<VacancyModel> repository,
-    IMapper mapper)
+    IDatabaseTransaction databaseTransaction,
+    ILocalizer localizer,
+    IMapper mapper) : Responder
 {
-    public async Task<Response> GetRange(SortVacancyDTO dto, PaginationDTO pagination)
+    public async Task<Responder> GetRange(SortVacancyDTO dto)
     {
         try
         {
-            var spec = new SortVacancySpec(pagination.Skip, pagination.Total, pagination.ByDesc) { DTO = dto };
+            var spec = new SortVacancySpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto };
             var vacancies = await repository.GetRangeAsync(spec);
 
-            return new Response
-            {
-                Status = 200,
-                ObjectData = new { vacancies }
-            };
+            return Response(200, new { vacancies });
         }
         catch (EntityException ex)
         {
-            return new Response { Status = 500, Message = ex.Message };
+            return Response(500, ex.Message);
         }
     }
 
-    public async Task<Response> GetSingle(int id)
+    public async Task<Responder> GetSingle(int id)
     {
         try
         {
             var vacancy = await repository.GetByIdAsync(id);
 
-            return new Response
-            {
-                Status = 200,
-                ObjectData = new { vacancy }
-            };
+            return Response(200, new { vacancy });
         }
         catch (EntityException ex)
         {
-            return new Response { Status = 500, Message = ex.Message };
+            return Response(500, ex.Message);
         }
     }
 
-    public async Task<Response> RemoveSingle(int id, int companyId)
+    public async Task<Responder> RemoveSingle(int id, int companyId)
     {
+        using var transaction = databaseTransaction.Begin();
+
         try
         {
             var entity = await repository.DeleteAsync(id);
+            if (entity is null || entity.CompanyId != companyId)
+            {
+                transaction.Rollback();
+                return Response(403, localizer.Translate(Messages.FORBIDDEN));
+            }
 
-            return new Response { Status = 204 };
+            transaction.Commit();
+            return Response(204);
         }
         catch (EntityException ex)
         {
-            return new Response { Status = 500, Message = ex.Message };
+            transaction.Rollback();
+            return Response(500, ex.Message);
         }
     }
 
-    public async Task<Response> AddSingle(VacancyDTO dto)
+    public async Task<Responder> RemoveRange(IEnumerable<int> identifiers, int companyId)
+    {
+        using var transaction = databaseTransaction.Begin();
+
+        try
+        {
+            var entities = await repository.DeleteRangeAsync(identifiers);
+            if(entities.Any(e => e is null || e.CompanyId != companyId))
+            {
+                transaction.Rollback();
+                return Response(403, localizer.Translate(Messages.FORBIDDEN));
+            }
+
+            transaction.Commit();
+            return Response(204);
+        }
+        catch (EntityException ex)
+        {
+            transaction.Rollback();
+            return Response(500, ex.Message);
+        }
+    }
+
+    public async Task<Responder> AddSingle(VacancyDTO dto)
     {
         try
         {
             var model = mapper.Map<VacancyModel>(dto);
             model.CompanyId = dto.CompanyId;
             await repository.AddAsync(model);
-            return new Response { Status = 201 };
+            return Response(201);
         }
         catch (EntityException ex)
         {
-            return new Response { Status = 500, Message = ex.Message };
+            return Response(500, ex.Message);
+        }
+    }
+
+    public async Task<Responder> AddRange(IEnumerable<VacancyDTO> dtos)
+    {
+        try
+        {
+            var entities = new List<VacancyModel>();
+
+            foreach (var dto in dtos)
+            {
+                var model = mapper.Map<VacancyModel>(dto);
+                model.CompanyId = dto.CompanyId;
+                entities.Add(model);
+            }
+
+            await repository.AddRangeAsync(entities);
+            return Response(201);
+        }
+        catch (EntityException ex)
+        {
+            return Response(500, ex.Message);
+        }
+    }
+
+    public async Task<Responder> Update(VacancyDTO dto, int vacancyId, int companyId)
+    {
+        try
+        {
+            var entity = await repository.GetByIdAsync(vacancyId);
+            if (entity is null)
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
+
+            if (entity.CompanyId != companyId)
+                return Response(403, localizer.Translate(Messages.FORBIDDEN));
+
+            entity = mapper.Map(dto, entity);
+            await repository.UpdateAsync(entity);
+            return Response(200, new { entity });
+        }
+        catch (EntityException ex)
+        {
+            return Response(500, ex.Message);
         }
     }
 }
