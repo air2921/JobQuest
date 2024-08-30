@@ -2,23 +2,19 @@
 using AutoMapper;
 using common.DTO.ModelDTO;
 using common.Exceptions;
-using datahub.Redis;
 using domain.Abstractions;
 using domain.Localize;
 using domain.Models;
 using domain.SpecDTO;
 using domain.Specifications.Company;
 using JsonLocalizer;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace application.Workflows.Core;
 
 public class CompanyWk(
     IRepository<CompanyModel> repository,
-    IDataCache<ConnectionPrimary> dataCache,
+    IGenericCache<CompanyModel> genericCache,
     IDatabaseTransaction databaseTransaction,
     ILocalizer localizer,
     IMapper mapper) : Responder
@@ -27,21 +23,11 @@ public class CompanyWk(
     {
         try
         {
-            var cache = await dataCache.GetRangeAsync<CompanyModel>(CachePrefixes.Company + dto.ToString());
-            if (cache is not null)
-                return Response(200, new { companies = cache });
-
-            var spec = new SortCompanySpec(dto.Skip, dto.Total, dto.ByDesc) 
-            { 
-                DTO = dto,
-                Expressions = [x => x.Reviews, x => x.Vacancies]
-            };
-
-            var companies = await repository.GetRangeAsync(spec);
+            var spec = new SortCompanySpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto, Expressions = [x => x.Reviews, x => x.Vacancies] };
+            var companies = await genericCache.GetRangeAsync(CachePrefixes.Company + dto.ToString(), () => repository.GetRangeAsync(spec));
             if (companies is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
-            await dataCache.SetAsync(CachePrefixes.Company + dto.ToString(), companies, TimeSpan.FromMinutes(10));
             return Response(200, new { companies });
         }
         catch (EntityException ex)
@@ -54,17 +40,11 @@ public class CompanyWk(
     {
         try
         {
-            var cache = await dataCache.GetSingleAsync<CompanyModel>(CachePrefixes.Company + id);
-            if (cache is not null)
-                return Response(200, new { company = cache });
-
             var spec = new CompanyByRelationSpec(id) { Expressions = [x => x.Reviews, x => x.Vacancies] };
-
-            var company = await repository.GetRangeAsync(spec);
+            var company = await genericCache.GetSingleAsync(CachePrefixes.Company + id, () => repository.GetByIdWithInclude(spec));
             if (company is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
-            await dataCache.SetAsync(CachePrefixes.Company + id, company, TimeSpan.FromMinutes(10));
             return Response(200, new { company });
         }
         catch (EntityException ex)

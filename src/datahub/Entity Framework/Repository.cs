@@ -243,7 +243,7 @@ public class Repository<T> : IRepository<T> where T : class
         }
     }
 
-    public async Task<IEnumerable<T?>> DeleteRangeAsync(IEnumerable<int> identifiers, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<T>> DeleteRangeAsync(IEnumerable<int> identifiers, CancellationToken cancellationToken = default)
     {
         try
         {

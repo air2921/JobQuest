@@ -1,4 +1,4 @@
-﻿using Ardalis.Specification;
+﻿using application.Utils;
 using AutoMapper;
 using common.DTO.ModelDTO;
 using common.Exceptions;
@@ -9,7 +9,6 @@ using domain.SpecDTO;
 using domain.Specifications.Response;
 using JsonLocalizer;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +18,7 @@ namespace application.Workflows.Core;
 public class ResponseWk(
     IRepository<ResponseModel> repository,
     IRepository<ResumeModel> resumeRepository,
+    IGenericCache<ResponseModel> genericCache,
     IMapper mapper,
     ILocalizer localizer) : Responder
 {
@@ -33,7 +33,8 @@ public class ResponseWk(
                 Expressions = [x => x.Vacancy]
             };
 
-            var responses = await repository.GetRangeAsync(spec);
+            var responses = await genericCache.GetRangeAsync(CachePrefixes.Response_AsEmployer + $"{vacancyId}_" + dto.ToString(),
+                () => repository.GetRangeAsync(spec));
             bool antiCondition = responses is null ||
                 responses.Any(x => x.Vacancy.Company.UserId != userId);
             if (antiCondition)
@@ -58,7 +59,8 @@ public class ResponseWk(
                 Expressions = [x => x.Resume]
             };
 
-            var responses = await repository.GetRangeAsync(spec);
+            var responses = await genericCache.GetRangeAsync(CachePrefixes.Response_AsApplicant + $"{resumeId}_" + dto.ToString(),
+                () => repository.GetRangeAsync(spec));
             bool antiCondition = responses is null ||
                 responses.Any(x => x.Resume.UserId != userId);
             if (antiCondition)
@@ -77,7 +79,7 @@ public class ResponseWk(
         try
         {
             var spec = new ResponseByIdSpec(id) { Expressions = [x => x.Resume, x => x.Vacancy, x => x.Vacancy.Company] };
-            var response = await repository.GetByIdWithInclude(spec);
+            var response = await genericCache.GetSingleAsync(CachePrefixes.Response + id, () => repository.GetByIdWithInclude(spec));
             var antiCondition = response is null ||
                 (response.Vacancy.Company.UserId != userId && response.Resume.UserId != userId);
             if (antiCondition)

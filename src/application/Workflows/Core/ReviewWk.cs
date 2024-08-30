@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using application.Utils;
+using AutoMapper;
 using common.DTO.ModelDTO;
 using common.Exceptions;
 using domain.Abstractions;
@@ -15,6 +16,7 @@ namespace application.Workflows.Core;
 
 public class ReviewWk(
     IRepository<ReviewModel> repository,
+    IGenericCache<ReviewModel> genericCache,
     IDatabaseTransaction databaseTransaction,
     IMapper mapper,
     ILocalizer localizer) : Responder
@@ -23,13 +25,9 @@ public class ReviewWk(
     {
         try
         {
-            var spec = new SortReviewSpec(dto.Skip, dto.Total, dto.ByDesc, companyId)
-            {
-                IsRecomended = isRec,
-                Title = title,
-                Expressions = [x => x.Company]
-            };
-            var reviews = await repository.GetRangeAsync(spec);
+            var spec = new SortReviewSpec(dto.Skip, dto.Total, dto.ByDesc, companyId) { IsRecomended = isRec, Title = title, Expressions = [x => x.Company] };
+            var key = $"{CachePrefixes.Review}{dto.ToString()}-{companyId}-{isRec}-{title}";
+            var reviews = await genericCache.GetRangeAsync(key, () => repository.GetRangeAsync(spec));
             if (reviews is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
@@ -46,7 +44,7 @@ public class ReviewWk(
         try
         {
             var spec = new ReviewByIdSpec(id) { Expressions = [x => x.Company] };
-            var review = await repository.GetByIdWithInclude(spec);
+            var review = await genericCache.GetSingleAsync(CachePrefixes.Review + id, () => repository.GetByIdWithInclude(spec));
             if (review is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 

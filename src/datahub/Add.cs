@@ -43,6 +43,7 @@ public static class Add
         });
 
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped(typeof(IGenericCache<>), typeof(GenericCache<>));
         services.AddScoped<IDatabaseTransaction, DatabaseTransaction>();
         services.AddSingleton<IDataCache<ConnectionPrimary>, DataCache<ConnectionPrimary>>();
         services.AddSingleton<IDataCache<ConnectionSecondary>, DataCache<ConnectionSecondary>>();

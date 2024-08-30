@@ -18,5 +18,5 @@ public interface IRepository<T> where T : class
     Task<T?> UpdateAsync(T entity, CancellationToken cancellationToken = default);
     Task<T?> DeleteAsync(int id, CancellationToken cancellationToken = default);
     Task<T?> DeleteByFilterAsync(ISpecification<T> specification, CancellationToken cancellationToken = default);
-    Task<IEnumerable<T?>> DeleteRangeAsync(IEnumerable<int> identifiers, CancellationToken cancellationToken = default);
+    Task<IEnumerable<T>> DeleteRangeAsync(IEnumerable<int> identifiers, CancellationToken cancellationToken = default);
 }

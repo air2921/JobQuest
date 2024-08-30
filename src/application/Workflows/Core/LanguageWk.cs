@@ -2,7 +2,6 @@
 using AutoMapper;
 using common.DTO.ModelDTO;
 using common.Exceptions;
-using datahub.Redis;
 using domain.Abstractions;
 using domain.Localize;
 using domain.Models;
@@ -18,7 +17,7 @@ namespace application.Workflows.Core;
 
 public class LanguageWk(
     IRepository<LanguageModel> repository,
-    IDataCache<ConnectionPrimary> dataCache,
+    IGenericCache<LanguageModel> genericCache,
     IDatabaseTransaction databaseTransaction,
     IMapper mapper,
     ILocalizer localizer) : Responder
@@ -27,16 +26,11 @@ public class LanguageWk(
     {
         try
         {
-            var cache = await dataCache.GetRangeAsync<LanguageModel>(CachePrefixes.Language + dto.ToString());
-            if (cache is not null)
-                return Response(200, new { languages = cache });
-
             var spec = new SortLanguageSpec(dto.Skip, dto.Total, dto.ByDesc, userId) { DTO = dto };
-            var languages = await repository.GetRangeAsync(spec);
+            var languages = await genericCache.GetRangeAsync(CachePrefixes.Language + dto.ToString(), () => repository.GetRangeAsync(spec));
             if (languages is null)
-                return Response(400, localizer.Translate(Messages.NOT_FOUND));
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
-            await dataCache.SetAsync(CachePrefixes.Language + dto.ToString(), languages, TimeSpan.FromMinutes(10));
             return Response(200, new { languages });
         }
         catch (EntityException ex)
@@ -49,15 +43,10 @@ public class LanguageWk(
     {
         try
         {
-            var cache = await dataCache.GetSingleAsync<LanguageModel>(CachePrefixes.Language + id);
-            if (cache is not null)
-                return Response(200, new { language = cache });
-
-            var language = await repository.GetByIdAsync(id);
+            var language = await genericCache.GetSingleAsync(CachePrefixes.Language + id, () => repository.GetByIdAsync(id));
             if (language is null || language.UserId != userId)
                 return Response(400, localizer.Translate(Messages.NOT_FOUND));
 
-            await dataCache.SetAsync(CachePrefixes.Language + id, language, TimeSpan.FromMinutes(10));
             return Response(200, new { language });
         }
         catch (EntityException ex)

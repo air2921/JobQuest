@@ -20,6 +20,7 @@ namespace application.Workflows.Core;
 public class ResumeWk(
     IRepository<ResumeModel> repository,
     IDataCache<ConnectionPrimary> dataCache,
+    IGenericCache<ResumeModel> genericCache,
     IS3Service s3,
     IDatabaseTransaction databaseTransaction,
     ILocalizer localizer,
@@ -29,20 +30,11 @@ public class ResumeWk(
     {
         try
         {
-            var cache = await dataCache.GetRangeAsync<ResumeModel>(CachePrefixes.Resume + dto.ToString());
-            if (cache is not null)
-                return Response(200, new { resumes = cache });
-
-            var spec = new SortResumeSpec(dto.Skip, dto.Total, dto.ByDesc)
-            { 
-                DTO = dto,
-                Expressions = [x => x.Experiences, x => x.Educations, x => x.User, x => x.User.Languages]  
-            }; 
-            var resumes = await repository.GetRangeAsync(spec);
+            var spec = new SortResumeSpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto, Expressions = [x => x.Experiences, x => x.Educations, x => x.User, x => x.User.Languages] };
+            var resumes = await genericCache.GetRangeAsync(CachePrefixes.Response + dto.ToString(), () => repository.GetRangeAsync(spec));
             if (resumes is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
-            await dataCache.SetAsync(CachePrefixes.Resume + dto.ToString(), resumes, TimeSpan.FromMinutes(10));
             return Response(200, new { resumes });
         }
         catch (EntityException ex)
@@ -56,7 +48,7 @@ public class ResumeWk(
         try
         {
             var spec = new ResumeByIdSpec(id) { Expressions = [x => x.Experiences, x => x.Educations, x => x.User, x => x.User!.Languages] };
-            var resume = await repository.GetByIdWithInclude(spec);
+            var resume = await genericCache.GetSingleAsync(CachePrefixes.Resume + id, () => repository.GetByIdWithInclude(spec));
             if (resume is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
@@ -89,6 +81,7 @@ public class ResumeWk(
             if (entity.ImageKey is not null)
                 await s3.Delete(entity.ImageKey);
 
+            await dataCache.DeleteSingleAsync(CachePrefixes.Resume + entity.ResumeId);
             transaction.Commit();
             return Response(204);
         }
@@ -102,6 +95,8 @@ public class ResumeWk(
     public async Task<Response> RemoveRange(IEnumerable<int> identifiers, int userId)
     {
         using var transaction = databaseTransaction.Begin();
+        var tasks = new List<Task>();
+        var keys = new List<string>();
 
         try
         {
@@ -112,10 +107,20 @@ public class ResumeWk(
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
             }
 
+            foreach (var entity in entities)
+            {
+                if (entity.ImageKey is not null)
+                    tasks.Add(s3.Delete(entity.ImageKey));
+
+                keys.Add(CachePrefixes.Resume + entity.ResumeId);
+                tasks.Add(dataCache.DeleteRangeAsync(keys));
+            }
+
+            await Task.WhenAll(tasks);
             transaction.Commit();
             return Response(204);
         }
-        catch (EntityException ex)
+        catch (Exception ex) when (ex is EntityException || ex is S3Exception)
         {
             transaction.Rollback();
             return Response(500, ex.Message);
@@ -191,6 +196,7 @@ public class ResumeWk(
 
             entity = mapper.Map(dto, entity);
             await repository.UpdateAsync(entity);
+            await dataCache.DeleteSingleAsync(CachePrefixes.Resume + entity.ResumeId);
             transaction.Commit();
             return Response(200, new { entity });
         }
