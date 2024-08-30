@@ -29,7 +29,7 @@ public class ResumeWK(
             var spec = new SortResumeSpec(dto.Skip, dto.Total, dto.ByDesc)
             { 
                 DTO = dto,
-                Expressions = [x => x.Experiences, x => x.Educations, x => x.LanguageResumes]  
+                Expressions = [x => x.Experiences, x => x.Educations, x => x.User, x => x.User!.Languages]  
             }; 
             var resumes = await repository.GetRangeAsync();
             if (resumes is null)
@@ -47,7 +47,7 @@ public class ResumeWK(
     {
         try
         {
-            var spec = new ResumeByIdSpec(id) { Expressions = [x => x.Experiences, x => x.Educations, x => x.LanguageResumes] };
+            var spec = new ResumeByIdSpec(id) { Expressions = [x => x.Experiences, x => x.Educations, x => x.User, x => x.User!.Languages] };
             var resume = await repository.GetByIdWithInclude(spec);
             if (resume is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));

@@ -128,10 +128,6 @@ public class ResumeModel : Contact
     public ICollection<ResponseModel>? Responses { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    [JsonPropertyName("language_resumes")]
-    public ICollection<LanguageResumeModel>? LanguageResumes { get; set; }
-
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("educations")]
     public ICollection<EducationModel>? Educations { get; set; }
 

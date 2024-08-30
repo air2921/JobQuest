@@ -53,13 +53,14 @@ public class SortResumeSpec : SortCollectionSpec<ResumeModel>
         if (DTO.Languages is not null && DTO.Languages.Count > 0)
         {
             Query.Where(resume =>
-                resume.LanguageResumes != null &&
-                resume.LanguageResumes.Count >= DTO.Languages.Count &&
+                resume.User != null &&
+                resume.User.Languages != null &&
+                resume.User.Languages.Count >= DTO.Languages.Count &&
                 DTO.Languages.All(lang =>
-                    resume.LanguageResumes.Any(languageResume =>
+                    resume.User.Languages.Any(languageResume =>
                         languageResume.Language != null &&
-                        languageResume.Language.LanguageName == lang.Key.ToString() &&
-                        languageResume.Level >= (int)lang.Value)));
+                        languageResume.Language == lang.Key.ToString() &&
+                        languageResume.LanguageLevel >= (int)lang.Value)));
         }
 
         if (DTO.MinExp.HasValue || DTO.MaxExp.HasValue || DTO.StillWorks.HasValue || DTO.HasDuties.HasValue)

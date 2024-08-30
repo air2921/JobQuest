@@ -50,6 +50,10 @@ public class UserModel
     public ICollection<ResumeModel>? Resumes { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    [JsonPropertyName("languages")]
+    public ICollection<LanguageModel>? Languages { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("favorites")]
     public ICollection<FavoriteModel>? Favorites { get; set; }
 

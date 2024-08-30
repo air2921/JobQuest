@@ -34,7 +34,7 @@ public static class Add
 
         services.AddSingleton(provider =>
         {
-            return new ConnectionPrimary();
+            return new ConnectionSecondary();
         });
 
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

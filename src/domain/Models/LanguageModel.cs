@@ -15,9 +15,19 @@ public class LanguageModel
 
     [Column]
     [Language]
-    [JsonPropertyName("language_name")]
-    public string LanguageName { get; set; } = null!;
+    [JsonPropertyName("language")]
+    public string Language { get; set; } = null!;
 
-    [JsonIgnore]
-    public ICollection<LanguageResumeModel>? LanguageResumes { get; set; }
+    [Column]
+    [LanguageLevel]
+    [JsonPropertyName("language_level")]
+    public int LanguageLevel { get; set; }
+
+    [ForeignKey("UserId")]
+    [JsonPropertyName("user_id")]
+    public int UserId { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    [JsonPropertyName("user")]
+    public UserModel? User { get; set; }
 }

@@ -29,16 +29,10 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<LanguageResumeModel>()
-            .HasOne(r => r.Language)
-            .WithMany(l => l.LanguageResumes)
-            .HasForeignKey(r => r.LanguageId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<LanguageResumeModel>()
-            .HasOne(r => r.Resume)
-            .WithMany(r => r.LanguageResumes)
-            .HasForeignKey(r => r.ResumeId)
+        modelBuilder.Entity<LanguageModel>()
+            .HasOne(r => r.User)
+            .WithMany(r => r.Languages)
+            .HasForeignKey(r => r.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<CompanyModel>()
