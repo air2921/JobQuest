@@ -25,6 +25,8 @@ public class VacancyWk(
         {
             var spec = new SortVacancySpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto, Expressions = [x => x.Company] };
             var vacancies = await repository.GetRangeAsync(spec);
+            if (vacancies is null)
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
             return Response(200, new { vacancies });
         }
@@ -38,7 +40,10 @@ public class VacancyWk(
     {
         try
         {
-            var vacancy = await repository.GetByIdAsync(id);
+            var spec = new VacancyByIdSpec(id) { Expressions = [x => x.Company] };
+            var vacancy = await repository.GetByIdWithInclude(spec);
+            if (vacancy is null)
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
             return Response(200, new { vacancy });
         }

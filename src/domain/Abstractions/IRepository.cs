@@ -12,6 +12,7 @@ public interface IRepository<T> where T : class
     Task<IEnumerable<T>> GetRangeAsync(ISpecification<T>? specification = null, CancellationToken cancellationToken = default);
     Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
     Task<T?> GetByFilterAsync(ISpecification<T> specification, CancellationToken cancellationToken = default);
+    Task<T?> GetByIdWithInclude(IEntityById<T> specification, CancellationToken cancellationToken = default);
     Task<int> AddAsync(T entity, Func<T, int>? GetId = null, CancellationToken cancellationToken = default);
     Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
     Task<T?> UpdateAsync(T entity, CancellationToken cancellationToken = default);

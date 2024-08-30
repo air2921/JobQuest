@@ -345,48 +345,26 @@ namespace datahub.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LanguageId"));
 
-                    b.Property<string>("LanguageName")
+                    b.Property<string>("Language")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasAnnotation("Relational:JsonPropertyName", "language_name");
+                        .HasAnnotation("Relational:JsonPropertyName", "language");
+
+                    b.Property<int>("LanguageLevel")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "language_level");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "user_id");
 
                     b.HasKey("LanguageId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Languages");
 
-                    b.HasAnnotation("Relational:JsonPropertyName", "language");
-                });
-
-            modelBuilder.Entity("domain.Models.LanguageResumeModel", b =>
-                {
-                    b.Property<int>("LanguageResumeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Relational:JsonPropertyName", "language_resume_id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LanguageResumeId"));
-
-                    b.Property<int>("LanguageId")
-                        .HasColumnType("integer")
-                        .HasAnnotation("Relational:JsonPropertyName", "language_id");
-
-                    b.Property<int>("Level")
-                        .HasColumnType("integer")
-                        .HasAnnotation("Relational:JsonPropertyName", "level");
-
-                    b.Property<int>("ResumeId")
-                        .HasColumnType("integer")
-                        .HasAnnotation("Relational:JsonPropertyName", "resume_id");
-
-                    b.HasKey("LanguageResumeId");
-
-                    b.HasIndex("LanguageId");
-
-                    b.HasIndex("ResumeId");
-
-                    b.ToTable("LanguageResumes");
-
-                    b.HasAnnotation("Relational:JsonPropertyName", "language_resumes");
+                    b.HasAnnotation("Relational:JsonPropertyName", "languages");
                 });
 
             modelBuilder.Entity("domain.Models.RecoveryModel", b =>
@@ -903,23 +881,15 @@ namespace datahub.Migrations
                     b.Navigation("Vacancy");
                 });
 
-            modelBuilder.Entity("domain.Models.LanguageResumeModel", b =>
+            modelBuilder.Entity("domain.Models.LanguageModel", b =>
                 {
-                    b.HasOne("domain.Models.LanguageModel", "Language")
-                        .WithMany("LanguageResumes")
-                        .HasForeignKey("LanguageId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("domain.Models.ResumeModel", "Resume")
-                        .WithMany("LanguageResumes")
-                        .HasForeignKey("ResumeId")
+                    b.HasOne("domain.Models.UserModel", "User")
+                        .WithMany("Languages")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Language");
-
-                    b.Navigation("Resume");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("domain.Models.RecoveryModel", b =>
@@ -1009,11 +979,6 @@ namespace datahub.Migrations
                     b.Navigation("Vacancies");
                 });
 
-            modelBuilder.Entity("domain.Models.LanguageModel", b =>
-                {
-                    b.Navigation("LanguageResumes");
-                });
-
             modelBuilder.Entity("domain.Models.ResumeModel", b =>
                 {
                     b.Navigation("CandidateChats");
@@ -1021,8 +986,6 @@ namespace datahub.Migrations
                     b.Navigation("Educations");
 
                     b.Navigation("Experiences");
-
-                    b.Navigation("LanguageResumes");
 
                     b.Navigation("Responses");
 
@@ -1036,6 +999,8 @@ namespace datahub.Migrations
                     b.Navigation("Company");
 
                     b.Navigation("Favorites");
+
+                    b.Navigation("Languages");
 
                     b.Navigation("Recoveries");
 

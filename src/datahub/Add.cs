@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Serilog;
 using System;
 
 namespace datahub;
@@ -35,7 +34,7 @@ public static class Add
 
         services.AddSingleton(provider =>
         {
-            return new ConnectionPrimary();
+            return new ConnectionSecondary();
         });
 
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
