@@ -13,7 +13,7 @@ public class SortChatSpec : SortCollectionSpec<ChatModel>
 
         Query.Where(x => x.CandidateId.Equals(userId) || x.EmployerId.Equals(UserId));
 
-        Query.OrderByDescending(x => x.Messages != null && x.Messages.Any(m => !m.IsRead))
+        Query.OrderByDescending(x => x.Messages.Any(m => !m.IsRead))
                      .ThenByDescending(x => x.CreatedAt);
 
         Query.Skip(skip).Take(count);

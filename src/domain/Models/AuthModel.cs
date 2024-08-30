@@ -38,5 +38,5 @@ public class AuthModel
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("user")]
-    public UserModel? User { get; set; }
+    public UserModel User { get; set; } = null!;
 }

@@ -38,13 +38,13 @@ public class MessageModel
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("chat")]
-    public ChatModel? Chat { get; set; }
+    public ChatModel Chat { get; set; } = null!;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("employer")]
-    public CompanyModel? Employer { get; set; }
+    public CompanyModel Employer { get; set; } = null!;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("candidate")]
-    public ResumeModel? Candidate { get; set; }
+    public ResumeModel Candidate { get; set; } = null!;
 }

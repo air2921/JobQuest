@@ -23,15 +23,15 @@ public class FavoriteResumeModel
     [JsonPropertyName("user_id")]
     public int UserId { get; set; }
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    [JsonPropertyName("user")]
-    public UserModel? User { get; set; }
-
     [ForeignKey("ResumeId")]
     [JsonPropertyName("resume_id")]
     public int ResumeId { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    [JsonPropertyName("user")]
+    public UserModel User { get; set; } = null!;
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("resume")]
-    public ResumeModel? Resume { get; set; }
+    public ResumeModel Resume { get; set; } = null!;
 }

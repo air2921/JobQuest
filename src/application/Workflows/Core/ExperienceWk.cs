@@ -59,7 +59,7 @@ public class ExperienceWk(
         try
         {
             var experience = await repository.DeleteAsync(id);
-            if (experience is null || experience.Resume is null || experience.Resume.User is null)
+            if (experience is null || experience.Resume.User is null)
             {
                 transaction.Rollback();
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
@@ -82,7 +82,7 @@ public class ExperienceWk(
         try
         {
             var entities = await repository.DeleteRangeAsync(identifiers);
-            if (entities.Any(e => e is null || e.Resume is null || e.Resume.User is null || e.Resume.User.UserId != userId))
+            if (entities.Any(e => e is null || e.Resume.User.UserId != userId))
             {
                 transaction.Rollback();
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
@@ -139,12 +139,12 @@ public class ExperienceWk(
     {
         try
         {
-            var spec = new ExperienceByIdSpec(experienceId) { Expressions = [x => x.Resume, x => x.Resume!.User] };
+            var spec = new ExperienceByIdSpec(experienceId) { Expressions = [x => x.Resume, x => x.Resume.User] };
             var entity = await repository.GetByIdWithInclude(spec);
             if (entity is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
-            if (entity.Resume is null || entity.Resume.User is null || entity.Resume.User is null || entity.Resume.User.UserId != userId)
+            if (entity.Resume.User.UserId != userId)
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
 
             entity = mapper.Map(dto, entity);

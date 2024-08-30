@@ -27,7 +27,7 @@ public class SortCompanySpec : SortCollectionSpec<CompanyModel>
         }
 
         if (DTO.CompanyGrade.HasValue)
-            Query.Where(x => x.Reviews != null && x.Reviews.Count > 0 &&
+            Query.Where(x => x.Reviews.Count > 0 &&
                 x.Reviews.Sum(r => r.OverallGrade) >= DTO.CompanyGrade);
 
         if (DTO.Locations is not null && DTO.Locations.Any())
