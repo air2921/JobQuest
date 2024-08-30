@@ -8,6 +8,7 @@ public class Mapper : Profile
 {
     public Mapper()
     {
+        CreateMap<ResponseDTO, ResponseModel>();
         CreateMap<CompanyDTO, CompanyModel>();
         CreateMap<ResumeDTO, ResponseModel>();
         CreateMap<ExperienceDTO, ExperienceModel>();

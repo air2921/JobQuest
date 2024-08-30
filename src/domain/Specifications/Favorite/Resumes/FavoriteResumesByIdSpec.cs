@@ -7,9 +7,12 @@ namespace domain.Specifications.Favorite.Resumes;
 
 public class FavoriteResumesByIdSpec : IncludeSpec<FavoriteResumeModel>, IEntityById<FavoriteResumeModel>
 {
-    public FavoriteResumesByIdSpec(int id)
+    public FavoriteResumesByIdSpec(int id, int userId)
     {
         Id = id;
+        UserId = userId;
+
+        Query.Where(x => x.UserId.Equals(UserId));
         Query.Where(x => x.ResumeId.Equals(Id));
 
         if (Expressions is not null && Expressions.Any())
@@ -17,4 +20,5 @@ public class FavoriteResumesByIdSpec : IncludeSpec<FavoriteResumeModel>, IEntity
     }
 
     public int Id { get; set; }
+    public int UserId { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using Ardalis.Specification;
 using domain.Models;
+using domain.SpecDTO;
 using System.Linq;
 
 namespace domain.Specifications.Response;
@@ -13,12 +14,26 @@ public class SortResponseSpec : SortCollectionSpec<ResponseModel>
 
         Query.Where(x => x.ResponseId.Equals(ResumeId));
 
-        if (Status.HasValue)
-            Query.Where(x => x.Status.Equals(Status.Value));
+        if (DTO is null)
+        {
+            Initialize();
+            return;
+        }
+
+        if (DTO.Status.HasValue)
+            Query.Where(x => x.Status.Equals(DTO.Status));
+
+        if (DTO.Reason.HasValue)
+            Query.Where(x => x.Reason.Equals(DTO.Reason));
+
+        if (DTO.HasDescription.HasValue)
+            Query.Where(x => DTO.HasDescription.Value
+                ? !string.IsNullOrWhiteSpace(x.ReasonDescription)
+                : string.IsNullOrWhiteSpace(x.ReasonDescription));
 
         Initialize();
     }
 
     public int ResumeId { get; private set; }
-    public int? Status { get; set; }
+    public SortResponseDTO? DTO { get; set; }
 }

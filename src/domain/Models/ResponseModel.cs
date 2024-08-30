@@ -16,11 +16,11 @@ public class ResponseModel
     [Column]
     [ResponseStatus]
     [JsonPropertyName("status")]
-    public int Status { get; set; }
+    public int Status { get; set; } = 101;
 
     [Column]
     [JsonPropertyName("response_of_date")]
-    public DateTime ResponseOfDate { get; set; }
+    public DateTime ResponseOfDate { get; set; } = DateTime.UtcNow;
 
     [Column]
     [Reason(nullValidate: false)]
@@ -35,13 +35,13 @@ public class ResponseModel
     [JsonPropertyName("resume_id")]
     public int ResumeId { get; set; }
 
-    [ForeignKey("VacancyId")]
-    [JsonPropertyName("vacancy_id")]
-    public int VacancyId { get; set; }
-
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("resume")]
     public ResumeModel? Resume { get; set; }
+
+    [ForeignKey("VacancyId")]
+    [JsonPropertyName("vacancy_id")]
+    public int VacancyId { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("vacancy")]
