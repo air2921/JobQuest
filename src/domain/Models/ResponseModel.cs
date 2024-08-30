@@ -35,15 +35,15 @@ public class ResponseModel
     [JsonPropertyName("resume_id")]
     public int ResumeId { get; set; }
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    [JsonPropertyName("resume")]
-    public ResumeModel? Resume { get; set; }
-
     [ForeignKey("VacancyId")]
     [JsonPropertyName("vacancy_id")]
     public int VacancyId { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    [JsonPropertyName("resume")]
+    public ResumeModel Resume { get; set; } = null!;
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("vacancy")]
-    public VacancyModel? Vacancy { get; set; }
+    public VacancyModel Vacancy { get; set; } = null!;
 }

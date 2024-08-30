@@ -26,14 +26,12 @@ public class ResponseWk(
             var spec = new SortResponseSpec(dto.Skip, dto.Total, dto.ByDesc, resumeId)
             { 
                 DTO = dto,
-                Expressions = [x => x.Resume, x => x.Vacancy, x => x.Vacancy!.Company]
+                Expressions = [x => x.Resume, x => x.Vacancy, x => x.Vacancy.Company]
             };
 
             var responses = await repository.GetRangeAsync(spec);
             bool antiCondition = responses is null ||
-                responses.Any(x => x.Resume is null ||
-                x.Vacancy is null || x.Vacancy.Company is null ||
-                (x.Vacancy.Company.UserId != userId && x.Resume.UserId != userId));
+                responses.Any(x => x.Vacancy.Company.UserId != userId && x.Resume.UserId != userId);
             if (antiCondition)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
@@ -49,10 +47,9 @@ public class ResponseWk(
     {
         try
         {
-            var spec = new ResponseByIdSpec(id) { Expressions = [x => x.Resume, x => x.Vacancy, x => x.Vacancy!.Company] };
+            var spec = new ResponseByIdSpec(id) { Expressions = [x => x.Resume, x => x.Vacancy, x => x.Vacancy.Company] };
             var response = await repository.GetByIdWithInclude(spec);
-            var antiCondition = response is null || response.Resume is null ||
-                response.Resume.User is null || response.Vacancy is null || response.Vacancy.Company is null ||
+            var antiCondition = response is null ||
                 (response.Vacancy.Company.UserId != userId && response.Resume.UserId != userId);
             if (antiCondition)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
@@ -69,10 +66,9 @@ public class ResponseWk(
     {
         try
         {
-            var spec = new ResponseByIdSpec(id) { Expressions = [x => x.Resume, x => x.Vacancy, x => x.Vacancy!.Company] };
+            var spec = new ResponseByIdSpec(id) { Expressions = [x => x.Resume, x => x.Vacancy, x => x.Vacancy.Company] };
             var response = await repository.GetByIdWithInclude(spec);
-            var antiCondition = response is null || response.Resume is null ||
-                response.Resume.User is null || response.Vacancy is null || response.Vacancy.Company is null ||
+            var antiCondition = response is null ||
                 (response.Vacancy.Company.UserId != userId && response.Resume.UserId != userId);
             if (antiCondition)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
@@ -126,12 +122,9 @@ public class ResponseWk(
     {
         try
         {
-            var spec = new ResponseByIdSpec(responseId) { Expressions = [x => x.Resume, x => x.Vacancy, x => x.Vacancy!.Company] };
+            var spec = new ResponseByIdSpec(responseId) { Expressions = [x => x.Resume, x => x.Vacancy, x => x.Vacancy.Company] };
             var response = await repository.GetByIdWithInclude(spec);
-            var antiCondition = response is null || response.Resume is null ||
-                response.Vacancy is null || response.Vacancy.Company is null ||
-                response.Vacancy.Company.UserId != companyId;
-            if (antiCondition)
+            if (response is null || response.Vacancy.Company.UserId != companyId)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
             response = mapper.Map(dto, response!);

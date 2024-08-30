@@ -25,9 +25,9 @@ public class FavoriteVacancyModel
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("user")]
-    public UserModel? User { get; set; }
+    public UserModel User { get; set; } = null!;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("vacancy")]
-    public VacancyModel? Vacancy { get; set; }
+    public VacancyModel Vacancy { get; set; } = null!;
 }

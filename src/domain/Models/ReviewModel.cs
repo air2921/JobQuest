@@ -93,15 +93,15 @@ public class ReviewModel
     [JsonPropertyName("user_id")]
     public int UserId { get; set; }
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    [JsonPropertyName("user")]
-    public UserModel? User { get; set; }
-
     [ForeignKey("CompanyId")]
     [JsonPropertyName("company_id")]
     public int CompanyId { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    [JsonPropertyName("user")]
+    public UserModel User { get; set; } = null!;
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("company")]
-    public CompanyModel? Company { get; set; }
+    public CompanyModel Company { get; set; } = null!;
 }

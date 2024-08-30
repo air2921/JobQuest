@@ -40,5 +40,5 @@ public class RecoveryModel
     public int UserId { get; set; }
 
     [JsonPropertyName("user")]
-    public UserModel? User { get; set; }
+    public UserModel User { get; set; } = null!;
 }

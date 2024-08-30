@@ -67,13 +67,13 @@ public class VacancyModel
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("company")]
-    public CompanyModel? Company { get; set; }
+    public CompanyModel Company { get; set; } = null!;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("responses")]
-    public ICollection<ResponseModel>? Responses { get; set; }
+    public ICollection<ResponseModel> Responses { get; set; } = [];
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("favorites")]
-    public ICollection<FavoriteVacancyModel>? Favorites { get; set; }
+    public ICollection<FavoriteVacancyModel> Favorites { get; set; } = [];
 }

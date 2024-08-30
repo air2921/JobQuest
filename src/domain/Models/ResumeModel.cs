@@ -121,29 +121,29 @@ public class ResumeModel : Contact
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("user")]
-    public UserModel? User { get; set; }
-
+    public UserModel User { get; set; } = null!;
+    
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("responses")]
-    public ICollection<ResponseModel>? Responses { get; set; }
+    public ICollection<ResponseModel> Responses { get; set; } = [];
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("favorites")]
-    public ICollection<FavoriteResumeModel>? Favorites { get; set; }
+    public ICollection<FavoriteResumeModel>? Favorites { get; set; } = [];
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("educations")]
-    public ICollection<EducationModel>? Educations { get; set; }
+    public ICollection<EducationModel> Educations { get; set; } = [];
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("experiences")]
-    public ICollection<ExperienceModel>? Experiences { get; set; }
+    public ICollection<ExperienceModel> Experiences { get; set; } = [];
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("candidate_chats")]
-    public ICollection<ChatModel>? CandidateChats { get; set; }
+    public ICollection<ChatModel> CandidateChats { get; set; } = [];
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("sent_messages_as_candidate")]
-    public ICollection<MessageModel>? SentMessagesAsCandidate { get; set; }
+    public ICollection<MessageModel> SentMessagesAsCandidate { get; set; } = [];
 }

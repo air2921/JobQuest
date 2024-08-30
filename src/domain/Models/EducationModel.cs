@@ -71,5 +71,5 @@ public class EducationModel
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("resume")]
-    public ResumeModel? Resume { get; set; }
+    public ResumeModel Resume { get; set; } = null!;
 }

@@ -27,13 +27,13 @@ public class ChatModel
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("candidate_user")]
-    public ResumeModel? CandidateUser { get; set; }
+    public ResumeModel CandidateUser { get; set; } = null!;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("employer_user")]
-    public CompanyModel? EmployerUser { get; set; }
+    public CompanyModel EmployerUser { get; set; } = null!;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("messages")]
-    public ICollection<MessageModel>? Messages { get; set; }
+    public ICollection<MessageModel> Messages { get; set; } = [];
 }

@@ -47,25 +47,25 @@ public class UserModel
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("resumes")]
-    public ICollection<ResumeModel>? Resumes { get; set; }
+    public ICollection<ResumeModel> Resumes { get; set; } = [];
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("languages")]
-    public ICollection<LanguageModel>? Languages { get; set; }
+    public ICollection<LanguageModel> Languages { get; set; } = [];
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("favorite_resumes")]
-    public ICollection<FavoriteResumeModel>? FavoriteResumes { get; set; }
+    public ICollection<FavoriteResumeModel> FavoriteResumes { get; set; } = [];
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("favorite_vacancies")]
-    public ICollection<FavoriteVacancyModel>? FavoriteVacancies { get; set; }
+    public ICollection<FavoriteVacancyModel> FavoriteVacancies { get; set; } = [];
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("auths")]
-    public ICollection<AuthModel>? Auths { get; set; }
+    public ICollection<AuthModel> Auths { get; set; } = [];
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("recoveries")]
-    public ICollection<RecoveryModel>? Recoveries { get; set; }
+    public ICollection<RecoveryModel> Recoveries { get; set; } = [];
 }

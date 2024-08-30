@@ -32,21 +32,21 @@ public class CompanyModel : Contact
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("user")]
-    public UserModel? User { get; set; }
+    public UserModel User { get; set; } = null!;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("vacancies")]
-    public ICollection<VacancyModel>? Vacancies { get; set; }
+    public ICollection<VacancyModel> Vacancies { get; set; } = [];
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("reviews")]
-    public ICollection<ReviewModel>? Reviews { get; set; }
+    public ICollection<ReviewModel> Reviews { get; set; } = [];
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("employer_chats")]
-    public ICollection<ChatModel>? EmployerChats { get; set; }
+    public ICollection<ChatModel> EmployerChats { get; set; } = [];
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("sent_messages_as_employer")]
-    public ICollection<MessageModel>? SentMessagesAsEmployer { get; set; }
+    public ICollection<MessageModel> SentMessagesAsEmployer { get; set; } = [];
 }

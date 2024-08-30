@@ -53,44 +53,33 @@ public class SortResumeSpec : SortCollectionSpec<ResumeModel>
         if (DTO.Languages is not null && DTO.Languages.Count > 0)
         {
             Query.Where(resume =>
-                resume.User != null &&
-                resume.User.Languages != null &&
                 resume.User.Languages.Count >= DTO.Languages.Count &&
                 DTO.Languages.All(lang =>
                     resume.User.Languages.Any(languageResume =>
-                        languageResume.Language != null &&
                         languageResume.Language == lang.Key.ToString() &&
                         languageResume.LanguageLevel >= (int)lang.Value)));
         }
 
         if (DTO.MinExp.HasValue || DTO.MaxExp.HasValue || DTO.StillWorks.HasValue || DTO.HasDuties.HasValue)
         {
-            Query.Where(x => x.Experiences != null && x.Experiences.Count > 0);
+            Query.Where(x => x.Experiences.Count > 0);
 
             if (DTO.MinExp.HasValue || DTO.MaxExp.HasValue)
             {
-#pragma warning disable CS8604 // Possible null reference argument.
                 Query.Where(x => x.Experiences.Sum(ex => ex.ExperienceCountInMounts) >= DTO.MinExp.GetValueOrDefault(0) &&
                     x.Experiences.Sum(ex => ex.ExperienceCountInMounts) <= DTO.MaxExp.GetValueOrDefault(int.MaxValue));
-#pragma warning restore CS8604 // Possible null reference argument.
             }
 
             if (DTO.StillWorks.HasValue)
             {
                 if (DTO.StillWorks.Value)
-#pragma warning disable CS8604 // Possible null reference argument.
                     Query.Where(x => x.Experiences.Any(ex => ex.IsPresentTime));
-#pragma warning restore CS8604 // Possible null reference argument.
                 else
-#pragma warning disable CS8604 // Possible null reference argument.
                     Query.Where(x => x.Experiences.All(ex => !ex.IsPresentTime));
-#pragma warning restore CS8604 // Possible null reference argument.
             }
 
             if (DTO.HasDuties.HasValue)
-#pragma warning disable CS8604 // Possible null reference argument.
                 Query.Where(x => x.Experiences.All(ex => !string.IsNullOrWhiteSpace(ex.Duties)));
-#pragma warning restore CS8604 // Possible null reference argument.
         }
 
         if (DTO.MinAge.HasValue)
