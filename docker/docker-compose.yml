@@ -21,6 +21,7 @@ services:
       - postgres_db
       - redis-primary
       - redis-secondary
+      - redis-chat
       - elasticsearch
 
   postgres_db:
