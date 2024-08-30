@@ -169,11 +169,8 @@ public class ResumeWk(
         try
         {
             var entity = await repository.GetByIdAsync(resumeId);
-            if (entity is null)
+            if (entity is null || entity.UserId != userId)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
-
-            if (entity.UserId != userId)
-                return Response(403, localizer.Translate(Messages.FORBIDDEN));
 
             if (file is not null && fileName is not null)
             {

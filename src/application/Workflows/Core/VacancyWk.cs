@@ -53,14 +53,17 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Response> RemoveSingle(int id, int companyId)
+    public async Task<Response> RemoveSingle(int id, int? companyId)
     {
+        if (!companyId.HasValue)
+            return Response(404, localizer.Translate(Messages.NOT_FOUND));
+
         using var transaction = databaseTransaction.Begin();
 
         try
         {
             var entity = await repository.DeleteAsync(id);
-            if (entity is null || entity.CompanyId != companyId)
+            if (entity is null || entity.CompanyId != companyId.Value)
             {
                 transaction.Rollback();
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
@@ -76,14 +79,17 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Response> RemoveRange(IEnumerable<int> identifiers, int companyId)
+    public async Task<Response> RemoveRange(IEnumerable<int> identifiers, int? companyId)
     {
+        if (!companyId.HasValue)
+            return Response(404, localizer.Translate(Messages.NOT_FOUND));
+
         using var transaction = databaseTransaction.Begin();
 
         try
         {
             var entities = await repository.DeleteRangeAsync(identifiers);
-            if(entities.Any(e => e is null || e.CompanyId != companyId))
+            if(entities.Any(e => e is null || e.CompanyId != companyId.Value))
             {
                 transaction.Rollback();
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
@@ -99,12 +105,15 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Response> AddSingle(VacancyDTO dto, int companyId)
+    public async Task<Response> AddSingle(VacancyDTO dto, int? companyId)
     {
+        if (!companyId.HasValue)
+            return Response(404, localizer.Translate(Messages.NOT_FOUND));
+
         try
         {
             var model = mapper.Map<VacancyModel>(dto);
-            model.CompanyId = companyId;
+            model.CompanyId = companyId.Value;
             await repository.AddAsync(model);
             return Response(201);
         }
@@ -114,8 +123,11 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Response> AddRange(IEnumerable<VacancyDTO> dtos, int companyId)
+    public async Task<Response> AddRange(IEnumerable<VacancyDTO> dtos, int? companyId)
     {
+        if (!companyId.HasValue)
+            return Response(404, localizer.Translate(Messages.NOT_FOUND));
+
         try
         {
             var entities = new List<VacancyModel>();
@@ -123,7 +135,7 @@ public class VacancyWk(
             foreach (var dto in dtos)
             {
                 var model = mapper.Map<VacancyModel>(dto);
-                model.CompanyId = companyId;
+                model.CompanyId = companyId.Value;
                 entities.Add(model);
             }
 
@@ -136,12 +148,15 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Response> Update(VacancyDTO dto, int vacancyId, int companyId)
+    public async Task<Response> Update(VacancyDTO dto, int vacancyId, int? companyId)
     {
+        if (!companyId.HasValue)
+            return Response(404, localizer.Translate(Messages.NOT_FOUND));
+
         try
         {
             var entity = await repository.GetByIdAsync(vacancyId);
-            if (entity is null || entity.CompanyId != companyId)
+            if (entity is null || entity.CompanyId != companyId.Value)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
             entity = mapper.Map(dto, entity);

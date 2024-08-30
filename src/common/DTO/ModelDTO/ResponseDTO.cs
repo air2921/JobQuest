@@ -13,10 +13,4 @@ public class ResponseDTO
     public int? Reason { get; set; }
 
     public string? ReasonDescription { get; set; }
-
-    [Required]
-    public int ResumeId { get; set; }
-
-    [Required]
-    public int VacancyId { get; set; }
 }

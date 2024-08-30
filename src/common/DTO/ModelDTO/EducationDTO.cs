@@ -21,7 +21,4 @@ public class EducationDTO
 
     [Required]
     public bool IsPresentTime { get; set; }
-
-    [Required]
-    public int ResumeId { get; set; }
 }

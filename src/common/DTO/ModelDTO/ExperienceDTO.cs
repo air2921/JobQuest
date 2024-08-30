@@ -25,7 +25,4 @@ public class ExperienceDTO
     public bool IsPresentTime { get; set; }
 
     public string? Duties { get; set; }
-
-    [Required]
-    public int ResumeId { get; set; }
 }

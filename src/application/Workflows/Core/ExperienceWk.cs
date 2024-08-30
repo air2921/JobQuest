@@ -8,13 +8,13 @@ using domain.SpecDTO;
 using domain.Specifications.Experience;
 using JsonLocalizer;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace application.Workflows.Core;
 
 public class ExperienceWk(
-    IRepository<ExperienceModel> repository,
+    IRepository<ExperienceModel> experienceRepository,
+    IRepository<ResumeModel> resumeRepository,
     ILocalizer localizer,
     IMapper mapper) : Responder
 {
@@ -23,7 +23,7 @@ public class ExperienceWk(
         try
         {
             var spec = new SortExperienceSpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto };
-            var experiences = await repository.GetRangeAsync(spec);
+            var experiences = await experienceRepository.GetRangeAsync(spec);
             if (experiences is null)
                 return Response(400, localizer.Translate(Messages.NOT_FOUND));
 
@@ -39,7 +39,7 @@ public class ExperienceWk(
     {
         try
         {
-            var experience = await repository.GetByIdAsync(id);
+            var experience = await experienceRepository.GetByIdAsync(id);
             if (experience is null)
                 return Response(400, localizer.Translate(Messages.NOT_FOUND));
 
@@ -57,11 +57,11 @@ public class ExperienceWk(
         try
         {
             var spec = new ExperienceByIdSpec(id) { Expressions = [x => x.Resume] };
-            var experience = await repository.GetByIdWithInclude(spec);
+            var experience = await experienceRepository.GetByIdWithInclude(spec);
             if (experience is null || experience.Resume.UserId != userId)
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
 
-            await repository.DeleteAsync(experience.ExperienceId);
+            await experienceRepository.DeleteAsync(experience.ExperienceId);
             return Response(204);
         }
         catch (EntityException ex)
@@ -70,13 +70,17 @@ public class ExperienceWk(
         }
     }
 
-    public async Task<Response> AddSingle(ExperienceDTO dto)
+    public async Task<Response> AddSingle(ExperienceDTO dto, int resumeId, int userId)
     {
         try
         {
+            var resume = await resumeRepository.GetByIdAsync(resumeId);
+            if (resume is null || resume.UserId != userId)
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
+
             var model = mapper.Map<ExperienceModel>(dto);
-            model.ResumeId = dto.ResumeId;
-            await repository.AddAsync(model);
+            model.ResumeId = resumeId;
+            await experienceRepository.AddAsync(model);
             return Response(201);
         }
         catch (EntityException ex)
@@ -85,20 +89,24 @@ public class ExperienceWk(
         }
     }
 
-    public async Task<Response> AddRange(IEnumerable<ExperienceDTO> dtos)
+    public async Task<Response> AddRange(IEnumerable<ExperienceDTO> dtos, int resumeId, int userId)
     {
         try
         {
+            var resume = await resumeRepository.GetByIdAsync(resumeId);
+            if (resume is null || resume.UserId != userId)
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
+
             var entities = new List<ExperienceModel>();
 
             foreach (var dto in dtos)
             {
                 var model = mapper.Map<ExperienceModel>(dto);
-                model.ResumeId = dto.ResumeId;
+                model.ResumeId = resumeId;
                 entities.Add(model);
             }
 
-            await repository.AddRangeAsync(entities);
+            await experienceRepository.AddRangeAsync(entities);
             return Response(201);
         }
         catch (EntityException ex)
@@ -112,12 +120,12 @@ public class ExperienceWk(
         try
         {
             var spec = new ExperienceByIdSpec(experienceId) { Expressions = [x => x.Resume] };
-            var entity = await repository.GetByIdWithInclude(spec);
+            var entity = await experienceRepository.GetByIdWithInclude(spec);
             if (entity is null || entity.Resume.UserId != userId)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
             entity = mapper.Map(dto, entity);
-            await repository.UpdateAsync(entity);
+            await experienceRepository.UpdateAsync(entity);
             return Response(200, new { entity });
         }
         catch (EntityException ex)

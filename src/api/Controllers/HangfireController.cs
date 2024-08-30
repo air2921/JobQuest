@@ -1,11 +1,14 @@
-﻿using background;
+﻿using api.Utils;
+using background;
 using Hangfire;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
 [Route("api/hangfire/jobs")]
 [ApiController]
+[Authorize(Policy = ApiSettings.ADMIN_POLICY)]
 public class HangfireController(DeleteExpiredAuth authService, DeleteExpiredRecovery recoveryService) : ControllerBase
 {
     [HttpPost("auth")]
