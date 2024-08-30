@@ -18,6 +18,9 @@ namespace datahub.Migrations
                 {
                     UserId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FirstName = table.Column<string>(type: "text", nullable: false),
+                    Patronymic = table.Column<string>(type: "text", nullable: true),
+                    LastName = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     PasswordHash = table.Column<string>(type: "text", nullable: false),
@@ -143,9 +146,6 @@ namespace datahub.Migrations
                     Skills = table.Column<string[]>(type: "text[]", nullable: true),
                     About = table.Column<string>(type: "text", nullable: true),
                     ImageKey = table.Column<string>(type: "text", nullable: true),
-                    FirstName = table.Column<string>(type: "text", nullable: false),
-                    Patronymic = table.Column<string>(type: "text", nullable: true),
-                    LastName = table.Column<string>(type: "text", nullable: false),
                     IsMale = table.Column<bool>(type: "boolean", nullable: false),
                     DateOfBirthday = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false),
@@ -244,6 +244,8 @@ namespace datahub.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CandidateId = table.Column<int>(type: "integer", nullable: false),
+                    CandidateName = table.Column<string>(type: "text", nullable: false),
+                    EmployerName = table.Column<string>(type: "text", nullable: false),
                     EmployerId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>

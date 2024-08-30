@@ -12,7 +12,7 @@ using datahub.Entity_Framework;
 namespace datahub.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240830013933_Init")]
+    [Migration("20240830150518_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -75,6 +75,11 @@ namespace datahub.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Relational:JsonPropertyName", "candidate_id");
 
+                    b.Property<string>("CandidateName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "candidate_name");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasAnnotation("Relational:JsonPropertyName", "created_at");
@@ -82,6 +87,11 @@ namespace datahub.Migrations
                     b.Property<int>("EmployerId")
                         .HasColumnType("integer")
                         .HasAnnotation("Relational:JsonPropertyName", "employer_id");
+
+                    b.Property<string>("EmployerName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "employer_name");
 
                     b.HasKey("ChatId");
 
@@ -521,11 +531,6 @@ namespace datahub.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Relational:JsonPropertyName", "employment");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasAnnotation("Relational:JsonPropertyName", "first_name");
-
                     b.Property<string>("Github")
                         .HasColumnType("text")
                         .HasAnnotation("Relational:JsonPropertyName", "github");
@@ -537,11 +542,6 @@ namespace datahub.Migrations
                     b.Property<bool>("IsMale")
                         .HasColumnType("boolean")
                         .HasAnnotation("Relational:JsonPropertyName", "is_male");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasAnnotation("Relational:JsonPropertyName", "last_name");
 
                     b.Property<string>("LinkedIn")
                         .HasColumnType("text")
@@ -559,10 +559,6 @@ namespace datahub.Migrations
                     b.Property<int>("MinSalary")
                         .HasColumnType("integer")
                         .HasAnnotation("Relational:JsonPropertyName", "min_salary");
-
-                    b.Property<string>("Patronymic")
-                        .HasColumnType("text")
-                        .HasAnnotation("Relational:JsonPropertyName", "patronymic");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("text")
@@ -712,22 +708,33 @@ namespace datahub.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("text")
-                        .HasAnnotation("Relational:JsonPropertyName", "email");
+                        .HasAnnotation("Relational:JsonPropertyName", "first_name");
 
                     b.Property<bool>("IsBlocked")
                         .HasColumnType("boolean")
                         .HasAnnotation("Relational:JsonPropertyName", "is_blocked");
 
-                    b.Property<string>("PasswordHash")
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasAnnotation("Relational:JsonPropertyName", "password_hash");
+                        .HasAnnotation("Relational:JsonPropertyName", "last_name");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Patronymic")
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "patronymic");
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasAnnotation("Relational:JsonPropertyName", "role");
+                        .HasColumnType("text");
 
                     b.HasKey("UserId");
 
