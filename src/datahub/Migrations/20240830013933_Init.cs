@@ -316,7 +316,34 @@ namespace datahub.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Favorites",
+                name: "FavoriteResumes",
+                columns: table => new
+                {
+                    FavoriteId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    ResumeId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FavoriteResumes", x => x.FavoriteId);
+                    table.ForeignKey(
+                        name: "FK_FavoriteResumes_Resumes_ResumeId",
+                        column: x => x.ResumeId,
+                        principalTable: "Resumes",
+                        principalColumn: "ResumeId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FavoriteResumes_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FavoriteVacancies",
                 columns: table => new
                 {
                     FavoriteId = table.Column<int>(type: "integer", nullable: false)
@@ -327,15 +354,15 @@ namespace datahub.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Favorites", x => x.FavoriteId);
+                    table.PrimaryKey("PK_FavoriteVacancies", x => x.FavoriteId);
                     table.ForeignKey(
-                        name: "FK_Favorites_Users_UserId",
+                        name: "FK_FavoriteVacancies_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Favorites_Vacancies_VacancyId",
+                        name: "FK_FavoriteVacancies_Vacancies_VacancyId",
                         column: x => x.VacancyId,
                         principalTable: "Vacancies",
                         principalColumn: "VacancyId",
@@ -445,13 +472,23 @@ namespace datahub.Migrations
                 column: "ResumeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Favorites_UserId",
-                table: "Favorites",
+                name: "IX_FavoriteResumes_ResumeId",
+                table: "FavoriteResumes",
+                column: "ResumeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FavoriteResumes_UserId",
+                table: "FavoriteResumes",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Favorites_VacancyId",
-                table: "Favorites",
+                name: "IX_FavoriteVacancies_UserId",
+                table: "FavoriteVacancies",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FavoriteVacancies_VacancyId",
+                table: "FavoriteVacancies",
                 column: "VacancyId");
 
             migrationBuilder.CreateIndex(
@@ -533,7 +570,10 @@ namespace datahub.Migrations
                 name: "Experience");
 
             migrationBuilder.DropTable(
-                name: "Favorites");
+                name: "FavoriteResumes");
+
+            migrationBuilder.DropTable(
+                name: "FavoriteVacancies");
 
             migrationBuilder.DropTable(
                 name: "Languages");

@@ -12,7 +12,7 @@ using datahub.Entity_Framework;
 namespace datahub.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240830001125_Init")]
+    [Migration("20240830013933_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -307,12 +307,44 @@ namespace datahub.Migrations
                     b.HasAnnotation("Relational:JsonPropertyName", "experiences");
                 });
 
-            modelBuilder.Entity("domain.Models.FavoriteModel", b =>
+            modelBuilder.Entity("domain.Models.FavoriteResumeModel", b =>
                 {
                     b.Property<int>("FavoriteId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Relational:JsonPropertyName", "favorite_id");
+                        .HasAnnotation("Relational:JsonPropertyName", "favorite_resume_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FavoriteId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "created_at");
+
+                    b.Property<int>("ResumeId")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "resume_id");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "user_id");
+
+                    b.HasKey("FavoriteId");
+
+                    b.HasIndex("ResumeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FavoriteResumes");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "favorite_resumes");
+                });
+
+            modelBuilder.Entity("domain.Models.FavoriteVacancyModel", b =>
+                {
+                    b.Property<int>("FavoriteId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "favorite_vacancy_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FavoriteId"));
 
@@ -334,7 +366,7 @@ namespace datahub.Migrations
 
                     b.HasIndex("VacancyId");
 
-                    b.ToTable("Favorites");
+                    b.ToTable("FavoriteVacancies");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "favorites");
                 });
@@ -865,10 +897,29 @@ namespace datahub.Migrations
                     b.Navigation("Resume");
                 });
 
-            modelBuilder.Entity("domain.Models.FavoriteModel", b =>
+            modelBuilder.Entity("domain.Models.FavoriteResumeModel", b =>
+                {
+                    b.HasOne("domain.Models.ResumeModel", "Resume")
+                        .WithMany("Favorites")
+                        .HasForeignKey("ResumeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("domain.Models.UserModel", "User")
+                        .WithMany("FavoriteResumes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Resume");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("domain.Models.FavoriteVacancyModel", b =>
                 {
                     b.HasOne("domain.Models.UserModel", "User")
-                        .WithMany("Favorites")
+                        .WithMany("FavoriteVacancies")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -990,6 +1041,8 @@ namespace datahub.Migrations
 
                     b.Navigation("Experiences");
 
+                    b.Navigation("Favorites");
+
                     b.Navigation("Responses");
 
                     b.Navigation("SentMessagesAsCandidate");
@@ -1001,7 +1054,9 @@ namespace datahub.Migrations
 
                     b.Navigation("Company");
 
-                    b.Navigation("Favorites");
+                    b.Navigation("FavoriteResumes");
+
+                    b.Navigation("FavoriteVacancies");
 
                     b.Navigation("Languages");
 

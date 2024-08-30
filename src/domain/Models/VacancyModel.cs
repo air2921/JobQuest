@@ -75,5 +75,5 @@ public class VacancyModel
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("favorites")]
-    public ICollection<FavoriteModel>? Favorites { get; set; }
+    public ICollection<FavoriteVacancyModel>? Favorites { get; set; }
 }

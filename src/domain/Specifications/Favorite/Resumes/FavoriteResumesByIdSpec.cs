@@ -3,14 +3,14 @@ using domain.Abstractions;
 using domain.Models;
 using System.Linq;
 
-namespace domain.Specifications.Favorite;
+namespace domain.Specifications.Favorite.Resumes;
 
-public class FavoriteByIdSpec : IncludeSpec<FavoriteModel>, IEntityById<FavoriteModel>
+public class FavoriteResumesByIdSpec : IncludeSpec<FavoriteResumeModel>, IEntityById<FavoriteResumeModel>
 {
-    public FavoriteByIdSpec(int id)
+    public FavoriteResumesByIdSpec(int id)
     {
         Id = id;
-        Query.Where(x => x.FavoriteId.Equals(Id));
+        Query.Where(x => x.ResumeId.Equals(Id));
 
         if (Expressions is not null && Expressions.Any())
             IncludeEntities(Expressions);

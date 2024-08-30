@@ -128,6 +128,10 @@ public class ResumeModel : Contact
     public ICollection<ResponseModel>? Responses { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    [JsonPropertyName("favorites")]
+    public ICollection<FavoriteResumeModel>? Favorites { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("educations")]
     public ICollection<EducationModel>? Educations { get; set; }
 
