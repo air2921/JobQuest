@@ -5,7 +5,7 @@ using domain.Abstractions;
 using domain.Localize;
 using domain.Models;
 using domain.SpecDTO;
-using domain.Specifications.Experience;
+using domain.Specifications.Education;
 using JsonLocalizer;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,22 +13,22 @@ using System.Threading.Tasks;
 
 namespace application.Workflows.Core;
 
-public class ExperienceWk(
-    IRepository<ExperienceModel> repository,
+public class EducationWk(
+    IRepository<EducationModel> repository,
     IDatabaseTransaction databaseTransaction,
     ILocalizer localizer,
     IMapper mapper) : Responder
 {
-    public async Task<Response> GetRange(SortExperienceDTO dto)
+    public async Task<Response> GetRange(SortEducationDTO dto)
     {
         try
         {
-            var spec = new SortExperienceSpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto };
-            var experiences = await repository.GetRangeAsync(spec);
-            if (experiences is null)
+            var spec = new SortEducationSpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto };
+            var educations = await repository.GetRangeAsync(spec);
+            if (educations is null)
                 return Response(400, localizer.Translate(Messages.NOT_FOUND));
 
-            return Response(200, new { experiences });
+            return Response(200, new { educations });
         }
         catch (EntityException ex)
         {
@@ -40,11 +40,11 @@ public class ExperienceWk(
     {
         try
         {
-            var experience = await repository.GetByIdAsync(id);
-            if (experience is null)
+            var education = await repository.GetByIdAsync(id);
+            if (education is null)
                 return Response(400, localizer.Translate(Messages.NOT_FOUND));
 
-            return Response(200, new { experience });
+            return Response(200, new { education });
         }
         catch (EntityException ex)
         {
@@ -98,11 +98,11 @@ public class ExperienceWk(
         }
     }
 
-    public async Task<Response> AddSingle(ExperienceDTO dto)
+    public async Task<Response> AddSingle(EducationDTO dto)
     {
         try
         {
-            var model = mapper.Map<ExperienceModel>(dto);
+            var model = mapper.Map<EducationModel>(dto);
             model.ResumeId = dto.ResumeId;
             await repository.AddAsync(model);
             return Response(201);
@@ -113,15 +113,15 @@ public class ExperienceWk(
         }
     }
 
-    public async Task<Response> AddRange(IEnumerable<ExperienceDTO> dtos)
+    public async Task<Response> AddRange(IEnumerable<EducationDTO> dtos)
     {
         try
         {
-            var entities = new List<ExperienceModel>();
+            var entities = new List<EducationModel>();
 
             foreach (var dto in dtos)
             {
-                var model = mapper.Map<ExperienceModel>(dto);
+                var model = mapper.Map<EducationModel>(dto);
                 model.ResumeId = dto.ResumeId;
                 entities.Add(model);
             }
@@ -135,11 +135,11 @@ public class ExperienceWk(
         }
     }
 
-    public async Task<Response> Update(ExperienceDTO dto, int experienceId, int userId)
+    public async Task<Response> Update(EducationDTO dto, int experienceId, int userId)
     {
         try
         {
-            var spec = new ExperienceByIdSpec(experienceId) { Expressions = [x => x.Resume, x => x.Resume!.User] };
+            var spec = new EducationByIdSpec(experienceId) { Expressions = [x => x.Resume, x => x.Resume!.User] };
             var entity = await repository.GetByIdWithInclude(spec);
             if (entity is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
