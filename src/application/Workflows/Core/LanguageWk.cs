@@ -27,7 +27,7 @@ public class LanguageWk(
     {
         try
         {
-            var cache = await dataCache.GetRangeAsync<LanguageModel[]>(CachePrefixes.Language + dto.ToString());
+            var cache = await dataCache.GetRangeAsync<LanguageModel>(CachePrefixes.Language + dto.ToString());
             if (cache is not null)
                 return Response(200, new { languages = cache });
 

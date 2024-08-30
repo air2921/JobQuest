@@ -29,7 +29,7 @@ public class ResumeWk(
     {
         try
         {
-            var cache = await dataCache.GetRangeAsync<ResumeModel[]>(CachePrefixes.Resume + dto.ToString());
+            var cache = await dataCache.GetRangeAsync<ResumeModel>(CachePrefixes.Resume + dto.ToString());
             if (cache is not null)
                 return Response(200, new { resumes = cache });
 

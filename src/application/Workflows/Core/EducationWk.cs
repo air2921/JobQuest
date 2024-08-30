@@ -26,7 +26,7 @@ public class EducationWk(
     {
         try
         {
-            var cache = await dataCache.GetRangeAsync<EducationModel[]>(CachePrefixes.Education + dto.ToString());
+            var cache = await dataCache.GetRangeAsync<EducationModel>(CachePrefixes.Education + dto.ToString());
             if (cache is not null)
                 return Response(200, new { educations = cache });
 

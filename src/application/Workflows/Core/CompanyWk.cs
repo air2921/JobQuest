@@ -27,7 +27,7 @@ public class CompanyWk(
     {
         try
         {
-            var cache = await dataCache.GetRangeAsync<CompanyModel[]>(CachePrefixes.Company + dto.ToString());
+            var cache = await dataCache.GetRangeAsync<CompanyModel>(CachePrefixes.Company + dto.ToString());
             if (cache is not null)
                 return Response(200, new { companies = cache });
 

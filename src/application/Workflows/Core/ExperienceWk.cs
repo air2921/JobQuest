@@ -26,7 +26,7 @@ public class ExperienceWk(
     {
         try
         {
-            var cache = await dataCache.GetRangeAsync<ExperienceModel[]>(CachePrefixes.Experience + dto.ToString());
+            var cache = await dataCache.GetRangeAsync<ExperienceModel>(CachePrefixes.Experience + dto.ToString());
             if (cache is not null)
                 return Response(200, new { experiences = cache });
 
