@@ -1,6 +1,9 @@
 ﻿using application.Components;
 using application.Utils;
 using application.Workflows.Auth;
+using application.Workflows.Chat;
+using application.Workflows.Core;
+using application.Workflows.Core.Favorites;
 using AutoMapper;
 using domain.Abstractions;
 using Microsoft.Extensions.Configuration;
@@ -27,5 +30,19 @@ public static class Add
         services.AddScoped<LogoutWk>();
         services.AddScoped<RegisterWk>();
         services.AddScoped<RecoveryWk>();
+
+        services.AddScoped<FavoritesResumeWk>();
+        services.AddScoped<FavoritesVacancyWk>();
+        services.AddScoped<CompanyWk>();
+        services.AddScoped<EducationWk>();
+        services.AddScoped<ExperienceWk>();
+        services.AddScoped<LanguageWk>();
+        services.AddScoped<ResponseWk>();
+        services.AddScoped<ReviewWk>();
+        services.AddScoped<ResumeWK>();
+        services.AddScoped<VacancyWk>();
+
+        services.AddScoped<ChatWk>();
+        services.AddScoped<MessageWk>();
     }
 }

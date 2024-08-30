@@ -28,8 +28,8 @@ public class SortMessageSpec : SortCollectionSpec<MessageModel>
         Initialize();
     }
 
-    public int ChatId { get; set; }
-    public int UserId { get; set; }
+    public int ChatId { get; private set; }
+    public int UserId { get; private set; }
     public bool? OnlyRead { get; set; }
     public string? KeyWord { get; set; }
 }
