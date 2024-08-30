@@ -54,8 +54,12 @@ public class UserModel
     public ICollection<LanguageModel>? Languages { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    [JsonPropertyName("favorites")]
-    public ICollection<FavoriteModel>? Favorites { get; set; }
+    [JsonPropertyName("favorite_resumes")]
+    public ICollection<FavoriteResumeModel>? FavoriteResumes { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    [JsonPropertyName("favorite_vacancies")]
+    public ICollection<FavoriteVacancyModel>? FavoriteVacancies { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("auths")]

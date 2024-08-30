@@ -1,15 +1,18 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace domain.Models;
 
-[Table("Favorites")]
-public class FavoriteModel
+public class FavoriteResumeModel
 {
     [Key]
-    [JsonPropertyName("favorite_id")]
+    [JsonPropertyName("favorite_resume_id")]
     public int FavoriteId { get; set; }
 
     [Column]
@@ -20,15 +23,15 @@ public class FavoriteModel
     [JsonPropertyName("user_id")]
     public int UserId { get; set; }
 
-    [ForeignKey("VacancyId")]
-    [JsonPropertyName("vacancy_id")]
-    public int VacancyId { get; set; }
-
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("user")]
     public UserModel? User { get; set; }
 
+    [ForeignKey("ResumeId")]
+    [JsonPropertyName("resume_id")]
+    public int ResumeId { get; set; }
+
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    [JsonPropertyName("vacancy")]
-    public VacancyModel? Vacancy { get; set; }
+    [JsonPropertyName("resume")]
+    public ResumeModel? Resume { get; set; }
 }

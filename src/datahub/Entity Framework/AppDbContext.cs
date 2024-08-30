@@ -1,6 +1,7 @@
 ﻿using domain.Models;
 using domain.Models.Chat;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
 
 namespace datahub.Entity_Framework;
 
@@ -15,7 +16,8 @@ public class AppDbContext : DbContext
     public DbSet<VacancyModel> Vacancies { get; set; }
     public DbSet<ReviewModel> Reviews { get; set; }
     public DbSet<ResponseModel> Responses { get; set; }
-    public DbSet<FavoriteModel> Favorites { get; set; }
+    public DbSet<FavoriteVacancyModel> FavoriteVacancies { get; set; }
+    public DbSet<FavoriteResumeModel> FavoriteResumes { get; set; }
     public DbSet<AuthModel> Auths { get; set; }
     public DbSet<RecoveryModel> Recoveries { get; set; }
     public DbSet<ChatModel> Chats { get; set; }
@@ -77,16 +79,28 @@ public class AppDbContext : DbContext
             .HasForeignKey(r => r.VacancyId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<FavoriteModel>()
+        modelBuilder.Entity<FavoriteVacancyModel>()
             .HasOne(f => f.User)
-            .WithMany(r => r.Favorites)
+            .WithMany(r => r.FavoriteVacancies)
             .HasForeignKey(f => f.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<FavoriteModel>()
+        modelBuilder.Entity<FavoriteVacancyModel>()
             .HasOne(f => f.Vacancy)
             .WithMany(v => v.Favorites)
             .HasForeignKey(f => f.VacancyId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<FavoriteResumeModel>()
+            .HasOne(f => f.User)
+            .WithMany(r => r.FavoriteResumes)
+            .HasForeignKey(f => f.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<FavoriteResumeModel>()
+            .HasOne(f => f.Resume)
+            .WithMany(v => v.Favorites)
+            .HasForeignKey(f => f.ResumeId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<EducationModel>()
