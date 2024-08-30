@@ -8,6 +8,7 @@ using infrastructure;
 using application;
 using api.Middlewares;
 using api.Hubs;
+using api.Utils;
 
 namespace api;
 
@@ -72,11 +73,10 @@ public class Startup(IWebHostEnvironment environment)
         app.UseHttpsRedirection();
         app.UseRouting();
         app.UseSession();
-        app.UseCors("AllowSpecificOrigin");
+        app.UseCors(ApiSettings.CORS_NAME);
         app.UseBearer();
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseXsrfProtection();
         app.UseExceptionCatcher();
 
         app.UseEndpoints(endpoint =>

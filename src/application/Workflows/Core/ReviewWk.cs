@@ -19,7 +19,7 @@ public class ReviewWk(
     IMapper mapper,
     ILocalizer localizer) : Responder
 {
-    public async Task<Response> GetRange(SortExperienceDTO dto, int companyId, bool? isRec = null, string? title = null)
+    public async Task<Response> GetRange(PaginationDTO dto, int companyId, bool? isRec = null, string? title = null)
     {
         try
         {

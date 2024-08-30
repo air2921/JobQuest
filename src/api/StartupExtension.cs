@@ -8,6 +8,7 @@ using Hangfire;
 using Hangfire.PostgreSql;
 using JsonLocalizer;
 using api.Utils;
+using domain.Enums;
 
 namespace api;
 
@@ -36,7 +37,6 @@ public static class StartupExtension
 
         services.AddJsonLocalizer(env, options =>
         {
-            options.BackStepCount = 0;
             options.LocalizationDirectory = "localization";
             options.SupportedLanguages = ["en", "ru"];
             options.DefaultLanguage = "en";
@@ -44,7 +44,7 @@ public static class StartupExtension
 
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "webapi", Version = "v1" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "api", Version = "v1" });
 
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
@@ -80,9 +80,9 @@ public static class StartupExtension
 
         services.AddCors(options =>
         {
-            options.AddPolicy("AllowSpecificOrigin", builder =>
+            options.AddPolicy(ApiSettings.CORS_NAME, builder =>
             {
-                builder.WithOrigins("https://localhost:5173")
+                builder.WithOrigins(ApiSettings.FRONTEND_DOMAIN)
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();
@@ -101,17 +101,17 @@ public static class StartupExtension
         });
 
         services.AddAuthorizationBuilder()
-            .AddPolicy("AdminPolicy", policy =>
+            .AddPolicy(ApiSettings.ADMIN_POLICY, policy =>
             {
-                policy.RequireRole("Admin");
+                policy.RequireRole(Role.Admin.ToString());
             })
-            .AddPolicy("EmployerPolicy", policy =>
+            .AddPolicy(ApiSettings.EMPLOYER_POLICY, policy =>
             {
-                policy.RequireRole("Employer", "Admin");
+                policy.RequireRole(Role.Employer.ToString(), Role.Admin.ToString());
             })
-            .AddPolicy("CandidatePolicy", policy =>
+            .AddPolicy(ApiSettings.APPLICANT_POLICY, policy =>
             {
-                policy.RequireRole("Candidate", "Admin");
+                policy.RequireRole(Role.Applicant.ToString(), Role.Admin.ToString());
             });
 
         services.AddAuthentication(auth =>
@@ -146,9 +146,6 @@ public static class StartupExtension
                 }
             };
         });
-
-        services.AddAntiforgery(options => { options.HeaderName = Immutable.XSRF_HEADER_NAME; });
-        services.AddMvc();
 
         services.AddScoped<IUserInfo, UserInfo>();
     }

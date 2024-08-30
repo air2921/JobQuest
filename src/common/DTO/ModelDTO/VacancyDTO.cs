@@ -27,7 +27,4 @@ public class VacancyDTO
 
     [Required]
     public string About { get; set; } = null!;
-
-    [Required]
-    public int CompanyId { get; set; }
 }

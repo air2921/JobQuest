@@ -8,7 +8,9 @@ using domain.Models;
 using domain.SpecDTO;
 using domain.Specifications.Response;
 using JsonLocalizer;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,28 +18,55 @@ namespace application.Workflows.Core;
 
 public class ResponseWk(
     IRepository<ResponseModel> repository,
+    IRepository<ResumeModel> resumeRepository,
     IMapper mapper,
     ILocalizer localizer) : Responder
 {
-    public async Task<Response> GetRange(SortResponseDTO dto, int resumeId, int userId)
+    public async Task<Response> GetRangeAsEmployer(SortResponseDTO dto, int vacancyId, int userId)
     {
         try
         {
-            var spec = new SortResponseSpec(dto.Skip, dto.Total, dto.ByDesc, resumeId)
-            { 
+            var spec = new SortResponseSpec(dto.Skip, dto.Total, dto.ByDesc, true)
+            {
                 DTO = dto,
-                Expressions = [x => x.Resume, x => x.Vacancy, x => x.Vacancy.Company]
+                VacancyId = vacancyId,
+                Expressions = [x => x.Vacancy]
             };
 
             var responses = await repository.GetRangeAsync(spec);
             bool antiCondition = responses is null ||
-                responses.Any(x => x.Vacancy.Company.UserId != userId && x.Resume.UserId != userId);
+                responses.Any(x => x.Vacancy.Company.UserId != userId);
             if (antiCondition)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
             return Response(200, new { responses });
         }
-        catch (EntityException ex)
+        catch (Exception ex) when (ex is EntityException || ex is ValidationException)
+        {
+            return Response(500, ex.Message);
+        }
+    }
+
+    public async Task<Response> GetRangeAsApplicant(SortResponseDTO dto, int resumeId, int userId)
+    {
+        try
+        {
+            var spec = new SortResponseSpec(dto.Skip, dto.Total, dto.ByDesc, false)
+            {
+                DTO = dto,
+                ResumeId = resumeId,
+                Expressions = [x => x.Resume]
+            };
+
+            var responses = await repository.GetRangeAsync(spec);
+            bool antiCondition = responses is null ||
+                responses.Any(x => x.Resume.UserId != userId);
+            if (antiCondition)
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
+
+            return Response(200, new { responses });
+        }
+        catch (Exception ex) when (ex is EntityException || ex is ValidationException)
         {
             return Response(500, ex.Message);
         }
@@ -82,33 +111,19 @@ public class ResponseWk(
         }
     }
 
-    public async Task<Response> AddRange(IEnumerable<ResponseDTO> dtos)
+    public async Task<Response> AddSingle(int resumeId, int vacancyId, int userId)
     {
         try
         {
-            var entities = new List<ResponseModel>();
+            var resume = await resumeRepository.GetByIdAsync(resumeId);
+            if (resume is null || resume.UserId != userId)
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
-            foreach (var dto in dtos)
+            var model = new ResponseModel
             {
-                var model = mapper.Map<ResponseModel>(dto);
-                model.ResumeId = dto.ResumeId;
-                entities.Add(model);
-            }
-
-            await repository.AddRangeAsync(entities);
-            return Response(201);
-        }
-        catch (EntityException ex)
-        {
-            return Response(500, ex.Message);
-        }
-    }
-
-    public async Task<Response> AddSingle(ResponseDTO dto)
-    {
-        try
-        {
-            var model = mapper.Map<ResponseModel>(dto);
+                ResumeId = resumeId,
+                VacancyId = vacancyId
+            };
             await repository.AddAsync(model);
             return Response(201);
         }

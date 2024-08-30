@@ -8,7 +8,6 @@ using domain.SpecDTO;
 using domain.Specifications.Language;
 using JsonLocalizer;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,12 +36,12 @@ public class LanguageWk(
         }
     }
 
-    public async Task<Response> GetSingle(int id)
+    public async Task<Response> GetSingle(int id, int userId)
     {
         try
         {
             var language = await repository.GetByIdAsync(id);
-            if (language is null)
+            if (language is null || language.UserId != userId)
                 return Response(400, localizer.Translate(Messages.NOT_FOUND));
 
             return Response(200, new { language });

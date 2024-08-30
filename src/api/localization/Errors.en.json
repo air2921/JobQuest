@@ -1,5 +1,9 @@
 [
   {
+    "key": "invalid_collation_options",
+    "value": "Invalid collation options"
+  },
+  {
     "key": "too_many_attempts",
     "value": "Too much unsuccessful attempts. Try again later"
   },

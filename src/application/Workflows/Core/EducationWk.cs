@@ -14,7 +14,8 @@ using System.Threading.Tasks;
 namespace application.Workflows.Core;
 
 public class EducationWk(
-    IRepository<EducationModel> repository,
+    IRepository<EducationModel> educationRepository,
+    IRepository<ResumeModel> resumeRepository,
     ILocalizer localizer,
     IMapper mapper) : Responder
 {
@@ -23,7 +24,7 @@ public class EducationWk(
         try
         {
             var spec = new SortEducationSpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto };
-            var educations = await repository.GetRangeAsync(spec);
+            var educations = await educationRepository.GetRangeAsync(spec);
             if (educations is null)
                 return Response(400, localizer.Translate(Messages.NOT_FOUND));
 
@@ -39,9 +40,9 @@ public class EducationWk(
     {
         try
         {
-            var education = await repository.GetByIdAsync(id);
+            var education = await educationRepository.GetByIdAsync(id);
             if (education is null)
-                return Response(400, localizer.Translate(Messages.NOT_FOUND));
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
             return Response(200, new { education });
         }
@@ -56,11 +57,11 @@ public class EducationWk(
         try
         {
             var spec = new EducationByIdSpec(id) { Expressions = [x => x.Resume] };
-            var education = await repository.GetByIdWithInclude(spec);
+            var education = await educationRepository.GetByIdWithInclude(spec);
             if (education is null || education.Resume.UserId != userId)
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
 
-            await repository.DeleteAsync(education.EducationId);
+            await educationRepository.DeleteAsync(education.EducationId);
             return Response(204);
         }
         catch (EntityException ex)
@@ -69,13 +70,17 @@ public class EducationWk(
         }
     }
 
-    public async Task<Response> AddSingle(EducationDTO dto)
+    public async Task<Response> AddSingle(EducationDTO dto, int resumeId, int userId)
     {
         try
         {
+            var resume = await resumeRepository.GetByIdAsync(resumeId);
+            if (resume is null || resume.UserId != userId)
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
+
             var model = mapper.Map<EducationModel>(dto);
-            model.ResumeId = dto.ResumeId;
-            await repository.AddAsync(model);
+            model.ResumeId = resumeId;
+            await educationRepository.AddAsync(model);
             return Response(201);
         }
         catch (EntityException ex)
@@ -84,20 +89,24 @@ public class EducationWk(
         }
     }
 
-    public async Task<Response> AddRange(IEnumerable<EducationDTO> dtos)
+    public async Task<Response> AddRange(IEnumerable<EducationDTO> dtos, int resumeId, int userId)
     {
         try
         {
+            var resume = await resumeRepository.GetByIdAsync(resumeId);
+            if (resume is null || resume.UserId != userId)
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
+
             var entities = new List<EducationModel>();
 
             foreach (var dto in dtos)
             {
                 var model = mapper.Map<EducationModel>(dto);
-                model.ResumeId = dto.ResumeId;
+                model.ResumeId = resumeId;
                 entities.Add(model);
             }
 
-            await repository.AddRangeAsync(entities);
+            await educationRepository.AddRangeAsync(entities);
             return Response(201);
         }
         catch (EntityException ex)
@@ -110,8 +119,8 @@ public class EducationWk(
     {
         try
         {
-            var spec = new EducationByIdSpec(experienceId) { Expressions = [x => x.Resume, x => x.Resume.User] };
-            var entity = await repository.GetByIdWithInclude(spec);
+            var spec = new EducationByIdSpec(experienceId) { Expressions = [x => x.Resume] };
+            var entity = await educationRepository.GetByIdWithInclude(spec);
             if (entity is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
@@ -119,7 +128,7 @@ public class EducationWk(
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
 
             entity = mapper.Map(dto, entity);
-            await repository.UpdateAsync(entity);
+            await educationRepository.UpdateAsync(entity);
             return Response(200, new { entity });
         }
         catch (EntityException ex)

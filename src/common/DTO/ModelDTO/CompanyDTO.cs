@@ -14,9 +14,6 @@ public class CompanyDTO
     [Required]
     public DateTime RegisterDate { get; set; }
 
-    [JsonIgnore]
-    public int UserId { get; set; }
-
     public string? PhoneNumber { get; set; }
 
     public string? Email { get; set; }
