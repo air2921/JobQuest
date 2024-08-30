@@ -1,12 +1,15 @@
-﻿using AutoMapper;
+﻿using application.Utils;
+using AutoMapper;
 using common.DTO.ModelDTO;
 using common.Exceptions;
+using datahub.Redis;
 using domain.Abstractions;
 using domain.Localize;
 using domain.Models;
 using domain.SpecDTO;
 using domain.Specifications.Language;
 using JsonLocalizer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +18,7 @@ namespace application.Workflows.Core;
 
 public class LanguageWk(
     IRepository<LanguageModel> repository,
+    IDataCache<ConnectionPrimary> dataCache,
     IDatabaseTransaction databaseTransaction,
     IMapper mapper,
     ILocalizer localizer) : Responder
@@ -23,11 +27,16 @@ public class LanguageWk(
     {
         try
         {
+            var cache = await dataCache.GetRangeAsync<LanguageModel[]>(CachePrefixes.Language + dto.ToString());
+            if (cache is not null)
+                return Response(200, new { languages = cache });
+
             var spec = new SortLanguageSpec(dto.Skip, dto.Total, dto.ByDesc, userId) { DTO = dto };
             var languages = await repository.GetRangeAsync(spec);
             if (languages is null)
                 return Response(400, localizer.Translate(Messages.NOT_FOUND));
 
+            await dataCache.SetAsync(CachePrefixes.Language + dto.ToString(), languages, TimeSpan.FromMinutes(10));
             return Response(200, new { languages });
         }
         catch (EntityException ex)
@@ -40,10 +49,15 @@ public class LanguageWk(
     {
         try
         {
+            var cache = await dataCache.GetSingleAsync<LanguageModel>(CachePrefixes.Language + id);
+            if (cache is not null)
+                return Response(200, new { language = cache });
+
             var language = await repository.GetByIdAsync(id);
             if (language is null || language.UserId != userId)
                 return Response(400, localizer.Translate(Messages.NOT_FOUND));
 
+            await dataCache.SetAsync(CachePrefixes.Language + id, language, TimeSpan.FromMinutes(10));
             return Response(200, new { language });
         }
         catch (EntityException ex)

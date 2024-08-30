@@ -38,13 +38,9 @@ public class SortCompanySpec : SortCollectionSpec<CompanyModel>
             Query.Where(x => x.Vacancies != null && x.Vacancies.Count > 0);
 
             if (DTO.HasOpenedVacancies.Value)
-#pragma warning disable CS8604 // Possible null reference argument.
                 Query.Where(x => x.Vacancies.Any(v => v.IsOpened));
-#pragma warning restore CS8604 // Possible null reference argument.
             else
-#pragma warning disable CS8604 // Possible null reference argument.
                 Query.Where(x => x.Vacancies.All(v => !v.IsOpened));
-#pragma warning restore CS8604 // Possible null reference argument.
         }
 
         Initialize();

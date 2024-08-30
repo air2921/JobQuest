@@ -1,6 +1,8 @@
-﻿using AutoMapper;
+﻿using application.Utils;
+using AutoMapper;
 using common.DTO.ModelDTO;
 using common.Exceptions;
+using datahub.Redis;
 using domain.Abstractions;
 using domain.Localize;
 using domain.Models;
@@ -17,6 +19,7 @@ namespace application.Workflows.Core;
 
 public class ResumeWk(
     IRepository<ResumeModel> repository,
+    IDataCache<ConnectionPrimary> dataCache,
     IS3Service s3,
     IDatabaseTransaction databaseTransaction,
     ILocalizer localizer,
@@ -26,15 +29,20 @@ public class ResumeWk(
     {
         try
         {
+            var cache = await dataCache.GetRangeAsync<ResumeModel[]>(CachePrefixes.Resume + dto.ToString());
+            if (cache is not null)
+                return Response(200, new { resumes = cache });
+
             var spec = new SortResumeSpec(dto.Skip, dto.Total, dto.ByDesc)
             { 
                 DTO = dto,
-                Expressions = [x => x.Experiences, x => x.Educations, x => x.User, x => x.User!.Languages]  
+                Expressions = [x => x.Experiences, x => x.Educations, x => x.User, x => x.User.Languages]  
             }; 
-            var resumes = await repository.GetRangeAsync();
+            var resumes = await repository.GetRangeAsync(spec);
             if (resumes is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
+            await dataCache.SetAsync(CachePrefixes.Resume + dto.ToString(), resumes, TimeSpan.FromMinutes(10));
             return Response(200, new { resumes });
         }
         catch (EntityException ex)
