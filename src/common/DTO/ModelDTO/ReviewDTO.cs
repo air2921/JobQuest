@@ -40,7 +40,4 @@ public class ReviewDTO
 
     [Required]
     public string? Description { get; set; }
-
-    [JsonIgnore]
-    public int UserId { get; set; }
 }

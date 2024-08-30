@@ -81,6 +81,7 @@ public class ResumeWK(
             if (entity.ImageKey is not null)
                 await s3.Delete(entity.ImageKey);
 
+            transaction.Commit();
             return Response(204);
         }
         catch (Exception ex) when (ex is EntityException || ex is S3Exception)
@@ -129,6 +130,7 @@ public class ResumeWK(
             }
 
             await repository.AddAsync(model);
+            transaction.Commit();
             return Response(201);
         }
         catch (Exception ex) when (ex is EntityException || ex is S3Exception)
@@ -184,6 +186,7 @@ public class ResumeWK(
 
             entity = mapper.Map(dto, entity);
             await repository.UpdateAsync(entity);
+            transaction.Commit();
             return Response(200, new { entity });
         }
         catch (Exception ex) when (ex is EntityException || ex is S3Exception)

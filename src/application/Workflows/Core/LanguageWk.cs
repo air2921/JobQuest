@@ -5,30 +5,31 @@ using domain.Abstractions;
 using domain.Localize;
 using domain.Models;
 using domain.SpecDTO;
-using domain.Specifications.Vacancy;
+using domain.Specifications.Language;
 using JsonLocalizer;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace application.Workflows.Core;
 
-public class VacancyWk(
-    IRepository<VacancyModel> repository,
+public class LanguageWk(
+    IRepository<LanguageModel> repository,
     IDatabaseTransaction databaseTransaction,
-    ILocalizer localizer,
-    IMapper mapper) : Responder
+    IMapper mapper,
+    ILocalizer localizer) : Responder
 {
-    public async Task<Response> GetRange(SortVacancyDTO dto)
+    public async Task<Response> GetRange(SortLanguageDTO dto, int userId)
     {
         try
         {
-            var spec = new SortVacancySpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto, Expressions = [x => x.Company] };
-            var vacancies = await repository.GetRangeAsync(spec);
-            if (vacancies is null)
-                return Response(404, localizer.Translate(Messages.NOT_FOUND));
+            var spec = new SortLanguageSpec(dto.Skip, dto.Total, dto.ByDesc, userId) { DTO = dto };
+            var languages = await repository.GetRangeAsync(spec);
+            if (languages is null)
+                return Response(400, localizer.Translate(Messages.NOT_FOUND));
 
-            return Response(200, new { vacancies });
+            return Response(200, new { languages });
         }
         catch (EntityException ex)
         {
@@ -40,12 +41,11 @@ public class VacancyWk(
     {
         try
         {
-            var spec = new VacancyByIdSpec(id) { Expressions = [x => x.Company] };
-            var vacancy = await repository.GetByIdWithInclude(spec);
-            if (vacancy is null)
-                return Response(404, localizer.Translate(Messages.NOT_FOUND));
+            var language = await repository.GetByIdAsync(id);
+            if (language is null)
+                return Response(400, localizer.Translate(Messages.NOT_FOUND));
 
-            return Response(200, new { vacancy });
+            return Response(200, new { language });
         }
         catch (EntityException ex)
         {
@@ -53,17 +53,17 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Response> RemoveSingle(int id, int companyId)
+    public async Task<Response> RemoveSingle(int id, int userId)
     {
         using var transaction = databaseTransaction.Begin();
 
         try
         {
             var entity = await repository.DeleteAsync(id);
-            if (entity is null || entity.CompanyId != companyId)
+            if (entity is null || entity.UserId != userId)
             {
                 transaction.Rollback();
-                return Response(403, localizer.Translate(Messages.FORBIDDEN));
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
             }
 
             transaction.Commit();
@@ -76,14 +76,14 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Response> RemoveRange(IEnumerable<int> identifiers, int companyId)
+    public async Task<Response> RemoveRange(IEnumerable<int> identifiers, int userId)
     {
         using var transaction = databaseTransaction.Begin();
 
         try
         {
             var entities = await repository.DeleteRangeAsync(identifiers);
-            if(entities.Any(e => e is null || e.CompanyId != companyId))
+            if (entities.Any(e => e is null || e.UserId != userId))
             {
                 transaction.Rollback();
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
@@ -99,12 +99,12 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Response> AddSingle(VacancyDTO dto)
+    public async Task<Response> AddSingle(LanguageDTO dto, int userId)
     {
         try
         {
-            var model = mapper.Map<VacancyModel>(dto);
-            model.CompanyId = dto.CompanyId;
+            var model = mapper.Map<LanguageModel>(dto);
+            model.UserId = userId;
             await repository.AddAsync(model);
             return Response(201);
         }
@@ -114,16 +114,16 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Response> AddRange(IEnumerable<VacancyDTO> dtos)
+    public async Task<Response> AddRange(IEnumerable<LanguageDTO> dtos, int userId)
     {
         try
         {
-            var entities = new List<VacancyModel>();
+            var entities = new List<LanguageModel>();
 
             foreach (var dto in dtos)
             {
-                var model = mapper.Map<VacancyModel>(dto);
-                model.CompanyId = dto.CompanyId;
+                var model = mapper.Map<LanguageModel>(dto);
+                model.UserId = userId;
                 entities.Add(model);
             }
 
@@ -136,13 +136,16 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Response> Update(VacancyDTO dto, int vacancyId, int companyId)
+    public async Task<Response> Update(LanguageDTO dto, int languageId, int userId)
     {
         try
         {
-            var entity = await repository.GetByIdAsync(vacancyId);
-            if (entity is null || entity.CompanyId != companyId)
+            var entity = await repository.GetByIdAsync(languageId);
+            if (entity is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
+
+            if (entity.UserId != userId)
+                return Response(403, localizer.Translate(Messages.FORBIDDEN));
 
             entity = mapper.Map(dto, entity);
             await repository.UpdateAsync(entity);

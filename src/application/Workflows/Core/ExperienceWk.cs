@@ -15,7 +15,6 @@ namespace application.Workflows.Core;
 
 public class ExperienceWk(
     IRepository<ExperienceModel> repository,
-    IDatabaseTransaction databaseTransaction,
     ILocalizer localizer,
     IMapper mapper) : Responder
 {
@@ -54,46 +53,19 @@ public class ExperienceWk(
 
     public async Task<Response> RemoveSingle(int id, int userId)
     {
-        using var transaction = databaseTransaction.Begin();
 
         try
         {
-            var experience = await repository.DeleteAsync(id);
-            if (experience is null || experience.Resume.User is null)
-            {
-                transaction.Rollback();
+            var spec = new ExperienceByIdSpec(id) { Expressions = [x => x.Resume] };
+            var experience = await repository.GetByIdWithInclude(spec);
+            if (experience is null || experience.Resume.UserId != userId)
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
-            }
 
-            transaction.Commit();
+            await repository.DeleteAsync(experience.ExperienceId);
             return Response(204);
         }
         catch (EntityException ex)
         {
-            transaction.Rollback();
-            return Response(500, ex.Message);
-        }
-    }
-
-    public async Task<Response> RemoveRange(IEnumerable<int> identifiers, int userId)
-    {
-        using var transaction = databaseTransaction.Begin();
-
-        try
-        {
-            var entities = await repository.DeleteRangeAsync(identifiers);
-            if (entities.Any(e => e is null || e.Resume.User.UserId != userId))
-            {
-                transaction.Rollback();
-                return Response(403, localizer.Translate(Messages.FORBIDDEN));
-            }
-
-            transaction.Commit();
-            return Response(204);
-        }
-        catch (EntityException ex)
-        {
-            transaction.Rollback();
             return Response(500, ex.Message);
         }
     }
@@ -139,13 +111,10 @@ public class ExperienceWk(
     {
         try
         {
-            var spec = new ExperienceByIdSpec(experienceId) { Expressions = [x => x.Resume, x => x.Resume.User] };
+            var spec = new ExperienceByIdSpec(experienceId) { Expressions = [x => x.Resume] };
             var entity = await repository.GetByIdWithInclude(spec);
-            if (entity is null)
+            if (entity is null || entity.Resume.UserId != userId)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
-
-            if (entity.Resume.User.UserId != userId)
-                return Response(403, localizer.Translate(Messages.FORBIDDEN));
 
             entity = mapper.Map(dto, entity);
             await repository.UpdateAsync(entity);

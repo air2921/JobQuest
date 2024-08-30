@@ -20,17 +20,17 @@ public class UserModel
 
     [Column]
     [Email(nullValidate: true)]
-    [JsonPropertyName("email")]
+    [JsonIgnore]
     public string Email { get; set; } = null!;
 
     [Column]
     [Hash]
-    [JsonPropertyName("password_hash")]
+    [JsonIgnore]
     public string PasswordHash { get; set; } = null!;
 
     [Column]
     [Role]
-    [JsonPropertyName("role")]
+    [JsonIgnore]
     public string Role { get; set; } = null!;
 
     [Column]
@@ -38,12 +38,12 @@ public class UserModel
     public bool IsBlocked { get; set; } = false;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    [JsonPropertyName("reviews")]
-    public ICollection<ReviewModel>? Reviews { get; set; }
-
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("company")]
     public CompanyModel? Company { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    [JsonPropertyName("reviews")]
+    public ICollection<ReviewModel> Reviews { get; set; } = [];
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("resumes")]

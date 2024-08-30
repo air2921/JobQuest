@@ -124,7 +124,7 @@ public class ResponseWk(
         {
             var spec = new ResponseByIdSpec(responseId) { Expressions = [x => x.Resume, x => x.Vacancy, x => x.Vacancy.Company] };
             var response = await repository.GetByIdWithInclude(spec);
-            if (response is null || response.Vacancy.Company.UserId != companyId)
+            if (response is null || response.Vacancy.Company.CompanyId != companyId)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
             response = mapper.Map(dto, response!);
