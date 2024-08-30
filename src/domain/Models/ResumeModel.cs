@@ -76,21 +76,6 @@ public class ResumeModel : Contact
     public string? ImageKey { get; set; }
 
     [Column]
-    [Name(nullValidate: true)]
-    [JsonPropertyName("first_name")]
-    public string FirstName { get; set; } = null!;
-
-    [Column]
-    [Name(nullValidate: false)]
-    [JsonPropertyName("patronymic")]
-    public string? Patronymic { get; set; }
-
-    [Column]
-    [Name(nullValidate: true)]
-    [JsonPropertyName("last_name")]
-    public string LastName { get; set; } = null!;
-
-    [Column]
     [JsonPropertyName("is_male")]
     public bool IsMale { get; set; }
 

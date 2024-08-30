@@ -21,6 +21,14 @@ public class ChatModel
     [JsonPropertyName("candidate_id")]
     public int CandidateId { get; set; }
 
+    [Column]
+    [JsonPropertyName("candidate_name")]
+    public string CandidateName { get; set; } = null!;
+
+    [Column]
+    [JsonPropertyName("employer_name")]
+    public string EmployerName { get; set; } = null!;
+
     [ForeignKey("EmployerId")]
     [JsonPropertyName("employer_id")]
     public int EmployerId { get; set; }

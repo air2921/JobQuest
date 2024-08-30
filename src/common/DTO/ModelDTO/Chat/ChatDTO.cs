@@ -9,4 +9,7 @@ public class ChatDTO
 
     [Required]
     public int EmployerId { get; set; }
+
+    [Required]
+    public string EmployerName { get; set; } = null!;
 }

@@ -37,10 +37,16 @@ public static class Add
             return new ConnectionSecondary();
         });
 
+        services.AddSingleton(provider =>
+        {
+            return new RedisChatConnection();
+        });
+
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IDatabaseTransaction, DatabaseTransaction>();
         services.AddSingleton<IDataCache<ConnectionPrimary>, DataCache<ConnectionPrimary>>();
         services.AddSingleton<IDataCache<ConnectionSecondary>, DataCache<ConnectionSecondary>>();
+        services.AddSingleton<IDataCache<RedisChatConnection>, DataCache<RedisChatConnection>>();
 
         services.AddHostedService<RedisCleanupService>();
     }

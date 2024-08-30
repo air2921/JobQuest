@@ -41,14 +41,6 @@ public class ResumeDTO
     public string? ImageKey { get; set; }
 
     [Required]
-    public string FirstName { get; set; } = null!;
-
-    public string? Patronymic { get; set; }
-
-    [Required]
-    public string LastName { get; set; } = null!;
-
-    [Required]
     public bool IsMale { get; set; }
 
     [Required]

@@ -15,6 +15,21 @@ public class UserModel
     public int UserId { get; set; }
 
     [Column]
+    [Name(nullValidate: true)]
+    [JsonPropertyName("first_name")]
+    public string FirstName { get; set; } = null!;
+
+    [Column]
+    [Name(nullValidate: false)]
+    [JsonPropertyName("patronymic")]
+    public string? Patronymic { get; set; }
+
+    [Column]
+    [Name(nullValidate: true)]
+    [JsonPropertyName("last_name")]
+    public string LastName { get; set; } = null!;
+
+    [Column]
     [JsonPropertyName("created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

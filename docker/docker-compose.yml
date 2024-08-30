@@ -56,6 +56,15 @@ services:
       - "webapi" 
     restart: always
 
+  redis-chat:
+    container_name: redis-secondary
+    image: redis:latest
+    ports:
+      - "6381:6379"
+    networks:
+      - "webapi" 
+    restart: always
+
   elasticsearch:
     container_name: elasticsearch
     image: elasticsearch:8.12.2

@@ -43,7 +43,8 @@ public class RegisterWk(
             await dataCache.SetAsync(
                 uniqueToken,
                 new UserObject(dto.Email, hashUtility.Hash(dto.Password),
-                dto.AsEmployer ? Role.Employer.ToString() : Role.Applicant.ToString(), code),
+                dto.AsEmployer ? Role.Employer.ToString() : Role.Applicant.ToString(), code,
+                dto.FirstName, dto.LastName, dto.Patronymic),
                 TimeSpan.FromMinutes(10));
 
             return Response(200, localizer.Translate(Messages.MAIL_SENT), new { uniqueToken });
@@ -76,6 +77,9 @@ public class RegisterWk(
                 Email = userObj.Email,
                 PasswordHash = userObj.Password,
                 Role = userObj.Role,
+                FirstName = userObj.FirstName,
+                LastName = userObj.LastName,
+                Patronymic = userObj.Patronymic,
             });
 
             return Response(201);
@@ -86,5 +90,5 @@ public class RegisterWk(
         }
     }
 
-    private record UserObject(string Email, string Password, string Role, int Code);
+    private record UserObject(string Email, string Password, string Role, int Code, string FirstName, string LastName, string? Patronymic);
 }

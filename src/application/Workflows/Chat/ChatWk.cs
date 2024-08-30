@@ -3,6 +3,7 @@ using common.DTO.ModelDTO.Chat;
 using common.Exceptions;
 using domain.Abstractions;
 using domain.Localize;
+using domain.Models;
 using domain.Models.Chat;
 using domain.SpecDTO;
 using domain.Specifications.Chat;
@@ -15,6 +16,8 @@ namespace application.Workflows.Chat;
 
 public class ChatWk(
     IRepository<ChatModel> repository,
+    IRepository<ResumeModel> resumeRepository,
+    IRepository<UserModel> userRepository,
     IDatabaseTransaction databaseTransaction,
     IMapper mapper,
     ILocalizer localizer) : Responder
@@ -65,7 +68,7 @@ public class ChatWk(
             }
 
             transaction.Commit();
-            return Response(204);
+            return Response(204, chat);
         }
         catch (EntityException ex)
         {
@@ -101,30 +104,14 @@ public class ChatWk(
     {
         try
         {
+            var candidate = await userRepository.GetByIdAsync(dto.CandidateId);
+            if (candidate is null)
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
+
             var model = mapper.Map<ChatModel>(dto);
+            model.CandidateName = candidate.FirstName;
             await repository.AddAsync(model);
-            return Response(201);
-        }
-        catch (EntityException ex)
-        {
-            return Response(500, ex.Message);
-        }
-    }
-
-    public async Task<Response> AddRange(IEnumerable<ChatDTO> dtos)
-    {
-        try
-        {
-            var entities = new List<ChatModel>();
-
-            foreach (var dto in dtos)
-            {
-                var model = mapper.Map<ChatModel>(dto);
-                entities.Add(model);
-            }
-
-            await repository.AddRangeAsync(entities);
-            return Response(201);
+            return Response(201, model);
         }
         catch (EntityException ex)
         {

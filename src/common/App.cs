@@ -8,6 +8,7 @@ public static class App
     public const string REDIS_NAME = "Name";
     public const string REDIS_PRIMARY = "Primary";
     public const string REDIS_SECONDARY = "Secondary";
+    public const string REDIS_CHAT = "Chat";
     public const string ELASTIC_SEARCH = "Elasticsearch";
     public const string EMAIL = "Email";
     public const string EMAIL_PASSWORD = "EmailPassword";

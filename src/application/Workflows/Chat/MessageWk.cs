@@ -16,6 +16,7 @@ namespace application.Workflows.Chat;
 
 public class MessageWk(
     IRepository<MessageModel> repository,
+    IRepository<ChatModel> chatRepository,
     IDatabaseTransaction databaseTransaction,
     IMapper mapper,
     ILocalizer localizer) : Responder
@@ -46,7 +47,8 @@ public class MessageWk(
     {
         try
         {
-            var message = await repository.GetByIdAsync(id);
+            var spec = new MessageByIdSpec(id) { Expressions = [x => x.Chat] };
+            var message = await repository.GetByIdWithInclude(spec);
             if (message is null || message.EmployerId != userId || message.CandidateId != userId)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
@@ -110,28 +112,10 @@ public class MessageWk(
         {
             var model = mapper.Map<MessageModel>(dto);
             await repository.AddAsync(model);
-            return Response(201);
-        }
-        catch (EntityException ex)
-        {
-            return Response(500, ex.Message);
-        }
-    }
-
-    public async Task<Response> AddRange(IEnumerable<MessageDTO> dtos)
-    {
-        try
-        {
-            var entities = new List<MessageModel>();
-
-            foreach (var dto in dtos)
-            {
-                var model = mapper.Map<MessageModel>(dto);
-                entities.Add(model);
-            }
-
-            await repository.AddRangeAsync(entities);
-            return Response(201);
+            var chat = await chatRepository.GetByIdAsync(model.ChatId);
+            if (chat is not null)
+                model.Chat = chat;
+            return Response(201, new { model });
         }
         catch (EntityException ex)
         {

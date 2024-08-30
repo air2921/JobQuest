@@ -11,8 +11,8 @@ public class MessageDTO
     public int ChatId { get; set; }
 
     [Required]
-    public int EmployerId { get; set; }
+    public int CandidateId { get; set; }
 
     [Required]
-    public int CandidateId { get; set; }
+    public int EmployerId { get; set; }
 }

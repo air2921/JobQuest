@@ -21,6 +21,11 @@ public class ConnectionSecondary : IConnection
     public string ConnectionName { get; init; } = App.REDIS_SECONDARY;
 }
 
+public class RedisChatConnection : IConnection
+{
+    public string ConnectionName { get; init; } = App.REDIS_CHAT;
+}
+
 public class DataCache<T> : IDataCache<T> where T : IConnection
 {
     private static readonly JsonSerializerSettings _jsonSerializerSettings = new() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore };
