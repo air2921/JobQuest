@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace application.Workflows.Core;
 
-public class ResumeWK(
+public class ResumeWk(
     IRepository<ResumeModel> repository,
     IS3Service s3,
     IDatabaseTransaction databaseTransaction,
@@ -114,14 +114,14 @@ public class ResumeWK(
         }
     }
 
-    public async Task<Response> AddSingle(ResumeDTO dto, Stream? file = null, string? fileName = null)
+    public async Task<Response> AddSingle(ResumeDTO dto, int userId, Stream? file = null, string? fileName = null)
     {
         using var transaction = databaseTransaction.Begin();
 
         try
         {
             var model = mapper.Map<ResumeModel>(dto);
-            model.UserId = dto.UserId;
+            model.UserId = userId;
 
             if (file is not null && fileName is not null)
             {
@@ -140,7 +140,7 @@ public class ResumeWK(
         }
     }
 
-    public async Task<Response> AddRange(IEnumerable<ResumeDTO> dtos)
+    public async Task<Response> AddRange(IEnumerable<ResumeDTO> dtos, int userId)
     {
         try
         {
@@ -149,7 +149,7 @@ public class ResumeWK(
             foreach (var dto in dtos)
             {
                 var model = mapper.Map<ResumeModel>(dto);
-                model.UserId = dto.UserId;
+                model.UserId = userId;
                 entities.Add(model);
             }
 
@@ -180,7 +180,7 @@ public class ResumeWK(
                 if (entity.ImageKey is not null)
                     await s3.Delete(entity.ImageKey);
 
-                entity.ImageKey = fileName;
+                entity.ImageKey = Guid.NewGuid().ToString() + fileName;
                 await s3.Upload(file, fileName);
             }
 

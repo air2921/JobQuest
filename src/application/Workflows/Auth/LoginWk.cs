@@ -26,32 +26,30 @@ public class LoginWk(
     TokenPublisher tokenPublisher,
     ILocalizer localizer) : Responder
 {
-    public async Task<Response> Initiate(string email, string password)
+    public async Task<Response> Initiate(LoginDTO dto)
     {
-        email = email.ToLowerInvariant();
-
         try
         {
-            if (!await attemptValidator.IsValidTry(email))
+            if (!await attemptValidator.IsValidTry(dto.Email))
                 return Response(403, localizer.Translate(Messages.TOO_MANY_ATTEMPTS));
 
-            var user = await userRepository.GetByFilterAsync(new UserByEmailSpec(email));
+            var user = await userRepository.GetByFilterAsync(new UserByEmailSpec(dto.Email));
             if (user is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
             if (user.IsBlocked)
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
 
-            if (!hashUtility.Verify(password, user.PasswordHash))
+            if (!hashUtility.Verify(dto.Password, user.PasswordHash))
             {
-                await attemptValidator.AddAttempt(email);
+                await attemptValidator.AddAttempt(dto.Email);
                 return Response(401, localizer.Translate(Messages.INCORRECT_LOGIN));
             }
 
             var code = generate.GenerateCode(8);
             await sender.SendMessage(new EmailDTO
             {
-                Email = email,
+                Email = dto.Email,
                 Username = localizer.Translate(Names.USER),
                 Subject = localizer.Translate(Mail.LOGIN_CONFIRM_HEAD),
                 Body = localizer.Translate(Mail.LOGIN_CONFIRM_BODY) + code

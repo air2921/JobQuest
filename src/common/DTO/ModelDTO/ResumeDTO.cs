@@ -54,9 +54,6 @@ public class ResumeDTO
     [Required]
     public DateTime DateOfBirthday { get; set; }
 
-    [JsonIgnore]
-    public int UserId { get; set; }
-
     public string? PhoneNumber { get; set; }
 
     public string? Email { get; set; }

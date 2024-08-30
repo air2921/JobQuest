@@ -79,12 +79,12 @@ public class CompanyWk(
         }
     }
 
-    public async Task<Response> AddSingle(CompanyDTO dto)
+    public async Task<Response> AddSingle(CompanyDTO dto, int userId)
     {
         try
         {
             var model = mapper.Map<CompanyModel>(dto);
-            model.UserId = dto.UserId;
+            model.UserId = userId;
             await repository.AddAsync(model);
             return Response(201);
         }
@@ -94,7 +94,7 @@ public class CompanyWk(
         }
     }
 
-    public async Task<Response> Update(CompanyDTO dto, int companyId)
+    public async Task<Response> Update(CompanyDTO dto, int companyId, int userId)
     {
         try
         {
@@ -102,7 +102,7 @@ public class CompanyWk(
             if (entity is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
-            if (entity.UserId != dto.UserId)
+            if (entity.UserId != userId)
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
 
             entity = mapper.Map(dto, entity);

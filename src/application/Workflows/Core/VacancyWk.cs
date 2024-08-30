@@ -99,12 +99,12 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Response> AddSingle(VacancyDTO dto)
+    public async Task<Response> AddSingle(VacancyDTO dto, int companyId)
     {
         try
         {
             var model = mapper.Map<VacancyModel>(dto);
-            model.CompanyId = dto.CompanyId;
+            model.CompanyId = companyId;
             await repository.AddAsync(model);
             return Response(201);
         }
@@ -114,7 +114,7 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Response> AddRange(IEnumerable<VacancyDTO> dtos)
+    public async Task<Response> AddRange(IEnumerable<VacancyDTO> dtos, int companyId)
     {
         try
         {
@@ -123,7 +123,7 @@ public class VacancyWk(
             foreach (var dto in dtos)
             {
                 var model = mapper.Map<VacancyModel>(dto);
-                model.CompanyId = dto.CompanyId;
+                model.CompanyId = companyId;
                 entities.Add(model);
             }
 

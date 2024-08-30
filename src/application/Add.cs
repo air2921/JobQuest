@@ -39,7 +39,7 @@ public static class Add
         services.AddScoped<LanguageWk>();
         services.AddScoped<ResponseWk>();
         services.AddScoped<ReviewWk>();
-        services.AddScoped<ResumeWK>();
+        services.AddScoped<ResumeWk>();
         services.AddScoped<VacancyWk>();
 
         services.AddScoped<ChatWk>();
