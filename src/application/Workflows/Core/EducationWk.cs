@@ -1,20 +1,23 @@
-﻿using AutoMapper;
+﻿using application.Utils;
+using AutoMapper;
 using common.DTO.ModelDTO;
 using common.Exceptions;
+using datahub.Redis;
 using domain.Abstractions;
 using domain.Localize;
 using domain.Models;
 using domain.SpecDTO;
 using domain.Specifications.Education;
 using JsonLocalizer;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace application.Workflows.Core;
 
 public class EducationWk(
     IRepository<EducationModel> educationRepository,
+    IDataCache<ConnectionPrimary> dataCache,
     IRepository<ResumeModel> resumeRepository,
     ILocalizer localizer,
     IMapper mapper) : Responder
@@ -23,11 +26,16 @@ public class EducationWk(
     {
         try
         {
+            var cache = await dataCache.GetRangeAsync<EducationModel[]>(CachePrefixes.Education + dto.ToString());
+            if (cache is not null)
+                return Response(200, new { educations = cache });
+
             var spec = new SortEducationSpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto };
             var educations = await educationRepository.GetRangeAsync(spec);
             if (educations is null)
                 return Response(400, localizer.Translate(Messages.NOT_FOUND));
 
+            await dataCache.SetAsync(CachePrefixes.Education + dto.ToString(), educations, TimeSpan.FromMinutes(10));
             return Response(200, new { educations });
         }
         catch (EntityException ex)
@@ -40,10 +48,15 @@ public class EducationWk(
     {
         try
         {
+            var cache = await dataCache.GetSingleAsync<EducationModel>(CachePrefixes.Education + id);
+            if (cache is not null)
+                return Response(200, new { education = cache });
+
             var education = await educationRepository.GetByIdAsync(id);
             if (education is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
+            await dataCache.SetAsync(CachePrefixes.Education + id, education, TimeSpan.FromMinutes(10));
             return Response(200, new { education });
         }
         catch (EntityException ex)

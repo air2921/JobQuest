@@ -29,7 +29,7 @@ public class ReviewWk(
                 Title = title,
                 Expressions = [x => x.Company]
             };
-            var reviews = await repository.GetRangeAsync();
+            var reviews = await repository.GetRangeAsync(spec);
             if (reviews is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 

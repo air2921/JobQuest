@@ -1,12 +1,15 @@
-﻿using AutoMapper;
+﻿using application.Utils;
+using AutoMapper;
 using common.DTO.ModelDTO;
 using common.Exceptions;
+using datahub.Redis;
 using domain.Abstractions;
 using domain.Localize;
 using domain.Models;
 using domain.SpecDTO;
 using domain.Specifications.Vacancy;
 using JsonLocalizer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +18,7 @@ namespace application.Workflows.Core;
 
 public class VacancyWk(
     IRepository<VacancyModel> repository,
+    IDataCache<ConnectionPrimary> dataCache,
     IDatabaseTransaction databaseTransaction,
     ILocalizer localizer,
     IMapper mapper) : Responder
@@ -23,11 +27,16 @@ public class VacancyWk(
     {
         try
         {
+            var cache = await dataCache.GetRangeAsync<VacancyModel[]>(CachePrefixes.Vacancy + dto.ToString());
+            if (cache is not null)
+                return Response(200, new { vacancies = cache });
+
             var spec = new SortVacancySpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto, Expressions = [x => x.Company] };
             var vacancies = await repository.GetRangeAsync(spec);
             if (vacancies is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
+            await dataCache.SetAsync(CachePrefixes.Vacancy + dto.ToString(), vacancies, TimeSpan.FromMinutes(10));
             return Response(200, new { vacancies });
         }
         catch (EntityException ex)
@@ -40,11 +49,16 @@ public class VacancyWk(
     {
         try
         {
+            var cache = await dataCache.GetSingleAsync<VacancyModel>(CachePrefixes.Vacancy + id);
+            if (cache is not null)
+                return Response(200, new { vacancy = cache });
+
             var spec = new VacancyByIdSpec(id) { Expressions = [x => x.Company] };
             var vacancy = await repository.GetByIdWithInclude(spec);
             if (vacancy is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
+            await dataCache.SetAsync(CachePrefixes.Vacancy + id, vacancy, TimeSpan.FromMinutes(10));
             return Response(200, new { vacancy });
         }
         catch (EntityException ex)

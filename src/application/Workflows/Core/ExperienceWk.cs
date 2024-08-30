@@ -1,12 +1,15 @@
-﻿using AutoMapper;
+﻿using application.Utils;
+using AutoMapper;
 using common.DTO.ModelDTO;
 using common.Exceptions;
+using datahub.Redis;
 using domain.Abstractions;
 using domain.Localize;
 using domain.Models;
 using domain.SpecDTO;
 using domain.Specifications.Experience;
 using JsonLocalizer;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,6 +18,7 @@ namespace application.Workflows.Core;
 public class ExperienceWk(
     IRepository<ExperienceModel> experienceRepository,
     IRepository<ResumeModel> resumeRepository,
+    IDataCache<ConnectionPrimary> dataCache,
     ILocalizer localizer,
     IMapper mapper) : Responder
 {
@@ -22,11 +26,16 @@ public class ExperienceWk(
     {
         try
         {
+            var cache = await dataCache.GetRangeAsync<ExperienceModel[]>(CachePrefixes.Experience + dto.ToString());
+            if (cache is not null)
+                return Response(200, new { experiences = cache });
+
             var spec = new SortExperienceSpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto };
             var experiences = await experienceRepository.GetRangeAsync(spec);
             if (experiences is null)
                 return Response(400, localizer.Translate(Messages.NOT_FOUND));
 
+            await dataCache.SetAsync(CachePrefixes.Experience + dto.ToString(), experiences, TimeSpan.FromMinutes(10));
             return Response(200, new { experiences });
         }
         catch (EntityException ex)
@@ -39,10 +48,15 @@ public class ExperienceWk(
     {
         try
         {
+            var cache = await dataCache.GetSingleAsync<ExperienceModel>(CachePrefixes.Experience + id);
+            if (cache is not null)
+                return Response(200, new { experience = cache });
+
             var experience = await experienceRepository.GetByIdAsync(id);
             if (experience is null)
                 return Response(400, localizer.Translate(Messages.NOT_FOUND));
 
+            await dataCache.SetAsync(CachePrefixes.Experience + id, experience, TimeSpan.FromMinutes(10));
             return Response(200, new { experience });
         }
         catch (EntityException ex)
