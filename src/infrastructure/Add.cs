@@ -8,12 +8,13 @@ using JsonLocalizer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace infrastructure;
 
 public static class Add
 {
-    public static void AddInfrastructure(this IServiceCollection services, IConfiguration config)
+    public static void AddInfrastructure(this IServiceCollection services, IConfiguration config, Serilog.ILogger logger)
     {
         services.AddScoped(provider =>
         {
@@ -33,6 +34,12 @@ public static class Add
             var smtpClient = provider.GetRequiredService<ISmtpClientWrapper>();
             var localizer = provider.GetRequiredService<ILocalizer>();
             return new Sender(config, logger, smtpClient, localizer);
+        });
+
+        services.AddLogging(log =>
+        {
+            log.ClearProviders();
+            log.AddSerilog(logger);
         });
 
         services.AddScoped<IS3Service, S3Service>();

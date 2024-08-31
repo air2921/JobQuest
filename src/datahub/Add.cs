@@ -6,13 +6,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 
 namespace datahub;
 
 public static class Add
 {
-    public static void AddDataHub(this IServiceCollection services, IConfiguration config)
+    public static void AddDataHub(this IServiceCollection services, IConfiguration config, Serilog.ILogger logger)
     {
         services.AddDbContext<AppDbContext>(options =>
         {
@@ -20,6 +21,16 @@ public static class Add
             .EnableServiceProviderCaching(false)
             .EnableDetailedErrors(true)
             .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);
+        });
+
+        using var provider = services.BuildServiceProvider();
+        var dbContext = provider.GetRequiredService<AppDbContext>();
+        dbContext.Initialize();
+
+        services.AddLogging(log =>
+        {
+            log.ClearProviders();
+            log.AddSerilog(logger);
         });
 
         services.AddSingleton(provider =>

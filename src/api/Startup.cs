@@ -40,9 +40,9 @@ public class Startup(IWebHostEnvironment environment)
         });
 
         services.AddBackground();
-        services.AddDataHub(config);
-        services.AddApplication(config);
-        services.AddInfrastructure(config);
+        services.AddDataHub(config, Log.Logger);
+        services.AddApplication(config, Log.Logger);
+        services.AddInfrastructure(config, Log.Logger);
         services.AddStartupServices(config, environment);
     }
 
@@ -58,6 +58,7 @@ public class Startup(IWebHostEnvironment environment)
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         //app.UseResponseCompression();
+        Console.WriteLine("HELLO");
         app.UseHangfireDashboard("/hangfire");
 
         if (env.IsDevelopment())

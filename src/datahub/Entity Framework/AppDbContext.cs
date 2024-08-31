@@ -1,6 +1,7 @@
 ﻿using domain.Models;
 using domain.Models.Chat;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 
 namespace datahub.Entity_Framework;
@@ -25,7 +26,13 @@ public class AppDbContext : DbContext
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
-        if (!Database.EnsureCreated())
+
+    }
+
+    public void Initialize()
+    {
+        var pendingMigrations = Database.GetPendingMigrations();
+        if (pendingMigrations.Any())
             Database.Migrate();
     }
 

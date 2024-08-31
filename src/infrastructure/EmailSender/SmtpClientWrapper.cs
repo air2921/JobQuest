@@ -24,10 +24,11 @@ public class SmtpClientWrapper(
 
     public async Task EmailSendAsync(MimeMessage message, CancellationToken cancellationToken = default)
     {
+        var section = configuration.GetSection(App.EMAIL_SECTION);
         try
         {
-            await _smtpClient.ConnectAsync("smtp.yandex.ru", 587, SecureSocketOptions.Auto, cancellationToken);
-            await _smtpClient.AuthenticateAsync(configuration[App.EMAIL], configuration[App.EMAIL_PASSWORD], cancellationToken);
+            await _smtpClient.ConnectAsync(section[App.EMAIL_PROVIDER], 587, SecureSocketOptions.Auto, cancellationToken);
+            await _smtpClient.AuthenticateAsync(section[App.EMAIL], section[App.EMAIL_PASSWORD], cancellationToken);
             await _smtpClient.SendAsync(message, cancellationToken);
         }
         catch (Exception ex) when (ex is AuthenticationException || ex is SocketException)

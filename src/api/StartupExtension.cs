@@ -82,7 +82,7 @@ public static class StartupExtension
         {
             options.AddPolicy(ApiSettings.CORS_NAME, builder =>
             {
-                builder.WithOrigins(ApiSettings.FRONTEND_DOMAIN)
+                builder.WithOrigins(ApiSettings.FRONTEND_DOMAIN, ApiSettings.SWAGGER_DOMAIN)
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();
@@ -114,6 +114,8 @@ public static class StartupExtension
                 policy.RequireRole(Role.Applicant.ToString(), Role.Admin.ToString());
             });
 
+        var jwtSection = configuration.GetSection(App.JWT_SECTION);
+
         services.AddAuthentication(auth =>
         {
             auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -128,9 +130,9 @@ public static class StartupExtension
                 ValidateIssuerSigningKey = true,
                 ValidateIssuer = true,
                 ValidateAudience = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration[App.SECRET_KEY]!)),
-                ValidIssuer = configuration[App.ISSUER],
-                ValidAudience = configuration[App.AUDIENCE],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSection[App.SECRET_KEY]!)),
+                ValidIssuer = jwtSection[App.ISSUER],
+                ValidAudience = jwtSection[App.AUDIENCE],
                 ClockSkew = TimeSpan.Zero
             };
             jwt.Events = new JwtBearerEvents()

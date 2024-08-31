@@ -10,6 +10,8 @@ internal class BearerMiddleware(RequestDelegate next, ILogger<BearerMiddleware> 
     {
         try
         {
+            AddSecurityHeaders(context);
+
             if (context.Request.Headers.ContainsKey(Immutable.NONE_BEARER))
             {
                 await next(context);
@@ -50,6 +52,9 @@ internal class BearerMiddleware(RequestDelegate next, ILogger<BearerMiddleware> 
                 });
                 context.Request.Headers.Append("Authorization", $"Bearer {jwt}");
             }
+
+            await next(context);
+            return;
         }
         catch (EntityException ex)
         {
@@ -57,10 +62,6 @@ internal class BearerMiddleware(RequestDelegate next, ILogger<BearerMiddleware> 
 
             await next(context);
             return;
-        }
-        finally
-        {
-            AddSecurityHeaders(context);
         }
     }
 

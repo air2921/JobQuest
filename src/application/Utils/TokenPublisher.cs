@@ -15,7 +15,9 @@ public class TokenPublisher(IConfiguration configuration, IGenerate generate)
 {
     public string JsonWebToken(JwtDTO dto)
     {
-        var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration[App.SECRET_KEY]!));
+        var section = configuration.GetSection(App.JWT_SECTION);
+
+        var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(section[App.SECRET_KEY]!));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
@@ -28,8 +30,8 @@ public class TokenPublisher(IConfiguration configuration, IGenerate generate)
             claims.Add(new Claim(ClaimTypes.UserData, dto.CompanyId.Value.ToString()));
 
         var token = new JwtSecurityToken(
-            issuer: configuration[App.ISSUER]!,
-            audience: configuration[App.AUDIENCE],
+            issuer: section[App.ISSUER]!,
+            audience: section[App.AUDIENCE],
             claims: claims,
             expires: DateTime.UtcNow + dto.Expires,
             signingCredentials: credentials);
