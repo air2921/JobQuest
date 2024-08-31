@@ -58,7 +58,7 @@ services:
     restart: always
 
   redis-chat:
-    container_name: redis-secondary
+    container_name: redis-chat
     image: redis:latest
     ports:
       - "6381:6379"
