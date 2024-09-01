@@ -42,9 +42,9 @@ public class LoginController(LoginWk workflow) : ControllerBase
         {
             MaxAge = expires,
             Secure = true,
-            HttpOnly = false,
+            HttpOnly = true,
             SameSite = SameSiteMode.None,
-            IsEssential = false
+            IsEssential = true
         };
     }
 

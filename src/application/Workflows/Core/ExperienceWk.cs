@@ -10,6 +10,7 @@ using domain.Specifications.Experience;
 using JsonLocalizer;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace application.Workflows.Core;
@@ -86,7 +87,7 @@ public class ExperienceWk(
             await experienceRepository.AddAsync(model);
             return Response(201);
         }
-        catch (EntityException ex)
+        catch (Exception ex) when (ex is EntityException || ex is ValidationException)
         {
             return Response(500, ex.Message);
         }
@@ -112,7 +113,7 @@ public class ExperienceWk(
             await experienceRepository.AddRangeAsync(entities);
             return Response(201);
         }
-        catch (EntityException ex)
+        catch (Exception ex) when (ex is EntityException || ex is ValidationException)
         {
             return Response(500, ex.Message);
         }
@@ -131,7 +132,7 @@ public class ExperienceWk(
             await experienceRepository.UpdateAsync(entity);
             return Response(200, new { entity });
         }
-        catch (EntityException ex)
+        catch (Exception ex) when (ex is EntityException || ex is ValidationException)
         {
             return Response(500, ex.Message);
         }

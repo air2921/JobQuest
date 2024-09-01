@@ -14,6 +14,7 @@ public static class App
     public const string REDIS_CHAT = "Chat";
 
     public const string EMAIL_SECTION = "Email";
+    public const string EMAIL_PORT = "Port";
     public const string EMAIL_PROVIDER = "Provider";
     public const string EMAIL = "Address";
     public const string EMAIL_PASSWORD = "Password";

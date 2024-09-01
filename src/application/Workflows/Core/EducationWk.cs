@@ -8,7 +8,9 @@ using domain.Models;
 using domain.SpecDTO;
 using domain.Specifications.Education;
 using JsonLocalizer;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace application.Workflows.Core;
@@ -84,7 +86,7 @@ public class EducationWk(
             await educationRepository.AddAsync(model);
             return Response(201);
         }
-        catch (EntityException ex)
+        catch (Exception ex) when (ex is EntityException || ex is ValidationException)
         {
             return Response(500, ex.Message);
         }
@@ -110,7 +112,7 @@ public class EducationWk(
             await educationRepository.AddRangeAsync(entities);
             return Response(201);
         }
-        catch (EntityException ex)
+        catch (Exception ex) when (ex is EntityException || ex is ValidationException)
         {
             return Response(500, ex.Message);
         }
@@ -132,7 +134,7 @@ public class EducationWk(
             await educationRepository.UpdateAsync(entity);
             return Response(200, new { entity });
         }
-        catch (EntityException ex)
+        catch (Exception ex) when (ex is EntityException || ex is ValidationException)
         {
             return Response(500, ex.Message);
         }

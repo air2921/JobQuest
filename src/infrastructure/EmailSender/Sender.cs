@@ -25,7 +25,7 @@ public class Sender(
         try
         {
             var emailMessage = new MimeMessage();
-            emailMessage.From.Add(new MailboxAddress("JobQuest", configuration[App.EMAIL]));
+            emailMessage.From.Add(new MailboxAddress("JobQuest", configuration.GetSection(App.EMAIL_SECTION)[App.EMAIL]));
             emailMessage.To.Add(new MailboxAddress(dto.Username, dto.Email));
             emailMessage.Subject = dto.Subject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
