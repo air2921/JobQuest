@@ -17,6 +17,8 @@ public class SortCompanyDTO : PaginationDTO
         var builder = new StringBuilder(256);
         builder.Append(UserId.ToString() ?? "null");
         builder.Append('-');
+        builder.Append(CompanyGrade.HasValue ? CompanyGrade : "null");
+        builder.Append('-');
         builder.Append(CompanyName ?? "null");
         builder.Append('-');
         builder.Append(HasOpenedVacancies.ToString() ?? "null");
