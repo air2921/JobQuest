@@ -58,7 +58,7 @@ public class Startup(IWebHostEnvironment environment)
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         //app.UseResponseCompression();
-        Console.WriteLine("HELLO");
+        app.UseLocalization();
         app.UseHangfireDashboard("/hangfire");
 
         if (env.IsDevelopment())

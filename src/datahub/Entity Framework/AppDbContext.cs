@@ -55,6 +55,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             PasswordHash = password,
             Role = Role.Employer.ToString()
         });
+        context.SaveChanges();
     }
 
     private void SeedApplicant()
@@ -77,6 +78,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             PasswordHash = password,
             Role = Role.Applicant.ToString()
         });
+        context.SaveChanges();
     }
 
     private void SeedAdmin()
@@ -99,6 +101,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             PasswordHash = password,
             Role = Role.Admin.ToString()
         });
+        context.SaveChanges();
     }
 
     public void SeedDatabase()

@@ -33,5 +33,6 @@ public static class Immutable
 
     public const string XSRF_HEADER_NAME = "X-XSRF-TOKEN";
     public const string REFRESH_TOKEN_HEADER_NAME = "X-REFRESH";
+    public const string LOCALIZATION_HEADER_NAME = "X-LOCALIZATION";
     public const string NONE_BEARER = "X-BEARER";
 }

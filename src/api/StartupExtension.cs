@@ -9,6 +9,7 @@ using Hangfire.PostgreSql;
 using JsonLocalizer;
 using api.Utils;
 using domain.Enums;
+using api.Swagger;
 
 namespace api;
 
@@ -68,6 +69,7 @@ public static class StartupExtension
                     Array.Empty<string>()
                 }
             });
+            c.OperationFilter<LocalizationHeaderOperationFilter>();
         });
 
         services.AddHangfire(config =>
