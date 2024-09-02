@@ -29,7 +29,7 @@ public static class Add
             log.AddSerilog(logger);
         });
 
-        services.AddAutoMapper(typeof(Mapper).Assembly);
+        services.AddAutoMapper(typeof(application.AutoMapper.Mapper));
          
         services.AddScoped<SessionComponent>();
         services.AddScoped<AttemptValidator>();

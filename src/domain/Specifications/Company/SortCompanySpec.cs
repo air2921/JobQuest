@@ -17,9 +17,6 @@ public class SortCompanySpec : SortCollectionSpec<CompanyModel>
             return;
         }
 
-        if (DTO.UserId.HasValue)
-            Query.Where(x => x.UserId.Equals(DTO.UserId));
-
         if (!string.IsNullOrWhiteSpace(DTO.CompanyName))
         {
             Query.Where(x => x.CompanyName.Contains(DTO.CompanyName, StringComparison.InvariantCultureIgnoreCase));

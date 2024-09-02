@@ -9,6 +9,7 @@ using domain.Models;
 using domain.Specifications.Company;
 using domain.Specifications.User;
 using JsonLocalizer;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
 
@@ -24,6 +25,7 @@ public class LoginWk(
     IDataCache<ConnectionSecondary> dataCache,
     AttemptValidator attemptValidator,
     TokenPublisher tokenPublisher,
+    IHostEnvironment environment,
     ILocalizer localizer) : Responder
 {
     public async Task<Response> Initiate(LoginDTO dto)
@@ -58,7 +60,8 @@ public class LoginWk(
             var uniqueToken = generate.GuidCombine(3, true);
             await dataCache.SetAsync(uniqueToken, new UserObject(code, user.UserId, user.Role), TimeSpan.FromMinutes(10));
 
-            return Response(200, localizer.Translate(Messages.MAIL_SENT), new { uniqueToken });
+            return Response(200, localizer.Translate(Messages.MAIL_SENT), 
+                environment.IsDevelopment() ? new { uniqueToken, code } : new { uniqueToken });
         }
         catch (Exception ex) when (ex is EntityException || ex is SmtpClientException)
         {
