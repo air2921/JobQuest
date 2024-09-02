@@ -47,24 +47,27 @@ services:
     networks:
       - "webapi" 
     restart: always
+    command: ["redis-server", "--port", "6379"]
 
   redis-secondary:
     container_name: redis-secondary
     image: redis:latest
     ports:
-      - "6380:6379"
+      - "6380:6380"
     networks:
       - "webapi" 
     restart: always
+    command: ["redis-server", "--port", "6380"]
 
   redis-chat:
     container_name: redis-chat
     image: redis:latest
     ports:
-      - "6381:6379"
+      - "6381:6381"
     networks:
       - "webapi" 
     restart: always
+    command: ["redis-server", "--port", "6381"]
 
   elasticsearch:
     container_name: elasticsearch

@@ -5,13 +5,10 @@ namespace common.DTO.ModelDTO;
 
 public class CompanyDTO
 {
-    [Required]
     public string CompanyName { get; set; } = null!;
 
-    [Required]
     public string Location { get; set; } = null!;
 
-    [Required]
     public DateTime RegisterDate { get; set; }
 
     public string? PhoneNumber { get; set; }

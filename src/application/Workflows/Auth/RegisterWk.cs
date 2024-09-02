@@ -15,7 +15,7 @@ namespace application.Workflows.Auth;
 
 public class RegisterWk(
     IRepository<UserModel> repository,
-    IDataCache<ConnectionPrimary> dataCache,
+    IDataCache<ConnectionSecondary> dataCache,
     AttemptValidator attemptValidator,
     ISender<EmailDTO> sender,
     IGenerate generate,

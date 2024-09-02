@@ -21,7 +21,7 @@ public class LoginWk(
     ISender<EmailDTO> sender,
     IHashUtility hashUtility,
     IGenerate generate,
-    IDataCache<ConnectionPrimary> dataCache,
+    IDataCache<ConnectionSecondary> dataCache,
     AttemptValidator attemptValidator,
     TokenPublisher tokenPublisher,
     ILocalizer localizer) : Responder
