@@ -42,7 +42,7 @@ public class DataCache<T> : IDataCache<T> where T : IConnection
         _server = _context.GetServer(connection.ConnectionName);
     }
 
-    public async Task SetAsync(string key, object value, TimeSpan expires)
+    public async Task<bool> SetAsync(string key, object value, TimeSpan expires)
     {
         try
         {
@@ -54,9 +54,11 @@ public class DataCache<T> : IDataCache<T> where T : IConnection
             await _db.StringSetAsync(key, dataToSave, expires);
 
             _logger.LogInformation($"Request to save data in redis\nKey: {key}");
+            return true;
         }
         catch (Exception ex)
         {
+            return false;
             _logger.LogCritical(ex.Message, key, value.ToString(), expires.TotalSeconds);
         }
     }
@@ -102,7 +104,7 @@ public class DataCache<T> : IDataCache<T> where T : IConnection
         }
     }
 
-    public async Task DeleteRangeAsync(IEnumerable<string> keys)
+    public async Task<bool> DeleteRangeAsync(IEnumerable<string> keys)
     {
         try
         {
@@ -114,14 +116,16 @@ public class DataCache<T> : IDataCache<T> where T : IConnection
 
             var allKeys = LogRange(keys);
             _logger.LogInformation($"Request to delete range data by keys from redis\nKeys: {allKeys}");
+            return true;
         }
         catch (Exception ex)
         {
             _logger.LogCritical(ex.Message);
+            return false;
         }
     }
 
-    public async Task DeleteSingleAsync(string key)
+    public async Task<bool> DeleteSingleAsync(string key)
     {
         try
         {
@@ -131,21 +135,23 @@ public class DataCache<T> : IDataCache<T> where T : IConnection
                 await _db.KeyDeleteAsync(key);
 
             _logger.LogInformation($"Request to delete data by key from redis\nKey: {key}");
+            return true;
         }
         catch (Exception ex)
         {
             _logger.LogCritical(ex.Message, key);
+            return false;
         }
     }
 
-    public async Task DeleteRangeByPatternAsync(string pattern)
+    public async Task<bool> DeleteRangeByPatternAsync(string pattern)
     {
         try
         {
             var keys = _server.Keys(pattern: pattern);
 
             if (!keys.Any())
-                return;
+                return true;
 
             var tasks = keys
                 .Select(key => _db.KeyDeleteAsync(key))
@@ -154,10 +160,12 @@ public class DataCache<T> : IDataCache<T> where T : IConnection
             await Task.WhenAll(tasks);
 
             _logger.LogInformation($"Request to delete range data by key pattern\n Pattern: {pattern}");
+            return true;
         }
         catch (Exception ex)
         {
             _logger.LogCritical(ex.Message, pattern);
+            return false;
         }
     }
 

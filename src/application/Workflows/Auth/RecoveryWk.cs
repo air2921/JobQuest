@@ -14,6 +14,7 @@ namespace application.Workflows.Auth;
 public class RecoveryWk(
     IRepository<RecoveryModel> recoveryRepository,
     IRepository<UserModel> userRepository,
+    IDatabaseTransaction databaseTransaction,
     ISender<EmailDTO> sender,
     IHashUtility hashUtility,
     IGenerate generate,
@@ -58,6 +59,8 @@ public class RecoveryWk(
 
     public async Task<Response> Complete(string recoveryToken, string password)
     {
+        using var transaction = databaseTransaction.Begin();
+
         try
         {
             var spec = new RecoveryByValueSpec(recoveryToken) { Expressions = [x => x.User] };
@@ -70,11 +73,15 @@ public class RecoveryWk(
 
             tokenModel.User.PasswordHash = hashUtility.Hash(password);
             await userRepository.UpdateAsync(tokenModel.User);
+            tokenModel.IsUsed = true;
+            await recoveryRepository.UpdateAsync(tokenModel);
 
+            transaction.Commit();
             return Response(204);
         }
         catch (EntityException ex)
         {
+            transaction.Rollback();
             return Response(500, ex.Message);
         }
     }

@@ -6,12 +6,12 @@ namespace domain.Abstractions;
 
 public interface IDataCache<T> where T : IConnection
 {
-    Task SetAsync(string key, object value, TimeSpan expires);
+    Task<bool> SetAsync(string key, object value, TimeSpan expires);
     Task<TObject?> GetSingleAsync<TObject>(string key);
     Task<IEnumerable<TObject>?> GetRangeAsync<TObject>(string key);
-    Task DeleteSingleAsync(string key);
-    Task DeleteRangeAsync(IEnumerable<string> keys);
-    Task DeleteRangeByPatternAsync(string pattern);
+    Task<bool> DeleteSingleAsync(string key);
+    Task<bool> DeleteRangeAsync(IEnumerable<string> keys);
+    Task<bool> DeleteRangeByPatternAsync(string pattern);
 }
 
 public interface IConnection

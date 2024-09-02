@@ -19,6 +19,7 @@ public class LoginWk(
     IRepository<UserModel> userRepository,
     IRepository<AuthModel> authRepository,
     IRepository<CompanyModel> companyRepository,
+    IDatabaseTransaction databaseTransaction,
     ISender<EmailDTO> sender,
     IHashUtility hashUtility,
     IGenerate generate,
@@ -71,6 +72,8 @@ public class LoginWk(
 
     public async Task<Response> Complete(int code, string token)
     {
+        using var transaction = databaseTransaction.Begin();
+
         try
         {
             if (!await attemptValidator.IsValidTry(token))
@@ -99,6 +102,10 @@ public class LoginWk(
             var company = await companyRepository.GetByFilterAsync(new CompanyByRelationSpec(userObj.UserId));
             int? companyId = company?.CompanyId;
 
+            if (!await dataCache.DeleteSingleAsync(token))
+                transaction.Rollback();
+
+            transaction.Commit();
             return Response(200, new
             {
                 refresh,
@@ -113,6 +120,7 @@ public class LoginWk(
         }
         catch (EntityException ex)
         {
+            transaction.Rollback();
             return Response(500, ex.Message);
         }
     }

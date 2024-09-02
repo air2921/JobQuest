@@ -15,6 +15,7 @@ namespace application.Workflows.Auth;
 
 public class RegisterWk(
     IRepository<UserModel> repository,
+    IDatabaseTransaction databaseTransaction,
     IDataCache<ConnectionSecondary> dataCache,
     AttemptValidator attemptValidator,
     ISender<EmailDTO> sender,
@@ -57,6 +58,8 @@ public class RegisterWk(
 
     public async Task<Response> Complete(int code, string token)
     {
+        using var transaction = databaseTransaction.Begin();
+
         try
         {
             if (!await attemptValidator.IsValidTry(token))
@@ -82,10 +85,15 @@ public class RegisterWk(
                 Patronymic = userObj.Patronymic,
             });
 
+            if(!await dataCache.DeleteSingleAsync(token))
+                transaction.Rollback();
+
+            transaction.Commit();
             return Response(201);
         }
         catch (EntityException ex)
         {
+            transaction.Rollback();
             return Response(500, ex.Message);
         }
     }
