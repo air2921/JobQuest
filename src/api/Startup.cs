@@ -40,7 +40,7 @@ public class Startup(IWebHostEnvironment environment)
         });
 
         services.AddBackground();
-        services.AddDataHub(config, Log.Logger);
+        services.AddDataHub(environment, config, Log.Logger);
         services.AddApplication(config, Log.Logger);
         services.AddInfrastructure(config, Log.Logger);
         services.AddStartupServices(config, environment);

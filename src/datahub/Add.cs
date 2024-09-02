@@ -5,6 +5,7 @@ using domain.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
@@ -13,7 +14,7 @@ namespace datahub;
 
 public static class Add
 {
-    public static void AddDataHub(this IServiceCollection services, IConfiguration config, Serilog.ILogger logger)
+    public static void AddDataHub(this IServiceCollection services, IHostEnvironment environment, IConfiguration config, Serilog.ILogger logger)
     {
         services.AddDbContext<AppDbContext>(options =>
         {
@@ -26,6 +27,9 @@ public static class Add
         using var provider = services.BuildServiceProvider();
         var dbContext = provider.GetRequiredService<AppDbContext>();
         dbContext.Initialize();
+
+        if (environment.IsDevelopment())
+            dbContext.SeedDatabase();
 
         services.AddLogging(log =>
         {

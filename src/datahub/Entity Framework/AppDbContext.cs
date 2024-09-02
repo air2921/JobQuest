@@ -1,4 +1,5 @@
-﻿using domain.Models;
+﻿using domain.Enums;
+using domain.Models;
 using domain.Models.Chat;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace datahub.Entity_Framework;
 
-public class AppDbContext : DbContext
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     public DbSet<UserModel> Users { get; set; }
     public DbSet<CompanyModel> Companies { get; set; }
@@ -24,16 +25,87 @@ public class AppDbContext : DbContext
     public DbSet<ChatModel> Chats { get; set; }
     public DbSet<MessageModel> Messages { get; set; }
 
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
 
-    }
+    private readonly DbContextOptions _options = options;
 
     public void Initialize()
     {
         var pendingMigrations = Database.GetPendingMigrations();
         if (pendingMigrations.Any())
             Database.Migrate();
+    }
+
+    private void SeedEmployer()
+    {
+        using var context = new AppDbContext((DbContextOptions<AppDbContext>)_options);
+        var password = "$2a$11$NbXvhbJEkKlsF2axlu3/B.WrlF.fm2vvD.1Bq7Qx3yGotVM28UGKe"; // 123
+        var email = "Employer236gmail.com";
+        var id = 128;
+
+        var user = context.Users.Find(id);
+        if (user is not null)
+            return;
+
+        context.Users.Add(new UserModel
+        {
+            UserId = id,
+            FirstName = "Jonh",
+            LastName = "Doe",
+            Email = email,
+            PasswordHash = password,
+            Role = Role.Employer.ToString()
+        });
+    }
+
+    private void SeedApplicant()
+    {
+        using var context = new AppDbContext((DbContextOptions<AppDbContext>)_options);
+        var password = "$2a$11$PPjoeOlyveAarHmMifiMiOeJbYf3IMSRJAHZ/IrwvQjoKt.k2jpuq"; // 123456
+        var email = "Applicant236gmail.com";
+        var id = 256;
+
+        var user = context.Users.Find(id);
+        if (user is not null)
+            return;
+
+        context.Users.Add(new UserModel
+        {
+            UserId = id,
+            FirstName = "Jonh",
+            LastName = "Doe",
+            Email = email,
+            PasswordHash = password,
+            Role = Role.Applicant.ToString()
+        });
+    }
+
+    private void SeedAdmin()
+    {
+        using var context = new AppDbContext((DbContextOptions<AppDbContext>)_options);
+        var password = "$2a$11$67rCu/FXexJpoBKzJlssv.pV0iAw7KTWnCD0G5Foc3QfnR.bmFgC6"; //123456789
+        var email = "Admin236gmail.com";
+        var id = 512;
+
+        var user = context.Users.Find(id);
+        if (user is not null)
+            return;
+
+        context.Users.Add(new UserModel
+        {
+            UserId = id,
+            FirstName = "Jonh",
+            LastName = "Doe",
+            Email = email,
+            PasswordHash = password,
+            Role = Role.Admin.ToString()
+        });
+    }
+
+    public void SeedDatabase()
+    {
+        SeedEmployer();
+        SeedApplicant();
+        SeedAdmin();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
