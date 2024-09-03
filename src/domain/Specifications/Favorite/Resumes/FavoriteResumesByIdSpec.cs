@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace domain.Specifications.Favorite.Resumes;
 
-public class FavoriteResumesByIdSpec : IncludeSpec<FavoriteResumeModel>, IEntityById<FavoriteResumeModel>
+public class FavoriteResumesByIdSpec : Specification<FavoriteResumeModel>, IEntityById<FavoriteResumeModel>
 {
     public FavoriteResumesByIdSpec(int id, int userId)
     {
@@ -14,9 +14,6 @@ public class FavoriteResumesByIdSpec : IncludeSpec<FavoriteResumeModel>, IEntity
 
         Query.Where(x => x.UserId.Equals(UserId));
         Query.Where(x => x.ResumeId.Equals(Id));
-
-        if (Expressions is not null && Expressions.Any())
-            IncludeEntities(Expressions);
     }
 
     public int Id { get; set; }

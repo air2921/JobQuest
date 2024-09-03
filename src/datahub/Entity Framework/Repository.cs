@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JsonLocalizer;
 using domain.Localize;
+using System.Linq.Expressions;
 
 namespace datahub.Entity_Framework;
 
@@ -68,14 +69,21 @@ public class Repository<T> : IRepository<T> where T : class
         }
     }
 
-    public async Task<IEnumerable<T>> GetRangeAsync(ISpecification<T>? specification = null, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<T>> GetRangeAsync(ISpecification<T>? specification = null,
+        Expression<Func<T, object?>>[]? expressions = null,
+        CancellationToken cancellationToken = default)
     {
+        expressions ??= [];
+
         try
         {
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(GET_ALL_AWAITING));
             cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
 
             IQueryable<T> query = _dbSet;
+            foreach (var expression in expressions)
+                query.Include(expression);
+
             if (specification is not null)
                 query = SpecificationEvaluator.Default.GetQuery(query, specification);
 
@@ -93,14 +101,21 @@ public class Repository<T> : IRepository<T> where T : class
         }
     }
 
-    public async Task<T?> GetByFilterAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
+    public async Task<T?> GetByFilterAsync(ISpecification<T> specification,
+        Expression<Func<T, object?>>[]? expressions = null,
+        CancellationToken cancellationToken = default)
     {
+        expressions ??= [];
+
         try
         {
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(GET_BY_FILTER_AWAITING));
             cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
 
             IQueryable<T> query = _dbSet;
+            foreach (var expression in expressions)
+                query.Include(expression);
+
             query = SpecificationEvaluator.Default.GetQuery(query, specification);
 
             return await query.FirstOrDefaultAsync(cancellationToken);
@@ -117,14 +132,21 @@ public class Repository<T> : IRepository<T> where T : class
         }
     }
 
-    public async Task<T?> GetByIdWithInclude(IEntityById<T> specification, CancellationToken cancellationToken = default)
+    public async Task<T?> GetByIdWithInclude(IEntityById<T> specification,
+        Expression<Func<T, object?>>[]? expressions = null,
+        CancellationToken cancellationToken = default)
     {
+        expressions ??= [];
+
         try
         {
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(GET_BY_FILTER_AWAITING));
             cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
 
             IQueryable<T> query = _dbSet;
+            foreach (var expression in expressions)
+                query.Include(expression);
+
             query = SpecificationEvaluator.Default.GetQuery(query, specification);
 
             return await query.FirstOrDefaultAsync(cancellationToken);

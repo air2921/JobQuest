@@ -63,8 +63,8 @@ public class RecoveryWk(
 
         try
         {
-            var spec = new RecoveryByValueSpec(recoveryToken) { Expressions = [x => x.User] };
-            var tokenModel = await recoveryRepository.GetByFilterAsync(spec);
+            var spec = new RecoveryByValueSpec(recoveryToken);
+            var tokenModel = await recoveryRepository.GetByFilterAsync(spec, [x => x.User]);
             if (tokenModel is null || tokenModel.User is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 

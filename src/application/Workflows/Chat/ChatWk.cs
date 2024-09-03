@@ -16,7 +16,6 @@ namespace application.Workflows.Chat;
 
 public class ChatWk(
     IRepository<ChatModel> repository,
-    IRepository<ResumeModel> resumeRepository,
     IRepository<UserModel> userRepository,
     IDatabaseTransaction databaseTransaction,
     IMapper mapper,

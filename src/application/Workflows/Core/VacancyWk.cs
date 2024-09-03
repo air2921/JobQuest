@@ -25,8 +25,9 @@ public class VacancyWk(
     {
         try
         {
-            var spec = new SortVacancySpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto, Expressions = [x => x.Company] };
-            var vacancies = await genericCache.GetRangeAsync(CachePrefixes.Vacancy + dto.ToString(), () => repository.GetRangeAsync(spec));
+            var spec = new SortVacancySpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto };
+            var vacancies = await genericCache.GetRangeAsync(CachePrefixes.Vacancy + dto.ToString(), 
+                () => repository.GetRangeAsync(spec, [x => x.Company]));
             if (vacancies is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
@@ -42,8 +43,9 @@ public class VacancyWk(
     {
         try
         {
-            var spec = new VacancyByIdSpec(id) { Expressions = [x => x.Company] };
-            var vacancy = await genericCache.GetSingleAsync(CachePrefixes.Vacancy + id, () => repository.GetByIdWithInclude(spec));
+            var spec = new VacancyByIdSpec(id);
+            var vacancy = await genericCache.GetSingleAsync(CachePrefixes.Vacancy + id, 
+                () => repository.GetByIdWithInclude(spec, [x => x.Company]));
             if (vacancy is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
