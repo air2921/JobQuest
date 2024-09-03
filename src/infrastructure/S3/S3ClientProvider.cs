@@ -19,7 +19,7 @@ public class S3ClientProvider(IConfiguration configuration)
             Bucket = bucket,
             S3Client = new AmazonS3Client(keyId, accessKey, new AmazonS3Config
             {
-                ServiceURL = App.S3_URL
+                ServiceURL = section[App.S3_URL]
             })
         };
     }
