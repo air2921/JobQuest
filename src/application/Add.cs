@@ -1,11 +1,15 @@
 ﻿using application.Components;
 using application.Utils;
+using application.Workflows.Administration;
 using application.Workflows.Auth;
 using application.Workflows.Chat;
 using application.Workflows.Core;
 using application.Workflows.Core.Favorites;
 using AutoMapper;
+using common.DTO;
 using domain.Abstractions;
+using domain.Models;
+using JsonLocalizer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -21,6 +25,14 @@ public static class Add
         {
             var generator = provider.GetRequiredService<IGenerate>();
             return new TokenPublisher(configuration, generator);
+        });
+
+        services.AddScoped(provider =>
+        {
+            var repository = provider.GetRequiredService<IRepository<UserModel>>();
+            var sender = provider.GetRequiredService<ISender<EmailDTO>>();
+            var localizer = provider.GetRequiredService<ILocalizer>();
+            return new UserWk(repository, sender, configuration, localizer);
         });
 
         services.AddAutoMapper(typeof(application.AutoMapper.Mapper));

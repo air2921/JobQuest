@@ -24,7 +24,6 @@ public static class StartupExtension
             });
         services.AddSignalR();
         services.AddHttpContextAccessor();
-        services.AddLogging();
         services.AddHttpClient();
         services.AddEndpointsApiExplorer();
 

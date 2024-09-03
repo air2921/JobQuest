@@ -2,6 +2,8 @@
 
 public static class App
 {
+    public const string SUPPORT_EMAIL = "SupportEmail";
+
     public const string MAIN_DB = "Postgres";
     public const string ELASTIC_SEARCH = "Elasticsearch";
 

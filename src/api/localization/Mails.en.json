@@ -22,5 +22,21 @@
   {
     "key": "mail_login_confirm_body",
     "value": "You received this email to complete your account login.\nIf you received this email by mistake, please change your password by following the instructions on the relevant page.\n\nThank you for using our service!\n\nYour confirmation code: "
+  },
+  {
+    "key": "mail_user_blocked_header",
+    "value": "Notice of JobQuest account blocking"
+  },
+  {
+    "key": "mail_user_blocked_body",
+    "value": "We are sorry to inform you that your JobQuest account has been temporarily suspended.\n\nWe understand this may be an inconvenience and are committed to reviewing your situation. If you believe that the block was made in error or you have information that can help resolve this issue, please contact our support team at the following email address: "
+  },
+  {
+    "key": "mail_user_unblocked_header",
+    "value": "JobQuest account unblocking notification"
+  },
+  {
+    "key": "mail_user_unblocked_body",
+    "value": "We are pleased to inform you that your JobQuest account has been successfully unlocked. You can once again enjoy all the features of our service without restrictions.\n\nWe understand that the blocking may have caused some inconvenience and thank you for your patience and understanding in this matter.\n\nIf you have any questions or require additional assistance, please do not hesitate to contact contact our support team at the following email address: "
   }
 ]
