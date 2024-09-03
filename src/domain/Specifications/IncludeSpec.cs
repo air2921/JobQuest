@@ -12,13 +12,7 @@ public abstract class IncludeSpec<T> : Specification<T> where T : class
             return;
 
         foreach (var expression in expressions)
-        {
-            var convertedExpression = Expression.Lambda<Func<T, object?>>(
-                Expression.Convert(expression.Body, typeof(object)),
-                expression.Parameters);
-
-            Query.Include(convertedExpression);
-        }
+            Query.Include(expression);
     }
 
     public Expression<Func<T, object?>>[]? Expressions { get; set; }

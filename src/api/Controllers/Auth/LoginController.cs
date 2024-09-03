@@ -1,14 +1,23 @@
-﻿using application.Utils;
+﻿using application.Components;
+using application.Utils;
 using application.Workflows.Auth;
 using common.DTO;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 
 namespace api.Controllers.Auth;
 
 [Route("api/login")]
 [ApiController]
-public class LoginController(LoginWk workflow) : ControllerBase
+public class LoginController(LoginWk workflow, SessionComponent sessionComponent) : ControllerBase
 {
+    [HttpGet]
+    public async Task<IActionResult> RefreshJsonWebToken([FromQuery] string refresh)
+    {
+        var response = await sessionComponent.RefreshJsonWebToken(refresh);
+        return StatusCode(response.Status, new { response });
+    }
+
     [HttpPost("initiate")]
     public async Task<IActionResult> Initiate([FromBody] LoginDTO dto)
     {

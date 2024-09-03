@@ -39,7 +39,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     {
         using var context = new AppDbContext((DbContextOptions<AppDbContext>)_options);
         var password = "$2a$11$NbXvhbJEkKlsF2axlu3/B.WrlF.fm2vvD.1Bq7Qx3yGotVM28UGKe"; // 123
-        var email = "Employer236gmail.com".ToLowerInvariant();
+        var email = "Employer236@gmail.com".ToLowerInvariant();
         var id = 128;
 
         var user = context.Users.Find(id);
@@ -62,7 +62,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     {
         using var context = new AppDbContext((DbContextOptions<AppDbContext>)_options);
         var password = "$2a$11$PPjoeOlyveAarHmMifiMiOeJbYf3IMSRJAHZ/IrwvQjoKt.k2jpuq"; // 123456
-        var email = "Applicant236gmail.com".ToLowerInvariant();
+        var email = "Applicant236@gmail.com".ToLowerInvariant();
         var id = 256;
 
         var user = context.Users.Find(id);
@@ -85,7 +85,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     {
         using var context = new AppDbContext((DbContextOptions<AppDbContext>)_options);
         var password = "$2a$11$67rCu/FXexJpoBKzJlssv.pV0iAw7KTWnCD0G5Foc3QfnR.bmFgC6"; //123456789
-        var email = "Admin236gmail.com".ToLowerInvariant();
+        var email = "Admin236@gmail.com".ToLowerInvariant();
         var id = 512;
 
         var user = context.Users.Find(id);
