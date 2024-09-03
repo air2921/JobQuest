@@ -60,8 +60,8 @@ public class ExperienceWk(
 
         try
         {
-            var spec = new ExperienceByIdSpec(id) { Expressions = [x => x.Resume] };
-            var experience = await experienceRepository.GetByIdWithInclude(spec);
+            var spec = new ExperienceByIdSpec(id);
+            var experience = await experienceRepository.GetByIdWithInclude(spec, [x => x.Resume]);
             if (experience is null || experience.Resume.UserId != userId)
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
 
@@ -123,8 +123,8 @@ public class ExperienceWk(
     {
         try
         {
-            var spec = new ExperienceByIdSpec(experienceId) { Expressions = [x => x.Resume] };
-            var entity = await experienceRepository.GetByIdWithInclude(spec);
+            var spec = new ExperienceByIdSpec(experienceId);
+            var entity = await experienceRepository.GetByIdWithInclude(spec, [x => x.Resume]);
             if (entity is null || entity.Resume.UserId != userId)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 

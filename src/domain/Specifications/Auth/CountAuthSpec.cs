@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace domain.Specifications.Auth;
 
-public class CountAuthSpec : IncludeSpec<AuthModel>
+public class CountAuthSpec : Specification<AuthModel>
 {
     public CountAuthSpec()
     {

@@ -30,8 +30,9 @@ public class ResumeWk(
     {
         try
         {
-            var spec = new SortResumeSpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto, Expressions = [x => x.Experiences, x => x.Educations, x => x.User, x => x.User.Languages] };
-            var resumes = await genericCache.GetRangeAsync(CachePrefixes.Response + dto.ToString(), () => repository.GetRangeAsync(spec));
+            var spec = new SortResumeSpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto };
+            var resumes = await genericCache.GetRangeAsync(CachePrefixes.Response + dto.ToString(), 
+                () => repository.GetRangeAsync(spec, [x => x.Experiences, x => x.Educations, x => x.User, x => x.User.Languages]));
             if (resumes is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
@@ -47,8 +48,9 @@ public class ResumeWk(
     {
         try
         {
-            var spec = new ResumeByIdSpec(id) { Expressions = [x => x.Experiences, x => x.Educations, x => x.User, x => x.User!.Languages] };
-            var resume = await genericCache.GetSingleAsync(CachePrefixes.Resume + id, () => repository.GetByIdWithInclude(spec));
+            var spec = new ResumeByIdSpec(id);
+            var resume = await genericCache.GetSingleAsync(CachePrefixes.Resume + id, 
+                () => repository.GetByIdWithInclude(spec, [x => x.Experiences, x => x.Educations, x => x.User, x => x.User!.Languages]));
             if (resume is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 

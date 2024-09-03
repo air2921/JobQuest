@@ -25,9 +25,9 @@ public class ReviewWk(
     {
         try
         {
-            var spec = new SortReviewSpec(dto.Skip, dto.Total, dto.ByDesc, companyId) { IsRecomended = isRec, Title = title, Expressions = [x => x.Company] };
+            var spec = new SortReviewSpec(dto.Skip, dto.Total, dto.ByDesc, companyId) { IsRecomended = isRec, Title = title };
             var key = $"{CachePrefixes.Review}{dto.ToString()}-{companyId}-{isRec}-{title}";
-            var reviews = await genericCache.GetRangeAsync(key, () => repository.GetRangeAsync(spec));
+            var reviews = await genericCache.GetRangeAsync(key, () => repository.GetRangeAsync(spec, [x => x.Company]));
             if (reviews is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
@@ -43,8 +43,9 @@ public class ReviewWk(
     {
         try
         {
-            var spec = new ReviewByIdSpec(id) { Expressions = [x => x.Company] };
-            var review = await genericCache.GetSingleAsync(CachePrefixes.Review + id, () => repository.GetByIdWithInclude(spec));
+            var spec = new ReviewByIdSpec(id);
+            var review = await genericCache.GetSingleAsync(CachePrefixes.Review + id, 
+                () => repository.GetByIdWithInclude(spec, [x => x.Company]));
             if (review is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 

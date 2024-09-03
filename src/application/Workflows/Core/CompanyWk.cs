@@ -23,8 +23,8 @@ public class CompanyWk(
     {
         try
         {
-            var spec = new SortCompanySpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto, Expressions = [x => x.Reviews, x => x.Vacancies] };
-            var companies = await genericCache.GetRangeAsync(CachePrefixes.Company + dto.ToString(), () => repository.GetRangeAsync(spec));
+            var spec = new SortCompanySpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto };
+            var companies = await genericCache.GetRangeAsync(CachePrefixes.Company + dto.ToString(), () => repository.GetRangeAsync(spec, [x => x.Reviews, x => x.Vacancies]));
             if (companies is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
@@ -40,8 +40,8 @@ public class CompanyWk(
     {
         try
         {
-            var spec = new CompanyByRelationSpec(id) { Expressions = [x => x.Reviews, x => x.Vacancies] };
-            var company = await genericCache.GetSingleAsync(CachePrefixes.Company + id, () => repository.GetByIdWithInclude(spec));
+            var spec = new CompanyByRelationSpec(id);
+            var company = await genericCache.GetSingleAsync(CachePrefixes.Company + id, () => repository.GetByIdWithInclude(spec, [x => x.Reviews, x => x.Vacancies]));
             if (company is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 

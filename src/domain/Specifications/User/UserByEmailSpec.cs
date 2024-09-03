@@ -3,16 +3,13 @@ using domain.Models;
 
 namespace domain.Specifications.User;
 
-public class UserByEmailSpec : IncludeSpec<UserModel>
+public class UserByEmailSpec : Specification<UserModel>
 {
     public UserByEmailSpec(string email)
     {
         Email = email.ToLowerInvariant();
 
         Query.Where(x => x.Email.Equals(Email));
-
-        if (Expressions is not null)
-            IncludeEntities(Expressions);
     }
 
     public string Email { get; private set; }

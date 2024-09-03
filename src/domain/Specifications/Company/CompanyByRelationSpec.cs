@@ -5,12 +5,11 @@ using System.Linq;
 
 namespace domain.Specifications.Company;
 
-public class CompanyByRelationSpec : IncludeSpec<CompanyModel>, IEntityById<CompanyModel>
+public class CompanyByRelationSpec : Specification<CompanyModel>, IEntityById<CompanyModel>
 {
     public CompanyByRelationSpec(int userId)
     {
         Id = userId;
-
         Query.Where(x => x.UserId.Equals(Id));
     }
 

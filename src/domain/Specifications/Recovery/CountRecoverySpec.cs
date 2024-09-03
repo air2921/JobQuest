@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace domain.Specifications.Recovery
 {
-    public class CountRecoverySpec : IncludeSpec<RecoveryModel>
+    public class CountRecoverySpec : Specification<RecoveryModel>
     {
         public CountRecoverySpec()
         {

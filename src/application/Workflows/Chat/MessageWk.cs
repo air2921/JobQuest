@@ -25,13 +25,8 @@ public class MessageWk(
     {
         try
         {
-            var spec = new SortMessageSpec(dto.Skip, dto.Total, dto.ByDesc, chatId, userId)
-            {
-                OnlyRead = onlyRead,
-                KeyWord = keyword,
-                Expressions = [x => x.Chat]
-            };
-            var messages = await repository.GetRangeAsync(spec);
+            var spec = new SortMessageSpec(dto.Skip, dto.Total, dto.ByDesc, chatId, userId) { OnlyRead = onlyRead, KeyWord = keyword };
+            var messages = await repository.GetRangeAsync(spec, [x => x.Chat]);
             if (messages is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
@@ -47,8 +42,8 @@ public class MessageWk(
     {
         try
         {
-            var spec = new MessageByIdSpec(id) { Expressions = [x => x.Chat] };
-            var message = await repository.GetByIdWithInclude(spec);
+            var spec = new MessageByIdSpec(id);
+            var message = await repository.GetByIdWithInclude(spec, [x => x.Chat]);
             if (message is null || message.EmployerId != userId || message.CandidateId != userId)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 

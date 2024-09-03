@@ -26,15 +26,9 @@ public class ResponseWk(
     {
         try
         {
-            var spec = new SortResponseSpec(dto.Skip, dto.Total, dto.ByDesc, true)
-            {
-                DTO = dto,
-                VacancyId = vacancyId,
-                Expressions = [x => x.Vacancy]
-            };
-
+            var spec = new SortResponseSpec(dto.Skip, dto.Total, dto.ByDesc, true) { DTO = dto, VacancyId = vacancyId };
             var responses = await genericCache.GetRangeAsync(CachePrefixes.Response_AsEmployer + $"{vacancyId}_" + dto.ToString(),
-                () => repository.GetRangeAsync(spec));
+                () => repository.GetRangeAsync(spec, [x => x.Vacancy]));
             bool antiCondition = responses is null ||
                 responses.Any(x => x.Vacancy.Company.UserId != userId);
             if (antiCondition)
@@ -52,15 +46,9 @@ public class ResponseWk(
     {
         try
         {
-            var spec = new SortResponseSpec(dto.Skip, dto.Total, dto.ByDesc, false)
-            {
-                DTO = dto,
-                ResumeId = resumeId,
-                Expressions = [x => x.Resume]
-            };
-
+            var spec = new SortResponseSpec(dto.Skip, dto.Total, dto.ByDesc, false) { DTO = dto, ResumeId = resumeId };
             var responses = await genericCache.GetRangeAsync(CachePrefixes.Response_AsApplicant + $"{resumeId}_" + dto.ToString(),
-                () => repository.GetRangeAsync(spec));
+                () => repository.GetRangeAsync(spec, [x => x.Resume]));
             bool antiCondition = responses is null ||
                 responses.Any(x => x.Resume.UserId != userId);
             if (antiCondition)
@@ -78,8 +66,9 @@ public class ResponseWk(
     {
         try
         {
-            var spec = new ResponseByIdSpec(id) { Expressions = [x => x.Resume, x => x.Vacancy, x => x.Vacancy.Company] };
-            var response = await genericCache.GetSingleAsync(CachePrefixes.Response + id, () => repository.GetByIdWithInclude(spec));
+            var spec = new ResponseByIdSpec(id);
+            var response = await genericCache.GetSingleAsync(CachePrefixes.Response + id, 
+                () => repository.GetByIdWithInclude(spec, [x => x.Resume, x => x.Vacancy, x => x.Vacancy.Company]));
             var antiCondition = response is null ||
                 (response.Vacancy.Company.UserId != userId && response.Resume.UserId != userId);
             if (antiCondition)
@@ -97,8 +86,8 @@ public class ResponseWk(
     {
         try
         {
-            var spec = new ResponseByIdSpec(id) { Expressions = [x => x.Resume, x => x.Vacancy, x => x.Vacancy.Company] };
-            var response = await repository.GetByIdWithInclude(spec);
+            var spec = new ResponseByIdSpec(id);
+            var response = await repository.GetByIdWithInclude(spec, [x => x.Resume, x => x.Vacancy, x => x.Vacancy.Company]);
             var antiCondition = response is null ||
                 (response.Vacancy.Company.UserId != userId && response.Resume.UserId != userId);
             if (antiCondition)
@@ -139,8 +128,8 @@ public class ResponseWk(
     {
         try
         {
-            var spec = new ResponseByIdSpec(responseId) { Expressions = [x => x.Resume, x => x.Vacancy, x => x.Vacancy.Company] };
-            var response = await repository.GetByIdWithInclude(spec);
+            var spec = new ResponseByIdSpec(responseId);
+            var response = await repository.GetByIdWithInclude(spec, [x => x.Resume, x => x.Vacancy, x => x.Vacancy.Company]);
             if (response is null || response.Vacancy.Company.CompanyId != companyId)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 

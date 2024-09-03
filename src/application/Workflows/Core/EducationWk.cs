@@ -59,8 +59,8 @@ public class EducationWk(
     {
         try
         {
-            var spec = new EducationByIdSpec(id) { Expressions = [x => x.Resume] };
-            var education = await educationRepository.GetByIdWithInclude(spec);
+            var spec = new EducationByIdSpec(id);
+            var education = await educationRepository.GetByIdWithInclude(spec, [x => x.Resume]);
             if (education is null || education.Resume.UserId != userId)
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
 
@@ -122,8 +122,8 @@ public class EducationWk(
     {
         try
         {
-            var spec = new EducationByIdSpec(experienceId) { Expressions = [x => x.Resume] };
-            var entity = await educationRepository.GetByIdWithInclude(spec);
+            var spec = new EducationByIdSpec(experienceId);
+            var entity = await educationRepository.GetByIdWithInclude(spec, [x => x.Resume]);
             if (entity is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 

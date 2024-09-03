@@ -16,8 +16,8 @@ public class SessionComponent(
 {
     public async Task<Response> RefreshJsonWebToken(string refresh)
     {
-        var spec = new AuthByValueSpec(refresh) { Expressions = [x => x.User] };
-        var model = await authRepository.GetByFilterAsync(spec);
+        var spec = new AuthByValueSpec(refresh);
+        var model = await authRepository.GetByFilterAsync(spec, [x => x.User]);
 
         if (model is null || model.User is null)
             return Response(404);
