@@ -19,7 +19,7 @@ public class NameAttribute(bool nullValidate) : ValidationAttribute
         if (value is not string name)
             return false;
 
-        string pattern = @"[^ \p{L}]";
+        string pattern = @"^[\p{L} ]+$";
         var regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Multiline);
 
         return regex.IsMatch(name);

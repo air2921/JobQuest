@@ -2,12 +2,9 @@
 using infrastructure.S3;
 using JsonLocalizer;
 using Microsoft.Extensions.Logging;
-using Moq;
 using Amazon.S3;
 using domain.Abstractions;
 using common.Exceptions;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.IO;
 
 namespace tests.infrasturcture.S3;
 

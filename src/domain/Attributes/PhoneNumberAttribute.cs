@@ -19,7 +19,7 @@ public class PhoneNumberAttribute(bool nullValidate) : ValidationAttribute
         if (value is not string phoneNumber)
             return false;
 
-        var pattern = @"^\+\d{1,3}-\d{3}-\d{3}-\d{2}-\d{2}$";
+        var pattern = @"^\+\d{1,9}-\d{3}-\d{3}-\d{2}-\d{2}$";
         return Regex.IsMatch(phoneNumber, pattern);
     }
 }

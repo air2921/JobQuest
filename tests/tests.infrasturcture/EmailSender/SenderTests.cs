@@ -8,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 using common.Exceptions;
-using Moq;
 
 namespace tests.infrasturcture.EmailSender;
 

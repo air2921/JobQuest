@@ -1,6 +1,5 @@
 ﻿using infrastructure.S3;
 using Microsoft.Extensions.Configuration;
-using Moq;
 using common;
 
 namespace tests.infrasturcture.S3;
