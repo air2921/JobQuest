@@ -1,6 +1,7 @@
 ﻿using api.Utils;
 using application.Workflows.Administration;
 using domain.SpecDTO;
+using JsonLocalizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +10,7 @@ namespace api.Controllers.Administration;
 [Route("api/admin/users")]
 [ApiController]
 [Authorize(Policy = ApiSettings.ADMIN_POLICY)]
-public class UserController(UserWk workflow) : ControllerBase
+public class UserController(UserWk workflow, LocalizerOptions localizerOptions) : ControllerBase
 {
     [HttpGet("{userId}")]
     public async Task<IActionResult> GetSingle([FromRoute] int userId)
@@ -27,10 +28,14 @@ public class UserController(UserWk workflow) : ControllerBase
         return StatusCode(response.Status, new { response });
     }
 
-    [HttpPost("{userId}/{block}")]
-    public async Task<IActionResult> BlockOrUnblock([FromRoute] int userId, [FromQuery] bool block)
+    [HttpPost("{userId}")]
+    public async Task<IActionResult> BlockOrUnblock([FromRoute] int userId, [FromQuery] bool block,
+        [FromQuery] string emailLanguage = "en")
     {
-        var response = await workflow.BlockOrUnblock(userId, block);
+        if (!localizerOptions.SupportedLanguages.Contains(emailLanguage))
+            emailLanguage = "en";
+
+        var response = await workflow.BlockOrUnblock(userId, block, emailLanguage);
         return StatusCode(response.Status, new { response });
     }
 }
