@@ -16,7 +16,7 @@ public static class Add
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration config)
     {
-        services.AddScoped(provider =>
+        services.AddScoped<IS3ClientProvider>(provider =>
         {
             return new S3ClientProvider(config);
         });

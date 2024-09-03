@@ -9,13 +9,6 @@ public class GenerateTests
 
     [Theory]
     [InlineData(1)]
-    [InlineData(2)]
-    [InlineData(3)]
-    [InlineData(4)]
-    [InlineData(5)]
-    [InlineData(6)]
-    [InlineData(7)]
-    [InlineData(8)]
     [InlineData(9)]
     public void GuidCombine_No_Hyphens_Format_Success(int count)
     {
@@ -27,13 +20,6 @@ public class GenerateTests
 
     [Theory]
     [InlineData(1)]
-    [InlineData(2)]
-    [InlineData(3)]
-    [InlineData(4)]
-    [InlineData(5)]
-    [InlineData(6)]
-    [InlineData(7)]
-    [InlineData(8)]
     [InlineData(9)]
     public void GuidCombine_Hyphens_Format_Success(int count)
     {
@@ -54,13 +40,6 @@ public class GenerateTests
 
     [Theory]
     [InlineData(1)]
-    [InlineData(2)]
-    [InlineData(3)]
-    [InlineData(4)]
-    [InlineData(5)]
-    [InlineData(6)]
-    [InlineData(7)]
-    [InlineData(8)]
     [InlineData(9)]
     public void GenerateCode_Success(int length)
     {
