@@ -15,18 +15,12 @@ namespace application;
 
 public static class Add
 {
-    public static void AddApplication(this IServiceCollection services, IConfiguration configuration, Serilog.ILogger logger)
+    public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped(provider =>
         {
             var generator = provider.GetRequiredService<IGenerate>();
             return new TokenPublisher(configuration, generator);
-        });
-
-        services.AddLogging(log =>
-        {
-            log.ClearProviders();
-            log.AddSerilog(logger);
         });
 
         services.AddAutoMapper(typeof(application.AutoMapper.Mapper));

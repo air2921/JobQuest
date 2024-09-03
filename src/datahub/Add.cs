@@ -14,7 +14,7 @@ namespace datahub;
 
 public static class Add
 {
-    public static void AddDataHub(this IServiceCollection services, IHostEnvironment environment, IConfiguration config, Serilog.ILogger logger)
+    public static void AddDataHub(this IServiceCollection services, IConfiguration config, IHostEnvironment environment)
     {
         services.AddDbContext<AppDbContext>(options =>
         {
@@ -30,12 +30,6 @@ public static class Add
 
         if (environment.IsDevelopment())
             dbContext.SeedDatabase();
-
-        services.AddLogging(log =>
-        {
-            log.ClearProviders();
-            log.AddSerilog(logger);
-        });
 
         services.AddSingleton(provider =>
         {

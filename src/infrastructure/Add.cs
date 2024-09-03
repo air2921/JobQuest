@@ -14,7 +14,7 @@ namespace infrastructure;
 
 public static class Add
 {
-    public static void AddInfrastructure(this IServiceCollection services, IConfiguration config, Serilog.ILogger logger)
+    public static void AddInfrastructure(this IServiceCollection services, IConfiguration config)
     {
         services.AddScoped(provider =>
         {
@@ -34,12 +34,6 @@ public static class Add
             var smtpClient = provider.GetRequiredService<ISmtpClientWrapper>();
             var localizer = provider.GetRequiredService<ILocalizer>();
             return new Sender(config, logger, smtpClient, localizer);
-        });
-
-        services.AddLogging(log =>
-        {
-            log.ClearProviders();
-            log.AddSerilog(logger);
         });
 
         services.AddScoped<IS3Service, S3Service>();
