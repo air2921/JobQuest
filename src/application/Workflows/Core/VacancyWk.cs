@@ -15,9 +15,9 @@ using System.Threading.Tasks;
 namespace application.Workflows.Core;
 
 public class VacancyWk(
-    IRepository<VacancyModel> repository,
+    IRepository<VacancyModel> vacancyRepository,
+    IRepository<CompanyModel> companyRepository,
     IGenericCache<VacancyModel> genericCache,
-    IDatabaseTransaction databaseTransaction,
     ILocalizer localizer,
     IMapper mapper) : Responder
 {
@@ -27,7 +27,7 @@ public class VacancyWk(
         {
             var spec = new SortVacancySpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto };
             var vacancies = await genericCache.GetRangeAsync(CachePrefixes.Vacancy + dto.ToString(), 
-                () => repository.GetRangeAsync(spec, [x => x.Company]));
+                () => vacancyRepository.GetRangeAsync(spec, [x => x.Company]));
             if (vacancies is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
@@ -45,7 +45,7 @@ public class VacancyWk(
         {
             var spec = new VacancyByIdSpec(id);
             var vacancy = await genericCache.GetSingleAsync(CachePrefixes.Vacancy + id, 
-                () => repository.GetByIdWithInclude(spec, [x => x.Company]));
+                () => vacancyRepository.GetByIdWithInclude(spec, [x => x.Company]));
             if (vacancy is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
@@ -57,68 +57,35 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Response> RemoveSingle(int id, int? companyId)
+    public async Task<Response> RemoveSingle(int id, int companyId, int userId)
     {
-        if (!companyId.HasValue)
-            return Response(404, localizer.Translate(Messages.NOT_FOUND));
-
-        using var transaction = databaseTransaction.Begin();
-
         try
         {
-            var entity = await repository.DeleteAsync(id);
-            if (entity is null || entity.CompanyId != companyId.Value)
-            {
-                transaction.Rollback();
+            var spec = new VacancyByIdSpec(id);
+            var entity = await vacancyRepository.GetByIdWithInclude(spec, [x => x.Company]);
+            if (entity is null || entity.CompanyId != companyId || entity.Company.UserId != userId)
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
-            }
 
-            transaction.Commit();
+            await vacancyRepository.DeleteAsync(id);
             return Response(204);
         }
         catch (EntityException ex)
         {
-            transaction.Rollback();
             return Response(500, ex.Message);
         }
     }
 
-    public async Task<Response> RemoveRange(IEnumerable<int> identifiers, int? companyId)
+    public async Task<Response> AddSingle(VacancyDTO dto, int companyId, int userId)
     {
-        if (!companyId.HasValue)
-            return Response(404, localizer.Translate(Messages.NOT_FOUND));
-
-        using var transaction = databaseTransaction.Begin();
-
         try
         {
-            var entities = await repository.DeleteRangeAsync(identifiers);
-            if(entities.Any(e => e is null || e.CompanyId != companyId.Value))
-            {
-                transaction.Rollback();
-                return Response(403, localizer.Translate(Messages.FORBIDDEN));
-            }
+            var entity = await companyRepository.GetByIdAsync(companyId);
+            if (entity is null || entity.UserId != userId)
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
-            transaction.Commit();
-            return Response(204);
-        }
-        catch (EntityException ex)
-        {
-            transaction.Rollback();
-            return Response(500, ex.Message);
-        }
-    }
-
-    public async Task<Response> AddSingle(VacancyDTO dto, int? companyId)
-    {
-        if (!companyId.HasValue)
-            return Response(404, localizer.Translate(Messages.NOT_FOUND));
-
-        try
-        {
             var model = mapper.Map<VacancyModel>(dto);
-            model.CompanyId = companyId.Value;
-            await repository.AddAsync(model);
+            model.CompanyId = companyId;
+            await vacancyRepository.AddAsync(model);
             return Response(201);
         }
         catch (EntityException ex)
@@ -127,23 +94,24 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Response> AddRange(IEnumerable<VacancyDTO> dtos, int? companyId)
+    public async Task<Response> AddRange(IEnumerable<VacancyDTO> dtos, int companyId, int userId)
     {
-        if (!companyId.HasValue)
-            return Response(404, localizer.Translate(Messages.NOT_FOUND));
+        var entities = new List<VacancyModel>();
 
         try
         {
-            var entities = new List<VacancyModel>();
+            var entity = await companyRepository.GetByIdAsync(companyId);
+            if (entity is null || entity.UserId != userId)
+                return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
             foreach (var dto in dtos)
             {
                 var model = mapper.Map<VacancyModel>(dto);
-                model.CompanyId = companyId.Value;
+                model.CompanyId = companyId;
                 entities.Add(model);
             }
 
-            await repository.AddRangeAsync(entities);
+            await vacancyRepository.AddRangeAsync(entities);
             return Response(201);
         }
         catch (EntityException ex)
@@ -152,19 +120,18 @@ public class VacancyWk(
         }
     }
 
-    public async Task<Response> Update(VacancyDTO dto, int vacancyId, int? companyId)
+    public async Task<Response> Update(VacancyDTO dto, int vacancyId, int companyId, int userId)
     {
-        if (!companyId.HasValue)
-            return Response(404, localizer.Translate(Messages.NOT_FOUND));
+        var spec = new VacancyByIdSpec(vacancyId);
+        var entity = await vacancyRepository.GetByIdWithInclude(spec, [x => x.Company]);
 
         try
         {
-            var entity = await repository.GetByIdAsync(vacancyId);
-            if (entity is null || entity.CompanyId != companyId.Value)
+            if (entity is null || entity.CompanyId != companyId || entity.Company.UserId != userId)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
             entity = mapper.Map(dto, entity);
-            await repository.UpdateAsync(entity);
+            await vacancyRepository.UpdateAsync(entity);
             return Response(200, new { entity });
         }
         catch (EntityException ex)

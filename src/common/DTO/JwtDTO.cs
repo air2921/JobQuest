@@ -7,8 +7,6 @@ public class JwtDTO
     [Required]
     public string Role { get; set; } = null!;
 
-    public int? CompanyId { get; set; }
-
     [Required]
     public int UserId { get; set; }
 

@@ -74,6 +74,7 @@ public static class StartupExtension
                 }
             });
             c.OperationFilter<LocalizationHeaderOperationFilter>();
+            c.OperationFilter<RefreshCookieOperationFilter>();
         });
 
         services.AddHangfire(config =>

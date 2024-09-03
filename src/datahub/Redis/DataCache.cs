@@ -58,8 +58,8 @@ public class DataCache<T> : IDataCache<T> where T : IConnection
         }
         catch (Exception ex)
         {
-            return false;
             _logger.LogCritical(ex.Message, key, value.ToString(), expires.TotalSeconds);
+            return false;
         }
     }
 

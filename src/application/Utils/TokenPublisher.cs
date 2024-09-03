@@ -26,9 +26,6 @@ public class TokenPublisher(IConfiguration configuration, IGenerate generate)
             new(ClaimTypes.Role, dto.Role)
         };
 
-        if (dto.CompanyId.HasValue && dto.CompanyId is not null)
-            claims.Add(new Claim(ClaimTypes.UserData, dto.CompanyId.Value.ToString()));
-
         var token = new JwtSecurityToken(
             issuer: section[App.ISSUER]!,
             audience: section[App.AUDIENCE],

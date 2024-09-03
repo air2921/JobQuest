@@ -3,7 +3,6 @@ using application.Workflows.Core;
 using common.DTO.ModelDTO;
 using domain.SpecDTO;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
@@ -12,43 +11,35 @@ namespace api.Controllers;
 [ApiController]
 public class VacancyController(VacancyWk workflow) : ControllerBase
 {
-    [HttpPost("add")]
+    [HttpPost("add/{companyId}")]
     [Authorize(Policy = ApiSettings.EMPLOYER_POLICY)]
-    public async Task<IActionResult> AddVacancy([FromBody] VacancyDTO dto, IUserInfo userInfo)
+    public async Task<IActionResult> AddVacancy([FromBody] VacancyDTO dto, [FromRoute] int companyId, IUserInfo userInfo)
     {
-        var response = await workflow.AddSingle(dto, userInfo.CompanyId);
+        var response = await workflow.AddSingle(dto, companyId, userInfo.UserId);
         return StatusCode(response.Status, new { response });
     }
 
-    [HttpPost("add/range")]
+    [HttpPost("add/range/{companyId}")]
     [Authorize(Policy = ApiSettings.EMPLOYER_POLICY)]
-    public async Task<IActionResult> AddVacancies([FromBody] IEnumerable<VacancyDTO> dtos, IUserInfo userInfo)
+    public async Task<IActionResult> AddVacancies([FromBody] IEnumerable<VacancyDTO> dtos, [FromRoute] int companyId, IUserInfo userInfo)
     {
-        var response = await workflow.AddRange(dtos, userInfo.CompanyId);
+        var response = await workflow.AddRange(dtos, companyId, userInfo.UserId);
         return StatusCode(response.Status, new { response });
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{companyId}/{vacancyId}")]
     [Authorize(Policy = ApiSettings.EMPLOYER_POLICY)]
-    public async Task<IActionResult> DeleteVacancy([FromRoute] int id, IUserInfo userInfo)
+    public async Task<IActionResult> DeleteVacancy([FromRoute] int companyId, [FromRoute] int vacancyId, IUserInfo userInfo)
     {
-        var response = await workflow.RemoveSingle(id, userInfo.CompanyId);
+        var response = await workflow.RemoveSingle(vacancyId, companyId, userInfo.UserId);
         return StatusCode(response.Status, new { response });
     }
 
-    [HttpDelete]
-    [Authorize(Policy = ApiSettings.EMPLOYER_POLICY)]
-    public async Task<IActionResult> DeleteVacancies([FromBody] IEnumerable<int> ids, IUserInfo userInfo)
-    {
-        var response = await workflow.RemoveRange(ids, userInfo.CompanyId);
-        return StatusCode(response.Status, new { response });
-    }
-
-    [HttpGet("{id}")]
+    [HttpGet("{vacancyId}")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetVacancy([FromRoute] int id)
+    public async Task<IActionResult> GetVacancy([FromRoute] int vacancyId)
     {
-        var response = await workflow.GetSingle(id);
+        var response = await workflow.GetSingle(vacancyId);
         return StatusCode(response.Status, new { response });
     }
 
@@ -60,11 +51,11 @@ public class VacancyController(VacancyWk workflow) : ControllerBase
         return StatusCode(response.Status, new { response });
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{companyId}/{vacancyId}")]
     [Authorize(Policy = ApiSettings.EMPLOYER_POLICY)]
-    public async Task<IActionResult> UpdateVacancy([FromBody] VacancyDTO dto, [FromRoute] int id, IUserInfo userInfo)
+    public async Task<IActionResult> UpdateVacancy([FromBody] VacancyDTO dto, [FromRoute] int companyId, [FromRoute] int vacancyId, IUserInfo userInfo)
     {
-        var response = await workflow.Update(dto, id, userInfo.CompanyId);
+        var response = await workflow.Update(dto, vacancyId, companyId, userInfo.UserId);
         return StatusCode(response.Status, new { response });
     }
 }
