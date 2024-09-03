@@ -3,7 +3,6 @@ using application.Utils;
 using application.Workflows.Auth;
 using common.DTO;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel;
 
 namespace api.Controllers.Auth;
 
@@ -11,7 +10,7 @@ namespace api.Controllers.Auth;
 [ApiController]
 public class LoginController(LoginWk workflow, SessionComponent sessionComponent) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("refresh/jwt")]
     public async Task<IActionResult> RefreshJsonWebToken([FromQuery] string refresh)
     {
         var response = await sessionComponent.RefreshJsonWebToken(refresh);

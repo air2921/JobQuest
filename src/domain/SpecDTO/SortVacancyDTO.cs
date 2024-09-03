@@ -7,6 +7,7 @@ namespace domain.SpecDTO;
 public class SortVacancyDTO : PaginationDTO
 {
     public int? CompanyId { get; set; }
+    public string? KeyWord { get; set; }
     public bool? IsOpened { get; set; }
     public IEnumerable<string>? Locations { get; set; }
     public int? MinSalary { get; set; }
@@ -25,6 +26,8 @@ public class SortVacancyDTO : PaginationDTO
         builder.Append(CompanyId.ToString() ?? "null");
         builder.Append('-');
         builder.Append(IsOpened.ToString() ?? "null");
+        builder.Append('-'); 
+        builder.Append(KeyWord ?? "null");
         builder.Append('-');
 
         if (Locations is not null && Locations.Any())

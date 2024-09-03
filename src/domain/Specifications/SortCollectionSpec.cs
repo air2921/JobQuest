@@ -4,23 +4,15 @@ using System;
 
 namespace domain.Specifications;
 
-public abstract class SortCollectionSpec<T> : Specification<T> where T : class
+public abstract class SortCollectionSpec<T>(int skip, int count, bool orderByDesc, Expression<Func<T, object?>> expression) 
+    : Specification<T> where T : class
 {
-    protected SortCollectionSpec(int skip, int count, bool orderByDesc, Expression<Func<T, object?>> expression)
-    {
-        SkipCount = skip;
-        Count = count;
-        OrderByDesc = orderByDesc;
-
-        OrderByExpression = Expression.Lambda<Func<T, object?>>(
+    public int SkipCount { get; set; } = skip;
+    public int Count { get; set; } = count;
+    public bool OrderByDesc { get; set; } = orderByDesc;
+    private Expression<Func<T, object?>> OrderByExpression { get; } = Expression.Lambda<Func<T, object?>>(
             Expression.Convert(expression.Body, typeof(object)),
             expression.Parameters);
-    }
-
-    public int SkipCount { get; set; }
-    public int Count { get; set; }
-    public bool OrderByDesc { get; set; }
-    private Expression<Func<T, object?>> OrderByExpression { get; }
 
     protected void Initialize()
     {

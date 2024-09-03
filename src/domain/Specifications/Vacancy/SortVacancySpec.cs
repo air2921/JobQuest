@@ -3,6 +3,7 @@ using domain.SpecDTO;
 using domain.Models;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace domain.Specifications.Vacancy;
 
@@ -49,12 +50,36 @@ public class SortVacancySpec : SortCollectionSpec<VacancyModel>
 
         if (DTO.Name is not null)
         {
-            Query.Where(x => x.VacancyName.Contains(DTO.Name, StringComparison.InvariantCultureIgnoreCase));
-            Query.OrderBy(x => Math.Abs(x.VacancyName.IndexOf(DTO.Name) - x.VacancyName.Length));
+            Query.Where(x => x.VacancyName.Contains(DTO.Name, StringComparison.InvariantCultureIgnoreCase))
+                .OrderBy(x => Math.Abs(x.VacancyName.IndexOf(DTO.Name) - x.VacancyName.Length));
+        }
+
+        if (!string.IsNullOrEmpty(DTO.KeyWord))
+        {
+            DTO.KeyWord = DTO.KeyWord.ToLowerInvariant();
+            var pattern = $@"\b{Regex.Escape(DTO.KeyWord)}\b";
+            var regex = new Regex(pattern, RegexOptions.IgnoreCase);
+
+            Query.Where(x =>
+                regex.IsMatch(x.About) ||
+                regex.IsMatch(x.VacancyName)
+            );
+
+            Query.OrderByDescending(x => CountKeywordOccurrences(x.About, DTO.KeyWord))
+                .ThenBy(x => Math.Abs(x.VacancyName.IndexOf(DTO.KeyWord, StringComparison.InvariantCultureIgnoreCase) - x.VacancyName.Length));
         }
 
         Initialize();
     }
 
     public SortVacancyDTO? DTO { get; set; }
+
+    private static int CountKeywordOccurrences(string text, string keyword)
+    {
+        if (string.IsNullOrEmpty(text) || string.IsNullOrEmpty(keyword))
+            return 0;
+
+        var regex = new Regex(Regex.Escape(keyword), RegexOptions.IgnoreCase);
+        return regex.Matches(text).Count;
+    }
 }
