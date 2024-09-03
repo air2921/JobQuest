@@ -13,10 +13,9 @@ using domain.Localize;
 
 namespace infrastructure.S3;
 
-public class S3Service(S3ClientProvider s3provider, ILogger<S3Service> logger, ILocalizer localizer) : IS3Service
+public class S3Service(IS3ClientProvider s3provider, ILogger<S3Service> logger, ILocalizer localizer) : IS3Service
 {
     private readonly object _lockObj = new();
-
     private readonly S3ClientObject _provider = s3provider.GetS3Client();
 
     public async Task Upload(Stream stream, string key, CancellationToken token = default)
@@ -76,7 +75,7 @@ public class S3Service(S3ClientProvider s3provider, ILogger<S3Service> logger, I
 
             await Task.WhenAll(tasks);
         }
-        catch (Exception)
+        catch (S3Exception)
         {
             cts.Cancel();
             foreach (var stream in fileStreams.Values)

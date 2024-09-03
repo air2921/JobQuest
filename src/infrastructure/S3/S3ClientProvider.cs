@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace infrastructure.S3;
 
-public class S3ClientProvider(IConfiguration configuration)
+public class S3ClientProvider(IConfiguration configuration) : IS3ClientProvider
 {
     public S3ClientObject GetS3Client()
     {
@@ -19,8 +19,13 @@ public class S3ClientProvider(IConfiguration configuration)
             Bucket = bucket,
             S3Client = new AmazonS3Client(keyId, accessKey, new AmazonS3Config
             {
-                ServiceURL = App.S3_URL
+                ServiceURL = section[App.S3_URL]
             })
         };
     }
+}
+
+public interface IS3ClientProvider
+{
+    S3ClientObject GetS3Client();
 }

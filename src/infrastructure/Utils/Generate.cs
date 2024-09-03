@@ -9,7 +9,7 @@ public class Generate : IGenerate
     private static readonly Random _rnd = new();
 
     private const int MIN = 0;
-    private const int MAX = 11;
+    private const int MAX = 10;
 
     public string GuidCombine(int count, bool useNoHyphensFormat = false)
     {
