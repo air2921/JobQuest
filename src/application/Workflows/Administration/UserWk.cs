@@ -17,6 +17,7 @@ namespace application.Workflows.Administration;
 
 public class UserWk(
     IRepository<UserModel> repository,
+    IDatabaseTransaction databaseTransaction,
     ISender<EmailDTO> sender,
     IConfiguration configuration,
     ILocalizer localizer) : Responder
@@ -56,6 +57,8 @@ public class UserWk(
 
     public async Task<Response> BlockOrUnblock(int userId, bool block)
     {
+        using var transaction = databaseTransaction.Begin();
+
         try
         {
             var user = await repository.GetByIdAsync(userId);
@@ -79,10 +82,12 @@ public class UserWk(
                 Body = body + configuration[App.SUPPORT_EMAIL]
             });
 
+            transaction.Commit();
             return Response(200, new { user });
         }
         catch (Exception ex) when (ex is EntityException || ex is SmtpClientException)
         {
+            transaction.Rollback();
             return Response(500, ex.Message);
         }
     }

@@ -30,9 +30,10 @@ public static class Add
         services.AddScoped(provider =>
         {
             var repository = provider.GetRequiredService<IRepository<UserModel>>();
+            var transaction = provider.GetRequiredService<IDatabaseTransaction>();
             var sender = provider.GetRequiredService<ISender<EmailDTO>>();
             var localizer = provider.GetRequiredService<ILocalizer>();
-            return new UserWk(repository, sender, configuration, localizer);
+            return new UserWk(repository, transaction, sender, configuration, localizer);
         });
 
         services.AddAutoMapper(typeof(application.AutoMapper.Mapper));
