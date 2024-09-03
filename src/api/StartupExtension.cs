@@ -17,7 +17,11 @@ public static class StartupExtension
 {
     public static void AddStartupServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
     {
-        services.AddControllers();
+        services.AddControllers()
+            .AddJsonOptions(opts =>
+            {
+                opts.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+            });
         services.AddSignalR();
         services.AddHttpContextAccessor();
         services.AddLogging();

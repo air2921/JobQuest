@@ -19,6 +19,7 @@ public class SortCompanyDTO : PaginationDTO
         builder.Append(CompanyName ?? "null");
         builder.Append('-');
         builder.Append(HasOpenedVacancies.ToString() ?? "null");
+        builder.Append('-');
         if (Locations is not null && Locations.Any())
         {
             foreach (var location in Locations)

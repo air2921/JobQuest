@@ -19,7 +19,7 @@ public class SortEducationDTO : PaginationDTO
         builder.Append(ResumeId.ToString() ?? "null");
         builder.Append('-');
         builder.Append(StillStyding.ToString() ?? "null");
-
+        builder.Append('-');
         if (Levels is not null && Levels.Any())
         {
             foreach (var level in Levels)
