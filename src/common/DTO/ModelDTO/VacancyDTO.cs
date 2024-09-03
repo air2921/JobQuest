@@ -10,6 +10,9 @@ public class VacancyDTO
     [Required]
     public string Location { get; set; } = null!;
 
+    [Required]
+    public string Country { get; set; } = null!;
+
     public int MinSalary { get; set; } = 0;
 
     public int MaxSalary { get; set; } = 0;

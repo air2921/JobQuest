@@ -12,6 +12,9 @@ public class CompanyDTO
     public string Location { get; set; } = null!;
 
     [Required]
+    public string Country { get; set; } = null!;
+
+    [Required]
     public DateTime RegisterDate { get; set; }
 
     public string? PhoneNumber { get; set; }

@@ -19,6 +19,10 @@ public class CompanyModel : Contact
     public string CompanyName { get; set; } = null!;
 
     [Column]
+    [JsonPropertyName("country")]
+    public string Country { get; set; } = null!;
+
+    [Column]
     [JsonPropertyName("location")]
     public string Location { get; set; } = null!;
 

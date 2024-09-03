@@ -27,6 +27,10 @@ public class VacancyModel
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [Column]
+    [JsonPropertyName("country")]
+    public string Country { get; set; } = null!;
+
+    [Column]
     [JsonPropertyName("location")]
     public string Location { get; set; } = null!;
 

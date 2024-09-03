@@ -179,6 +179,11 @@ namespace datahub.Migrations
                         .HasColumnType("text")
                         .HasAnnotation("Relational:JsonPropertyName", "location");
 
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "country");
+
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("text")
                         .HasAnnotation("Relational:JsonPropertyName", "phone_number");
@@ -784,6 +789,11 @@ namespace datahub.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasAnnotation("Relational:JsonPropertyName", "location");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "country");
 
                     b.Property<int>("MaxSalary")
                         .HasColumnType("integer")
