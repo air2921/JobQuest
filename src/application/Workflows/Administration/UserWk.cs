@@ -55,7 +55,7 @@ public class UserWk(
         }
     }
 
-    public async Task<Response> BlockOrUnblock(int userId, bool block)
+    public async Task<Response> BlockOrUnblock(int userId, bool block, string language = "en")
     {
         using var transaction = databaseTransaction.Begin();
 
@@ -71,8 +71,8 @@ public class UserWk(
             user.IsBlocked = block;
             await repository.UpdateAsync(user);
 
-            var head = block ? localizer.Translate(Mail.USER_BLOCK_HEAD) : localizer.Translate(Mail.USER_UNBLOCK_HEAD);
-            var body = block ? localizer.Translate(Mail.USER_BLOCK_BODY) : localizer.Translate(Mail.USER_UNBLOCK_BODY);
+            var head = block ? localizer.Translate(Mail.USER_BLOCK_HEAD, language) : localizer.Translate(Mail.USER_UNBLOCK_HEAD, language);
+            var body = block ? localizer.Translate(Mail.USER_BLOCK_BODY, language) : localizer.Translate(Mail.USER_UNBLOCK_BODY, language);
 
             await sender.SendMessage(new EmailDTO
             {
