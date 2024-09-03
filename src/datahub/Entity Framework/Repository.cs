@@ -81,8 +81,9 @@ public class Repository<T> : IRepository<T> where T : class
             cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
 
             IQueryable<T> query = _dbSet;
-            foreach (var expression in expressions)
-                query.Include(expression);
+            if (expressions.Length > 0)
+                foreach (var expression in expressions)
+                    query.Include(expression);
 
             if (specification is not null)
                 query = SpecificationEvaluator.Default.GetQuery(query, specification);
@@ -113,8 +114,9 @@ public class Repository<T> : IRepository<T> where T : class
             cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
 
             IQueryable<T> query = _dbSet;
-            foreach (var expression in expressions)
-                query.Include(expression);
+            if (expressions.Length > 0)
+                foreach (var expression in expressions)
+                    query.Include(expression);
 
             query = SpecificationEvaluator.Default.GetQuery(query, specification);
 
@@ -144,8 +146,9 @@ public class Repository<T> : IRepository<T> where T : class
             cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
 
             IQueryable<T> query = _dbSet;
-            foreach (var expression in expressions)
-                query.Include(expression);
+            if (expressions.Length > 0)
+                foreach (var expression in expressions)
+                    query.Include(expression);
 
             query = SpecificationEvaluator.Default.GetQuery(query, specification);
 
