@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StackExchange.Redis;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ public interface IDataCache<T> where T : IConnection
     Task<IEnumerable<TObject>?> GetRangeAsync<TObject>(string key);
     Task<bool> DeleteSingleAsync(string key);
     Task<bool> DeleteRangeAsync(IEnumerable<string> keys);
-    Task<bool> DeleteRangeByPatternAsync(string pattern);
+    Task<bool> DeleteRangeByPatternAsync(RedisValue pattern);
 }
 
 public interface IConnection

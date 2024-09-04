@@ -29,12 +29,12 @@ public class RedisChatConnection : IConnection
 public class DataCache<T> : IDataCache<T> where T : IConnection
 {
     private static readonly JsonSerializerSettings _jsonSerializerSettings = new() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore };
-    private readonly RedisContext _context;
+    private readonly IRedisContext _context;
     private readonly ILogger<DataCache<T>> _logger;
     private readonly IServer _server;
     private readonly IDatabase _db;
 
-    public DataCache(RedisContext context, ILogger<DataCache<T>> logger, T connection)
+    public DataCache(IRedisContext context, ILogger<DataCache<T>> logger, T connection)
     {
         _context = context;
         _logger = logger;
@@ -92,7 +92,6 @@ public class DataCache<T> : IDataCache<T> where T : IConnection
             if (!value.HasValue)
                 return null;
 
-
             _logger.LogInformation($"Request to get data from redis\nKey: {key}");
 
             return JsonConvert.DeserializeObject<IEnumerable<TObject>>(value!);
@@ -129,10 +128,7 @@ public class DataCache<T> : IDataCache<T> where T : IConnection
     {
         try
         {
-            var value = await _db.StringGetAsync(key);
-
-            if (value.HasValue)
-                await _db.KeyDeleteAsync(key);
+            await _db.KeyDeleteAsync(key);
 
             _logger.LogInformation($"Request to delete data by key from redis\nKey: {key}");
             return true;
@@ -144,7 +140,7 @@ public class DataCache<T> : IDataCache<T> where T : IConnection
         }
     }
 
-    public async Task<bool> DeleteRangeByPatternAsync(string pattern)
+    public async Task<bool> DeleteRangeByPatternAsync(RedisValue pattern)
     {
         try
         {

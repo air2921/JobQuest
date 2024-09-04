@@ -22,9 +22,11 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker\do
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "background", "src\background\background.csproj", "{5147D3C2-D468-472F-BC3A-5C358BFDC324}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests.infrasturcture", "tests\tests.infrasturcture\tests.infrasturcture.csproj", "{330017BB-F10A-4A28-A64E-4FA490DE0983}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tests.infrasturcture", "tests\tests.infrasturcture\tests.infrasturcture.csproj", "{330017BB-F10A-4A28-A64E-4FA490DE0983}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests.domain", "tests\tests.domain\tests.domain.csproj", "{EE0DFC84-F0B9-46A9-B0EF-9FD6B1D944C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tests.domain", "tests\tests.domain\tests.domain.csproj", "{EE0DFC84-F0B9-46A9-B0EF-9FD6B1D944C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests.datahub", "tests\tests.datahub\tests.datahub.csproj", "{0A55EEED-E7F4-41B8-8670-6F9D0D088A3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,6 +74,10 @@ Global
 		{EE0DFC84-F0B9-46A9-B0EF-9FD6B1D944C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE0DFC84-F0B9-46A9-B0EF-9FD6B1D944C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE0DFC84-F0B9-46A9-B0EF-9FD6B1D944C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A55EEED-E7F4-41B8-8670-6F9D0D088A3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A55EEED-E7F4-41B8-8670-6F9D0D088A3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A55EEED-E7F4-41B8-8670-6F9D0D088A3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A55EEED-E7F4-41B8-8670-6F9D0D088A3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
