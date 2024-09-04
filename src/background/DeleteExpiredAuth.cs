@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace background;
 
-public class DeleteExpiredAuth(IRepository<AuthModel> repository, ILogger<DeleteExpiredRecovery> logger)
+public class DeleteExpiredAuth(IRepository<AuthModel> repository, ILogger<DeleteExpiredAuth> logger)
 {
     public async Task DeleteExpired()
     {
