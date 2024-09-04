@@ -31,7 +31,7 @@ public static class Add
         if (environment.IsDevelopment())
             dbContext.SeedDatabase();
 
-        services.AddSingleton(provider =>
+        services.AddSingleton<IRedisContext>(provider =>
         {
             return new RedisContext(config);
         });

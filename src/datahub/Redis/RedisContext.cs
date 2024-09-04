@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace datahub.Redis;
 
-public class RedisContext
+public class RedisContext : IRedisContext
 {
     private readonly IConfiguration _config;
     private static readonly ConcurrentDictionary<string, ConnectionMultiplexer> _multiplexers = [];
@@ -45,4 +45,10 @@ public class RedisContext
         foreach (var multiplexer in _multiplexers.Values)
             multiplexer.Dispose();
     }
+}
+
+public interface IRedisContext
+{
+    IDatabase GetDatabase(string dbName);
+    IServer GetServer(string dbName);
 }
