@@ -14,9 +14,6 @@ public class GenericCache<T>(IDataCache<ConnectionPrimary> dataCache) : IGeneric
             return cache;
 
         var data = await dataReceiverCallback();
-        if (data is null)
-            return null;
-
         await dataCache.SetAsync(key, data, TimeSpan.FromMinutes(expirationMin));
         return data;
     }
