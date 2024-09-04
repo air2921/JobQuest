@@ -9,7 +9,7 @@ public class GenericCacheTests
     private readonly string _key = "key";
     private readonly string _value = "value";
     private readonly string[] _valueCollection = ["value1", "value2", "value3"];
-    private readonly Mock<Func<Task<string>>> _mockObjectCallBack;
+    private readonly Mock<Func<Task<string?>>> _mockObjectCallBack;
     private readonly Mock<Func<Task<IEnumerable<string>>>> _mockCollectionCallBack;
 
     private readonly Mock<IDataCache<ConnectionPrimary>> _mockCache;
@@ -17,7 +17,7 @@ public class GenericCacheTests
     public GenericCacheTests()
     {
         _mockCache = new Mock<IDataCache<ConnectionPrimary>>();
-        _mockObjectCallBack = new Mock<Func<Task<string>>>();
+        _mockObjectCallBack = new Mock<Func<Task<string?>>>();
         _mockCollectionCallBack = new Mock<Func<Task<IEnumerable<string>>>>();
     }
 
@@ -37,7 +37,9 @@ public class GenericCacheTests
     [Fact]
     public async Task GetRange_CacheIsNull_CallbackReturnsCollection()
     {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
         _mockCache.Setup(x => x.GetRangeAsync<string>(_key)).ReturnsAsync((IEnumerable<string>)null);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
         _mockCollectionCallBack.Setup(cb => cb()).ReturnsAsync(_valueCollection);
 
         var genericCache = new GenericCache<string>(_mockCache.Object);
@@ -65,8 +67,12 @@ public class GenericCacheTests
     [Fact]
     public async Task GetSingle_CacheIsNull_CallbackReturnsNull()
     {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
         _mockCache.Setup(x => x.GetSingleAsync<string>(_key)).ReturnsAsync((string)null);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
         _mockObjectCallBack.Setup(cb => cb()).ReturnsAsync((string)null);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
         var genericCache = new GenericCache<string>(_mockCache.Object);
         var result = await genericCache.GetSingleAsync(_key, _mockObjectCallBack.Object!, _expires);
@@ -79,7 +85,9 @@ public class GenericCacheTests
     [Fact]
     public async Task GetSingle_CacheIsNull_CallbackReturnsNotNull()
     {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
         _mockCache.Setup(x => x.GetSingleAsync<string>(_key)).ReturnsAsync((string)null);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
         _mockObjectCallBack.Setup(cb => cb()).ReturnsAsync(_value);
 
         var genericCache = new GenericCache<string>(_mockCache.Object);
