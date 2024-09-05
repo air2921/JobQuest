@@ -3,6 +3,7 @@ using AutoMapper;
 using common.DTO.ModelDTO;
 using common.Exceptions;
 using domain.Abstractions;
+using domain.Includes;
 using domain.Localize;
 using domain.Models;
 using domain.SpecDTO;
@@ -27,8 +28,9 @@ public class ResponseWk(
         try
         {
             var spec = new SortResponseSpec(dto.Skip, dto.Total, dto.ByDesc, true) { DTO = dto, VacancyId = vacancyId };
+            var include = new ResponseInclude { IncludeVacancy = true, IncludeCompany = true };
             var responses = await genericCache.GetRangeAsync(CachePrefixes.Response_AsEmployer + $"{vacancyId}_" + dto.ToString(),
-                () => repository.GetRangeAsync(spec, [x => x.Vacancy]));
+                () => repository.GetRangeAsync(spec, include));
             bool antiCondition = responses is null ||
                 responses.Any(x => x.Vacancy.Company.UserId != userId);
             if (antiCondition)
@@ -47,8 +49,9 @@ public class ResponseWk(
         try
         {
             var spec = new SortResponseSpec(dto.Skip, dto.Total, dto.ByDesc, false) { DTO = dto, ResumeId = resumeId };
+            var include = new ResponseInclude { IncludeResume = true };
             var responses = await genericCache.GetRangeAsync(CachePrefixes.Response_AsApplicant + $"{resumeId}_" + dto.ToString(),
-                () => repository.GetRangeAsync(spec, [x => x.Resume]));
+                () => repository.GetRangeAsync(spec, include));
             bool antiCondition = responses is null ||
                 responses.Any(x => x.Resume.UserId != userId);
             if (antiCondition)
@@ -67,8 +70,9 @@ public class ResponseWk(
         try
         {
             var spec = new ResponseByIdSpec(id);
+            var include = new ResponseInclude { IncludeVacancy = true, IncludeResume = true, IncludeCompany = true };
             var response = await genericCache.GetSingleAsync(CachePrefixes.Response + id, 
-                () => repository.GetByIdWithInclude(spec, [x => x.Resume, x => x.Vacancy, x => x.Vacancy.Company]));
+                () => repository.GetByIdWithInclude(spec, include));
             var antiCondition = response is null ||
                 (response.Vacancy.Company.UserId != userId && response.Resume.UserId != userId);
             if (antiCondition)
@@ -87,7 +91,8 @@ public class ResponseWk(
         try
         {
             var spec = new ResponseByIdSpec(id);
-            var response = await repository.GetByIdWithInclude(spec, [x => x.Resume, x => x.Vacancy, x => x.Vacancy.Company]);
+            var include = new ResponseInclude { IncludeVacancy = true, IncludeResume = true, IncludeCompany = true };
+            var response = await repository.GetByIdWithInclude(spec, include);
             var antiCondition = response is null ||
                 (response.Vacancy.Company.UserId != userId && response.Resume.UserId != userId);
             if (antiCondition)
@@ -129,7 +134,8 @@ public class ResponseWk(
         try
         {
             var spec = new ResponseByIdSpec(responseId);
-            var response = await repository.GetByIdWithInclude(spec, [x => x.Resume, x => x.Vacancy, x => x.Vacancy.Company]);
+            var include = new ResponseInclude { IncludeVacancy = true, IncludeResume = true, IncludeCompany = true };
+            var response = await repository.GetByIdWithInclude(spec, include);
             if (response is null || response.Vacancy.Company.CompanyId != companyId)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 

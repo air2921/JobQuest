@@ -3,6 +3,7 @@ using common.DTO.ModelDTO;
 using common.DTO.ModelDTO.Chat;
 using common.Exceptions;
 using domain.Abstractions;
+using domain.Includes;
 using domain.Localize;
 using domain.Models.Chat;
 using domain.SpecDTO;
@@ -26,7 +27,8 @@ public class MessageWk(
         try
         {
             var spec = new SortMessageSpec(dto.Skip, dto.Total, dto.ByDesc, chatId, userId) { OnlyRead = onlyRead, KeyWord = keyword };
-            var messages = await repository.GetRangeAsync(spec, [x => x.Chat]);
+            var include = new MessageInclude { IncludeChat = true };
+            var messages = await repository.GetRangeAsync(spec, include);
             if (messages is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
@@ -43,7 +45,8 @@ public class MessageWk(
         try
         {
             var spec = new MessageByIdSpec(id);
-            var message = await repository.GetByIdWithInclude(spec, [x => x.Chat]);
+            var include = new MessageInclude { IncludeChat = true };
+            var message = await repository.GetByIdWithInclude(spec, include);
             if (message is null || message.EmployerId != userId || message.CandidateId != userId)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 

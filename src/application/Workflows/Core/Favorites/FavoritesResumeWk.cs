@@ -1,6 +1,7 @@
 ﻿using common.DTO.ModelDTO;
 using common.Exceptions;
 using domain.Abstractions;
+using domain.Includes;
 using domain.Localize;
 using domain.Models;
 using domain.SpecDTO;
@@ -22,7 +23,8 @@ public class FavoritesResumeWk(
         try
         {
             var spec = new SortFavoriteResumesSpec(dto.Skip, dto.Total, dto.ByDesc, userId);
-            var favorites = await repository.GetRangeAsync(spec);
+            var include = new FavoriteResumeInclude { IncludeResume = true };
+            var favorites = await repository.GetRangeAsync(spec, include);
             if (favorites is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 

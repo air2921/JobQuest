@@ -4,6 +4,7 @@ using common.DTO.ModelDTO;
 using common.Exceptions;
 using datahub.Redis;
 using domain.Abstractions;
+using domain.Includes;
 using domain.Localize;
 using domain.Models;
 using domain.SpecDTO;
@@ -31,8 +32,9 @@ public class ResumeWk(
         try
         {
             var spec = new SortResumeSpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto };
+            var include = new ResumeInclude { IncludeExperiences = true, IncludeEducations = true, IncludeUser = true, IncludeLanguages = true };
             var resumes = await genericCache.GetRangeAsync(CachePrefixes.Response + dto.ToString(), 
-                () => repository.GetRangeAsync(spec, [x => x.Experiences, x => x.Educations, x => x.User, x => x.User.Languages]));
+                () => repository.GetRangeAsync(spec, include));
             if (resumes is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
@@ -49,8 +51,9 @@ public class ResumeWk(
         try
         {
             var spec = new ResumeByIdSpec(id);
+            var include = new ResumeInclude { IncludeExperiences = true, IncludeEducations = true, IncludeUser = true, IncludeLanguages = true };
             var resume = await genericCache.GetSingleAsync(CachePrefixes.Resume + id, 
-                () => repository.GetByIdWithInclude(spec, [x => x.Experiences, x => x.Educations, x => x.User, x => x.User!.Languages]));
+                () => repository.GetByIdWithInclude(spec, include));
             if (resume is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 

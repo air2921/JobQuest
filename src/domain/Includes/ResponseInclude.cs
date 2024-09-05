@@ -18,12 +18,17 @@ public class ResponseInclude : IInclude<ResponseModel>
                 expressions.Add(x => x.Resume);
 
             if (IncludeVacancy)
+            {
                 expressions.Add(x => x.Vacancy);
+                if (IncludeCompany)
+                    expressions.Add(x => x.Vacancy.Company);
+            }
 
             return expressions.ToArray();
         }
     }
 
     public bool IncludeResume { get; set; } = false;
+    public bool IncludeCompany { get; set; } = false;
     public bool IncludeVacancy { get; set; } = false;
 }

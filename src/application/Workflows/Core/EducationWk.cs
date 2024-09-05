@@ -3,6 +3,7 @@ using AutoMapper;
 using common.DTO.ModelDTO;
 using common.Exceptions;
 using domain.Abstractions;
+using domain.Includes;
 using domain.Localize;
 using domain.Models;
 using domain.SpecDTO;
@@ -60,7 +61,8 @@ public class EducationWk(
         try
         {
             var spec = new EducationByIdSpec(id);
-            var education = await educationRepository.GetByIdWithInclude(spec, [x => x.Resume]);
+            var include = new EducationInclude { IncludeResume = true };
+            var education = await educationRepository.GetByIdWithInclude(spec, include);
             if (education is null || education.Resume.UserId != userId)
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
 
@@ -123,7 +125,8 @@ public class EducationWk(
         try
         {
             var spec = new EducationByIdSpec(experienceId);
-            var entity = await educationRepository.GetByIdWithInclude(spec, [x => x.Resume]);
+            var include = new EducationInclude { IncludeResume = true };
+            var entity = await educationRepository.GetByIdWithInclude(spec, include);
             if (entity is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 

@@ -3,6 +3,7 @@ using AutoMapper;
 using common.DTO.ModelDTO;
 using common.Exceptions;
 using domain.Abstractions;
+using domain.Includes;
 using domain.Localize;
 using domain.Models;
 using domain.SpecDTO;
@@ -26,8 +27,9 @@ public class ReviewWk(
         try
         {
             var spec = new SortReviewSpec(dto.Skip, dto.Total, dto.ByDesc, companyId) { IsRecomended = isRec, Title = title };
+            var include = new ReviewInclude { IncludeUser = true };
             var key = $"{CachePrefixes.Review}{dto.ToString()}-{companyId}-{isRec}-{title}";
-            var reviews = await genericCache.GetRangeAsync(key, () => repository.GetRangeAsync(spec, [x => x.Company]));
+            var reviews = await genericCache.GetRangeAsync(key, () => repository.GetRangeAsync(spec, include));
             if (reviews is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
@@ -44,8 +46,9 @@ public class ReviewWk(
         try
         {
             var spec = new ReviewByIdSpec(id);
+            var include = new ReviewInclude { IncludeUser = true };
             var review = await genericCache.GetSingleAsync(CachePrefixes.Review + id, 
-                () => repository.GetByIdWithInclude(spec, [x => x.Company]));
+                () => repository.GetByIdWithInclude(spec, include));
             if (review is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 

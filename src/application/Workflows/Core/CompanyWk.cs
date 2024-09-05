@@ -3,6 +3,7 @@ using AutoMapper;
 using common.DTO.ModelDTO;
 using common.Exceptions;
 using domain.Abstractions;
+using domain.Includes;
 using domain.Localize;
 using domain.Models;
 using domain.SpecDTO;
@@ -24,7 +25,8 @@ public class CompanyWk(
         try
         {
             var spec = new SortCompanySpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto };
-            var companies = await genericCache.GetRangeAsync(CachePrefixes.Company + dto.ToString(), () => repository.GetRangeAsync(spec, [x => x.Reviews, x => x.Vacancies]));
+            var include = new CompanyInclude { IncludeReviews = true, IncludeVacancies = true };
+            var companies = await genericCache.GetRangeAsync(CachePrefixes.Company + dto.ToString(), () => repository.GetRangeAsync(spec, include));
             if (companies is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
@@ -41,7 +43,8 @@ public class CompanyWk(
         try
         {
             var spec = new CompanyByRelationSpec(id);
-            var company = await genericCache.GetSingleAsync(CachePrefixes.Company + id, () => repository.GetByIdWithInclude(spec, [x => x.Reviews, x => x.Vacancies]));
+            var include = new CompanyInclude { IncludeReviews = true, IncludeVacancies = true };
+            var company = await genericCache.GetSingleAsync(CachePrefixes.Company + id, () => repository.GetByIdWithInclude(spec, include));
             if (company is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 

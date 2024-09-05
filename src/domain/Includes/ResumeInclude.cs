@@ -15,7 +15,11 @@ public class ResumeInclude : IInclude<ResumeModel>
             var expressions = new List<Expression<Func<ResumeModel, object?>>>();
 
             if (IncludeUser)
+            {
                 expressions.Add(x => x.User);
+                if (IncludeLanguages)
+                    expressions.Add(x => x.User.Languages);
+            }
 
             if (IncludeResponses)
                 expressions.Add(x => x.Responses);
@@ -40,6 +44,7 @@ public class ResumeInclude : IInclude<ResumeModel>
     }
 
     public bool IncludeUser { get; set; } = false;
+    public bool IncludeLanguages { get; set; } = false;
     public bool IncludeResponses { get; set; } = false;
     public bool IncludeFavorites { get; set; } = false;
     public bool IncludeEducations { get; set; } = false;

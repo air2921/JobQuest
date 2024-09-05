@@ -1,5 +1,6 @@
 ﻿using common.Exceptions;
 using domain.Abstractions;
+using domain.Includes;
 using domain.Localize;
 using domain.Models;
 using domain.SpecDTO;
@@ -21,7 +22,8 @@ public class FavoritesVacancyWk(
         try
         {
             var spec = new SortFavoriteVacanciesSpec(dto.Skip, dto.Total, dto.ByDesc, userId);
-            var favorites = await repository.GetRangeAsync(spec);
+            var include = new FavoriteVacancyInclude { IncludeVacancy = true };
+            var favorites = await repository.GetRangeAsync(spec, include);
             if (favorites is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
