@@ -10,7 +10,6 @@ using domain.SpecDTO;
 using domain.Specifications.Vacancy;
 using JsonLocalizer;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace application.Workflows.Core;

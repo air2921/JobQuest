@@ -11,8 +11,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using JsonLocalizer;
 using domain.Localize;
-using System.Linq.Expressions;
-using StackExchange.Redis;
 
 namespace datahub.Entity_Framework;
 

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace tests.application.Components
+namespace tests.application.Components;
+
+public class SessionComponentTests
 {
-    internal class SessionComponentTests
-    {
-    }
+
 }
