@@ -5,6 +5,7 @@ using domain.Specifications.Auth;
 using System.Threading.Tasks;
 using common.DTO;
 using application.Workflows;
+using domain.Includes;
 
 namespace application.Components;
 
@@ -15,7 +16,8 @@ public class SessionComponent(
     public async Task<Response> RefreshJsonWebToken(string refresh)
     {
         var spec = new AuthByValueSpec(refresh);
-        var model = await authRepository.GetByFilterAsync(spec, [x => x.User]);
+        var include = new AuthInclude { IncludeUser = true };
+        var model = await authRepository.GetByFilterAsync(spec, include);
 
         if (model is null || model.User is null)
             return Response(404);
