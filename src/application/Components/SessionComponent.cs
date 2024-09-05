@@ -22,6 +22,9 @@ public class SessionComponent(
         if (model is null || model.User is null)
             return Response(404);
 
+        if (model.User.IsBlocked)
+            return Response(403);
+
         var jwt = tokenPublisher.JsonWebToken(new JwtDTO
         {
             Expires = Immutable.JwtExpires,

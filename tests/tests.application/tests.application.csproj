@@ -27,4 +27,8 @@
 	<Using Include="Moq" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Workflows\" />
+  </ItemGroup>
+
 </Project>
