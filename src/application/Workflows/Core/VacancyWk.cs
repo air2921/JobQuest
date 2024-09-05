@@ -3,13 +3,13 @@ using AutoMapper;
 using common.DTO.ModelDTO;
 using common.Exceptions;
 using domain.Abstractions;
+using domain.Includes;
 using domain.Localize;
 using domain.Models;
 using domain.SpecDTO;
 using domain.Specifications.Vacancy;
 using JsonLocalizer;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace application.Workflows.Core;
@@ -26,8 +26,9 @@ public class VacancyWk(
         try
         {
             var spec = new SortVacancySpec(dto.Skip, dto.Total, dto.ByDesc) { DTO = dto };
+            var include = new VacancyInclude { IncludeCompany = true };
             var vacancies = await genericCache.GetRangeAsync(CachePrefixes.Vacancy + dto.ToString(), 
-                () => vacancyRepository.GetRangeAsync(spec, [x => x.Company]));
+                () => vacancyRepository.GetRangeAsync(spec, include));
             if (vacancies is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
@@ -44,8 +45,9 @@ public class VacancyWk(
         try
         {
             var spec = new VacancyByIdSpec(id);
+            var include = new VacancyInclude { IncludeCompany = true };
             var vacancy = await genericCache.GetSingleAsync(CachePrefixes.Vacancy + id, 
-                () => vacancyRepository.GetByIdWithInclude(spec, [x => x.Company]));
+                () => vacancyRepository.GetByIdWithInclude(spec, include));
             if (vacancy is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
@@ -62,7 +64,8 @@ public class VacancyWk(
         try
         {
             var spec = new VacancyByIdSpec(id);
-            var entity = await vacancyRepository.GetByIdWithInclude(spec, [x => x.Company]);
+            var include = new VacancyInclude { IncludeCompany = true };
+            var entity = await vacancyRepository.GetByIdWithInclude(spec, include);
             if (entity is null || entity.CompanyId != companyId || entity.Company.UserId != userId)
                 return Response(403, localizer.Translate(Messages.FORBIDDEN));
 
@@ -123,7 +126,8 @@ public class VacancyWk(
     public async Task<Response> Update(VacancyDTO dto, int vacancyId, int companyId, int userId)
     {
         var spec = new VacancyByIdSpec(vacancyId);
-        var entity = await vacancyRepository.GetByIdWithInclude(spec, [x => x.Company]);
+        var include = new VacancyInclude { IncludeCompany = true };
+        var entity = await vacancyRepository.GetByIdWithInclude(spec, include);
 
         try
         {

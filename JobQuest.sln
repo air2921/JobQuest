@@ -26,9 +26,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tests.infrasturcture", "tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tests.domain", "tests\tests.domain\tests.domain.csproj", "{EE0DFC84-F0B9-46A9-B0EF-9FD6B1D944C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests.datahub", "tests\tests.datahub\tests.datahub.csproj", "{0A55EEED-E7F4-41B8-8670-6F9D0D088A3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tests.datahub", "tests\tests.datahub\tests.datahub.csproj", "{0A55EEED-E7F4-41B8-8670-6F9D0D088A3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests.background", "tests\tests.background\tests.background.csproj", "{929E2B22-5814-45CF-BDD2-887FB023816F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tests.background", "tests\tests.background\tests.background.csproj", "{929E2B22-5814-45CF-BDD2-887FB023816F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests.application", "tests\tests.application\tests.application.csproj", "{DAED3B80-E2D6-4EAA-963D-883F7FF34535}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,6 +86,10 @@ Global
 		{929E2B22-5814-45CF-BDD2-887FB023816F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{929E2B22-5814-45CF-BDD2-887FB023816F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{929E2B22-5814-45CF-BDD2-887FB023816F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAED3B80-E2D6-4EAA-963D-883F7FF34535}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAED3B80-E2D6-4EAA-963D-883F7FF34535}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAED3B80-E2D6-4EAA-963D-883F7FF34535}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAED3B80-E2D6-4EAA-963D-883F7FF34535}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

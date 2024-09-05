@@ -1,6 +1,7 @@
 ﻿using common.DTO;
 using common.Exceptions;
 using domain.Abstractions;
+using domain.Includes;
 using domain.Localize;
 using domain.Models;
 using domain.Specifications.Recovery;
@@ -64,7 +65,8 @@ public class RecoveryWk(
         try
         {
             var spec = new RecoveryByValueSpec(recoveryToken);
-            var tokenModel = await recoveryRepository.GetByFilterAsync(spec, [x => x.User]);
+            var include = new RecoveryInclude { IncludeUser = true };
+            var tokenModel = await recoveryRepository.GetByFilterAsync(spec, include);
             if (tokenModel is null || tokenModel.User is null)
                 return Response(404, localizer.Translate(Messages.NOT_FOUND));
 
