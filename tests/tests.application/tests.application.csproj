@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\application\application.csproj" />
+    <ProjectReference Include="..\..\src\common\common.csproj" />
     <ProjectReference Include="..\..\src\domain\domain.csproj" />
   </ItemGroup>
 

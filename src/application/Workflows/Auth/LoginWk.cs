@@ -98,7 +98,10 @@ public class LoginWk(
             });
 
             if (!await dataCache.DeleteSingleAsync(token))
+            {
                 transaction.Rollback();
+                return Response(500);
+            }
 
             transaction.Commit();
             return Response(200, new
