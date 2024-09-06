@@ -11,10 +11,13 @@ namespace application.Workflows.Auth;
 
 public class LogoutWk(
     IRepository<AuthModel> repository,
+    IDatabaseTransaction databaseTransaction,
     ILocalizer localizer) : Responder
 {
     public async Task<Response> Logout(string refresh, bool clearAllSessions = false)
     {
+        using var transaction = databaseTransaction.Begin();
+
         try
         {
             var model = await repository.DeleteByFilterAsync(new AuthByValueSpec(refresh));
@@ -24,10 +27,12 @@ public class LogoutWk(
             if (clearAllSessions)
                 await LogoutAllSessions(model.UserId);
 
-            return Response(404);
+            transaction.Commit();
+            return Response(204);
         }
         catch (EntityException ex)
         {
+            transaction.Rollback();
             return Response(500, ex.Message);
         }
     }
