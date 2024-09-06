@@ -8,6 +8,8 @@ namespace tests.background.Deleting_Expired;
 
 public class DeleteExpiredAuthTests
 {
+    private readonly DeleteExpiredAuth _service;
+
     private const int MAX = 10000;
 
     private readonly Mock<ILogger<DeleteExpiredAuth>> _mockLogger;
@@ -17,6 +19,8 @@ public class DeleteExpiredAuthTests
     {
         _mockLogger = new Mock<ILogger<DeleteExpiredAuth>>();
         _mockRepository = new Mock<IRepository<AuthModel>>();
+
+        _service = new DeleteExpiredAuth(_mockRepository.Object, _mockLogger.Object);
     }
 
     [Fact]
@@ -36,8 +40,7 @@ public class DeleteExpiredAuthTests
             spec.OrderByDesc == false && spec.IsExpired == true), null, CancellationToken.None))
             .ReturnsAsync(tokenList);
 
-        var service = new DeleteExpiredAuth(_mockRepository.Object, _mockLogger.Object);
-        await service.DeleteExpired();
+        await _service.DeleteExpired();
 
         _mockRepository.Verify(r => r.GetCount(It.Is<CountAuthSpec>(spec => spec.IsExpired == true)), Times.Once);
         _mockRepository.Verify(r => r.GetRangeAsync(It.Is<SortAuthSpec>(spec =>
@@ -64,8 +67,7 @@ public class DeleteExpiredAuthTests
             spec.OrderByDesc == false && spec.IsExpired == true), null, CancellationToken.None))
             .ReturnsAsync(tokenList);
 
-        var service = new DeleteExpiredAuth(_mockRepository.Object, _mockLogger.Object);
-        await service.DeleteExpired();
+        await _service.DeleteExpired();
 
         _mockRepository.Verify(r => r.GetCount(It.Is<CountAuthSpec>(spec => spec.IsExpired == true)), Times.Once);
         _mockRepository.Verify(r => r.GetRangeAsync(It.Is<SortAuthSpec>(spec =>
@@ -80,8 +82,7 @@ public class DeleteExpiredAuthTests
         _mockRepository.Setup(r => r.GetCount(It.Is<CountAuthSpec>(spec => spec.IsExpired == true)))
             .Throws(new Exception());
 
-        var service = new DeleteExpiredAuth(_mockRepository.Object, _mockLogger.Object);
-        await service.DeleteExpired();
+        await _service.DeleteExpired();
 
         _mockRepository.Verify(r => r.GetCount(It.Is<CountAuthSpec>(spec => spec.IsExpired == true)), Times.Once);
         _mockRepository.Verify(r => r.GetRangeAsync(It.Is<SortAuthSpec>(spec =>

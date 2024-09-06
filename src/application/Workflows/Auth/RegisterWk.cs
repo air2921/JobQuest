@@ -98,5 +98,5 @@ public class RegisterWk(
         }
     }
 
-    private record UserObject(string Email, string Password, string Role, int Code, string FirstName, string LastName, string? Patronymic);
+    public record UserObject(string Email, string Password, string Role, int Code, string FirstName, string LastName, string? Patronymic);
 }

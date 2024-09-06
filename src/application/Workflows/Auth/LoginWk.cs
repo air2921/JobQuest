@@ -119,5 +119,5 @@ public class LoginWk(
         }
     }
 
-    private record UserObject(int Code, int UserId, string Role);
+    public record UserObject(int Code, int UserId, string Role);
 }

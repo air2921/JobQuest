@@ -13,7 +13,7 @@ public class SessionComponent(
     IRepository<AuthModel> authRepository,
     TokenPublisher tokenPublisher) : Responder
 {
-    public async Task<Response> RefreshJsonWebToken(string refresh)
+    public virtual async Task<Response> RefreshJsonWebToken(string refresh)
     {
         var spec = new AuthByValueSpec(refresh);
         var include = new AuthInclude { IncludeUser = true };

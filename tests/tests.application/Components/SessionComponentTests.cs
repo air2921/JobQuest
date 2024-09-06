@@ -13,6 +13,8 @@ namespace tests.application.Components;
 
 public class SessionComponentTests
 {
+    private readonly SessionComponent _service;
+
     private readonly Mock<IConfiguration> _mockConfiguration;
     private readonly Mock<IGenerate> _mockGenerate;
 
@@ -25,9 +27,11 @@ public class SessionComponentTests
     {
         _mockConfiguration = new Mock<IConfiguration>();
         _mockGenerate = new Mock<IGenerate>();
-
         _mockRepository = new Mock<IRepository<AuthModel>>();
         _userModel = new UserModel { UserId = 2921, Role = Role.Admin.ToString() };
+
+        _service = new SessionComponent(_mockRepository.Object,
+            new TokenPublisherStub(_mockConfiguration.Object, _mockGenerate.Object, _userModel, _jwt));
     }
 
     [Fact]
@@ -37,9 +41,7 @@ public class SessionComponentTests
             It.Is<AuthInclude>(x => x.IncludeUser == true), CancellationToken.None))
             .ReturnsAsync(new AuthModel { Value = _refresh, UserId = 2921, User = _userModel });
 
-        var service = new SessionComponent(_mockRepository.Object,
-            new TokenPublisherStub(_mockConfiguration.Object, _mockGenerate.Object, _userModel, _jwt));
-        var result = await service.RefreshJsonWebToken(_refresh);
+        var result = await _service.RefreshJsonWebToken(_refresh);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(200, result.Status);
@@ -53,8 +55,7 @@ public class SessionComponentTests
             It.Is<AuthInclude>(x => x.IncludeUser == true), CancellationToken.None))
             .ReturnsAsync((AuthModel)null);
 
-        var service = new SessionComponent(_mockRepository.Object, null);
-        var result = await service.RefreshJsonWebToken(_refresh);
+        var result = await _service.RefreshJsonWebToken(_refresh);
 
         Assert.False(result.IsSuccess);
         Assert.Equal(404, result.Status);
@@ -68,8 +69,7 @@ public class SessionComponentTests
             It.Is<AuthInclude>(x => x.IncludeUser == true), CancellationToken.None))
             .ReturnsAsync(new AuthModel { Value = _refresh, UserId = 2921, User = null });
 
-        var service = new SessionComponent(_mockRepository.Object, null);
-        var result = await service.RefreshJsonWebToken(_refresh);
+        var result = await _service.RefreshJsonWebToken(_refresh);
 
         Assert.False(result.IsSuccess);
         Assert.Equal(404, result.Status);
