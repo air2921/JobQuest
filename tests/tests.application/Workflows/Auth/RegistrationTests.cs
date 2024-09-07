@@ -11,6 +11,7 @@ using common.Exceptions;
 using domain.Localize;
 using static application.Workflows.Auth.RegisterWk;
 using domain.Enums;
+using System.Text;
 
 namespace tests.application.Workflows.Auth;
 
@@ -38,7 +39,9 @@ public class RegistrationTests
     private readonly string _emailHead = "e_head";
     private readonly int _code = 12345678;
     private readonly string _token = "token";
+    private readonly string _encodedToken;
     private readonly RegisterDTO _registerDTO;
+    private readonly UserObject _userObject;
 
     public RegistrationTests()
     {
@@ -52,6 +55,7 @@ public class RegistrationTests
         _mockTransaction = new Mock<IDatabaseTransaction>();
         _mockDbContextTransaction = new Mock<IDbContextTransaction>();
         _mockTransaction.Setup(x => x.Begin()).Returns(_mockDbContextTransaction.Object);
+        _encodedToken = Convert.ToBase64String(Encoding.UTF32.GetBytes(_token));
 
         _service = new RegisterWk(_mockUserRepository.Object, _mockTransaction.Object, _mockCache.Object,
             new AttemptValidator(_mockCache.Object), _mockSender.Object, _mockGenerate.Object,
@@ -66,6 +70,8 @@ public class RegistrationTests
             FirstName = _firstName,
             LastName = _lastName
         };
+
+        _userObject = new UserObject(_email, _passwordHash, _role, _code, _firstName, _lastName, _patronymic);
     }
 
     [Fact]
@@ -149,5 +155,116 @@ public class RegistrationTests
         x.Email == _email && x.FirstName == _firstName && x.LastName == _lastName && x.Patronymic == _patronymic &&
         x.Password == _passwordHash),
             TimeSpan.FromMinutes(10)), Times.Once);
+    }
+
+    [Fact]
+    public async Task Complete_InvalidAttempt()
+    {
+        _mockCache.Setup(x => x.GetSingleAsync<int>(_encodedToken)).ReturnsAsync(11);
+
+        var result = await _service.Complete(_code, _token);
+
+        Assert.False(result.IsSuccess);
+        Assert.Equal(403, result.Status);
+        Assert.Null(result.ObjectData);
+
+        _mockCache.Verify(x => x.GetSingleAsync<UserObject>(_token), Times.Never);
+        _mockCache.Verify(x => x.SetAsync(_encodedToken, It.IsAny<int>(), It.IsAny<TimeSpan>()), Times.Never);
+        _mockUserRepository.Verify(x => x.AddAsync(It.IsAny<UserModel>(), null, CancellationToken.None), Times.Never);
+        _mockCache.Verify(x => x.DeleteSingleAsync(_token), Times.Never);
+    }
+
+    [Fact]
+    public async Task Complete_UserObjectNotFound()
+    {
+        _mockCache.Setup(x => x.GetSingleAsync<int>(_encodedToken)).ReturnsAsync(1);
+        _mockCache.Setup(x => x.GetSingleAsync<UserObject>(_token)).ReturnsAsync((UserObject)null);
+
+        var result = await _service.Complete(_code, _token);
+
+        Assert.False(result.IsSuccess);
+        Assert.Equal(404, result.Status);
+        Assert.Null(result.ObjectData);
+
+        _mockCache.Verify(x => x.SetAsync(_encodedToken, It.IsAny<int>(), It.IsAny<TimeSpan>()), Times.Never);
+        _mockUserRepository.Verify(x => x.AddAsync(It.IsAny<UserModel>(), null, CancellationToken.None), Times.Never);
+        _mockCache.Verify(x => x.DeleteSingleAsync(_token), Times.Never);
+    }
+
+    [Fact]
+    public async Task Complete_IncorrectCode()
+    {
+        _mockCache.Setup(x => x.GetSingleAsync<int>(_encodedToken)).ReturnsAsync(1);
+        _mockCache.Setup(x => x.GetSingleAsync<UserObject>(_token)).ReturnsAsync(_userObject);
+
+        var result = await _service.Complete(123, _token);
+
+        Assert.False(result.IsSuccess);
+        Assert.Equal(403, result.Status);
+        Assert.Null(result.ObjectData);
+
+        _mockCache.Verify(x => x.SetAsync(_encodedToken, 2, TimeSpan.FromMinutes(15)), Times.Once);
+        _mockUserRepository.Verify(x => x.AddAsync(It.IsAny<UserModel>(), null, CancellationToken.None), Times.Never);
+        _mockCache.Verify(x => x.DeleteSingleAsync(_token), Times.Never);
+    }
+
+    [Fact]
+    public async Task Complete_RepositoryThrowsException()
+    {
+        _mockCache.Setup(x => x.GetSingleAsync<int>(_encodedToken)).ReturnsAsync(1);
+        _mockCache.Setup(x => x.GetSingleAsync<UserObject>(_token)).ReturnsAsync(_userObject);
+        _mockUserRepository.Setup(x => x.AddAsync(It.IsAny<UserModel>(), null, CancellationToken.None))
+            .ThrowsAsync(new EntityException(""));
+
+        var result = await _service.Complete(_code, _token);
+
+        Assert.False(result.IsSuccess);
+        Assert.Equal(500, result.Status);
+        Assert.Null(result.ObjectData);
+
+        _mockCache.Verify(x => x.SetAsync(_encodedToken, It.IsAny<int>(), It.IsAny<TimeSpan>()), Times.Never);
+        _mockCache.Verify(x => x.DeleteSingleAsync(_token), Times.Never);
+    }
+
+    [Fact]
+    public async Task Complete_UserObjectNotDeleted()
+    {
+        _mockCache.Setup(x => x.GetSingleAsync<int>(_encodedToken)).ReturnsAsync(1);
+        _mockCache.Setup(x => x.GetSingleAsync<UserObject>(_token)).ReturnsAsync(_userObject);
+        _mockCache.Setup(x => x.DeleteSingleAsync(_token)).ReturnsAsync(false);
+
+        var result = await _service.Complete(_code, _token);
+
+        Assert.False(result.IsSuccess);
+        Assert.Equal(500, result.Status);
+        Assert.Null(result.ObjectData);
+
+        _mockTransaction.Verify(x => x.Begin(), Times.Once);
+        _mockDbContextTransaction.Verify(x => x.Rollback(), Times.Once);
+        _mockCache.Verify(x => x.SetAsync(_encodedToken, It.IsAny<int>(), It.IsAny<TimeSpan>()), Times.Never);
+        _mockUserRepository.Verify(x => x.AddAsync(It.Is<UserModel>(x => x.IsBlocked == false && x.Email == _email &&
+        x.FirstName == _firstName && x.LastName == _lastName && x.PasswordHash == _passwordHash && x.Patronymic == _patronymic &&
+        x.Role == _role), null, CancellationToken.None), Times.Once);
+    }
+
+    [Fact]
+    public async Task Complete_Success()
+    {
+        _mockCache.Setup(x => x.GetSingleAsync<int>(_encodedToken)).ReturnsAsync(1);
+        _mockCache.Setup(x => x.GetSingleAsync<UserObject>(_token)).ReturnsAsync(_userObject);
+        _mockCache.Setup(x => x.DeleteSingleAsync(_token)).ReturnsAsync(true);
+
+        var result = await _service.Complete(_code, _token);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(201, result.Status);
+        Assert.Null(result.ObjectData);
+
+        _mockTransaction.Verify(x => x.Begin(), Times.Once);
+        _mockDbContextTransaction.Verify(x => x.Commit(), Times.Once);
+        _mockCache.Verify(x => x.SetAsync(_encodedToken, It.IsAny<int>(), It.IsAny<TimeSpan>()), Times.Never);
+        _mockUserRepository.Verify(x => x.AddAsync(It.Is<UserModel>(x => x.IsBlocked == false && x.Email == _email &&
+        x.FirstName == _firstName && x.LastName == _lastName && x.PasswordHash == _passwordHash && x.Patronymic == _patronymic &&
+        x.Role == _role), null, CancellationToken.None), Times.Once);
     }
 }
