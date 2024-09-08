@@ -11,18 +11,12 @@ namespace api.Controllers.Auth;
 public class LoginController(LoginWk workflow, SessionComponent sessionComponent) : ControllerBase
 {
     [HttpGet("refresh/jwt")]
-    public async Task<IActionResult> RefreshJsonWebToken([FromQuery] string refresh)
-    {
-        var response = await sessionComponent.RefreshJsonWebToken(refresh);
-        return StatusCode(response.Status, new { response });
-    }
+    public async Task<IActionResult> RefreshJsonWebToken([FromQuery] string refresh) 
+        => this.Response(await sessionComponent.RefreshJsonWebToken(refresh));
 
     [HttpPost("initiate")]
     public async Task<IActionResult> Initiate([FromBody] LoginDTO dto)
-    {
-        var response = await workflow.Initiate(dto);
-        return StatusCode(response.Status, new { response });
-    }
+        => this.Response(await workflow.Initiate(dto));
 
     [HttpPost("confirm")]
     public async Task<IActionResult> Confirm([FromQuery] int code, [FromQuery] string token)

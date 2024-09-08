@@ -14,40 +14,25 @@ public class CompanyController(CompanyWk workflow) : ControllerBase
     [HttpPost("add")]
     [Authorize(Policy = ApiSettings.EMPLOYER_POLICY)]
     public async Task<IActionResult> AddCompany([FromBody] CompanyDTO dto, IUserInfo userInfo)
-    {
-        var response = await workflow.AddSingle(dto, userInfo.UserId);
-        return StatusCode(response.Status, new { response });
-    }
+        => this.Response(await workflow.AddSingle(dto, userInfo.UserId));
 
     [HttpDelete("{id}")]
     [Authorize(Policy = ApiSettings.EMPLOYER_POLICY)]
     public async Task<IActionResult> DeleteCompany([FromRoute] int id, IUserInfo userInfo)
-    {
-        var response = await workflow.RemoveSingle(id, userInfo.UserId);
-        return StatusCode(response.Status, new { response });
-    }
+        => this.Response(await workflow.RemoveSingle(id, userInfo.UserId));
 
     [HttpGet("{id}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetCompany([FromRoute] int id)
-    {
-        var response = await workflow.GetSingle(id);
-        return StatusCode(response.Status, new { response });
-    }
+        => this.Response(await workflow.GetSingle(id));
 
     [HttpPost("get")]
     [AllowAnonymous]
     public async Task<IActionResult> GetCompanies([FromBody] SortCompanyDTO dto)
-    {
-        var response = await workflow.GetRange(dto);
-        return StatusCode(response.Status, new { response });
-    }
+        => this.Response(await workflow.GetRange(dto));
 
     [HttpPut("{id}")]
     [Authorize(Policy = ApiSettings.EMPLOYER_POLICY)]
     public async Task<IActionResult> UpdateCompany([FromBody] CompanyDTO dto, [FromRoute] int id, IUserInfo userInfo)
-    {
-        var response = await workflow.Update(dto, id, userInfo.UserId);
-        return StatusCode(response.Status, new { response });
-    }
+        => this.Response(await workflow.Update(dto, id, userInfo.UserId));
 }

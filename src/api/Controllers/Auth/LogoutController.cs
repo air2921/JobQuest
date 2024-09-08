@@ -23,8 +23,5 @@ public class LogoutController(LogoutWk workflow) : ControllerBase
     [HttpPost("query")]
     [Authorize]
     public async Task<IActionResult> LogoutFromQuery([FromQuery] string refresh, [FromQuery] bool clearAll = false)
-    {
-        var response = await workflow.Logout(refresh, clearAll);
-        return StatusCode(response.Status);
-    }
+        => this.Response(await workflow.Logout(refresh, clearAll));
 }

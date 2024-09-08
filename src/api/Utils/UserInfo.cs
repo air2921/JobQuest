@@ -36,4 +36,3 @@ public interface IUserInfo
     public int UserId { get; }
     public string Role { get; }
 }
-

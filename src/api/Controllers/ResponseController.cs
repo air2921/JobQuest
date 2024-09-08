@@ -14,48 +14,30 @@ public class ResponseController(ResponseWk workflow, IUserInfo userInfo) : Contr
     [HttpPost("get/as/employer")]
     [Authorize(Policy = ApiSettings.EMPLOYER_POLICY)]
     public async Task<IActionResult> GetResponsesAsEmployer([FromBody] SortResponseDTO dto, [FromQuery] int vacancyId)
-    {
-        var response = await workflow.GetRangeAsEmployer(dto, vacancyId, userInfo.UserId);
-        return StatusCode(response.Status, new { response });
-    }
+        => this.Response(await workflow.GetRangeAsEmployer(dto, vacancyId, userInfo.UserId));
 
     [HttpPost("get/as/applicant")]
     [Authorize(Policy = ApiSettings.APPLICANT_POLICY)]
     public async Task<IActionResult> GetResponsesAsApplicant([FromBody] SortResponseDTO dto, [FromQuery] int resumeId)
-    {
-        var response = await workflow.GetRangeAsApplicant(dto, resumeId, userInfo.UserId);
-        return StatusCode(response.Status, new { response });
-    }
+        => this.Response(await workflow.GetRangeAsApplicant(dto, resumeId, userInfo.UserId));
 
     [HttpGet("{responseId}")]
     [Authorize]
     public async Task<IActionResult> GetResponse([FromRoute] int responseId)
-    {
-        var response = await workflow.GetSingle(responseId, userInfo.UserId);
-        return StatusCode(response.Status, new { response });
-    }
+        => this.Response(await workflow.GetSingle(responseId, userInfo.UserId));
 
     [HttpDelete("{responseId}")]
     [Authorize]
     public async Task<IActionResult> DeleteResponse([FromRoute] int responseId)
-    {
-        var response = await workflow.RemoveSingle(responseId, userInfo.UserId);
-        return StatusCode(response.Status, new { response });
-    }
+        => this.Response(await workflow.RemoveSingle(responseId, userInfo.UserId));
 
     [HttpPost("add/{resumeId}/{vacancyId}")]
     [Authorize(Policy = ApiSettings.APPLICANT_POLICY)]
     public async Task<IActionResult> AddResponse([FromRoute] int resumeId, [FromRoute] int vacancyId)
-    {
-        var response = await workflow.AddSingle(resumeId, vacancyId, userInfo.UserId);
-        return StatusCode(response.Status, new { response });
-    }
+        => this.Response(await workflow.AddSingle(resumeId, vacancyId, userInfo.UserId));
 
     [HttpPut("{responseId}")]
     [Authorize(Policy = ApiSettings.EMPLOYER_POLICY)]
     public async Task<IActionResult> UpdateResponse([FromBody] ResponseDTO dto, [FromRoute] int responseId)
-    {
-        var response = await workflow.Update(dto, responseId, userInfo.UserId);
-        return StatusCode(response.Status, new { response });
-    }
+        => this.Response(await workflow.Update(dto, responseId, userInfo.UserId));
 }

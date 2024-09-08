@@ -13,43 +13,25 @@ public class FavoritesVacancyController(FavoritesVacancyWk workflow, IUserInfo u
 {
     [HttpGet("range")]
     public async Task<IActionResult> GetFavorites([FromQuery] int skip, [FromQuery] int count, [FromQuery] bool byDesc)
-    {
-        var response = await workflow.GetRange(new PaginationDTO { Skip = skip, Total = count, ByDesc = byDesc }, userInfo.UserId);
-        return StatusCode(response.Status, new { response });
-    }
+        => this.Response(await workflow.GetRange(new PaginationDTO { Skip = skip, Total = count, ByDesc = byDesc }, userInfo.UserId));
 
     [HttpGet("{favoriteId}")]
     public async Task<IActionResult> GetFavorite([FromRoute] int favoriteId)
-    {
-        var response = await workflow.GetSingle(favoriteId, userInfo.UserId);
-        return StatusCode(response.Status, new { response });
-    }
+        => this.Response(await workflow.GetSingle(favoriteId, userInfo.UserId));
 
     [HttpDelete("range")]
     public async Task<IActionResult> DeleteFavorites([FromBody] IEnumerable<int> ids)
-    {
-        var response = await workflow.RemoveRange(ids, userInfo.UserId);
-        return StatusCode(response.Status);
-    }
+        => this.Response(await workflow.RemoveRange(ids, userInfo.UserId));
 
     [HttpDelete("{favoriteId}")]
     public async Task<IActionResult> DeleteFavorite([FromRoute] int favoriteId)
-    {
-        var response = await workflow.RemoveSingle(favoriteId, userInfo.UserId);
-        return StatusCode(response.Status);
-    }
+        => this.Response(await workflow.RemoveSingle(favoriteId, userInfo.UserId));
 
     [HttpPost("range")]
     public async Task<IActionResult> AddFavorites([FromBody] IEnumerable<int> ids)
-    {
-        var response = await workflow.AddRange(ids, userInfo.UserId);
-        return StatusCode(response.Status);
-    }
+        => this.Response(await workflow.AddRange(ids, userInfo.UserId));
 
     [HttpPost("{favoriteId}")]
     public async Task<IActionResult> AddFavorite([FromRoute] int favoriteId)
-    {
-        var response = await workflow.AddSingle(favoriteId, userInfo.UserId);
-        return StatusCode(response.Status);
-    }
+        => this.Response(await workflow.AddSingle(favoriteId, userInfo.UserId));
 }
