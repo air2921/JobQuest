@@ -19,13 +19,18 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
       - name: Build and start containers
         run: docker-compose up -d
 
       - name: Monitor and restart container if necessary
         id: monitor
         run: |
-          sleep 25
+          sleep 10
 
           container_status=$(docker inspect -f '{{.State.Status}}' api || echo "not found")
 
