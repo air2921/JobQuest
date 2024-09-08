@@ -28,19 +28,19 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Run api tests
-      run: dotnet test tests\tests.api\tests.api.csproj --verbosity normal --logger trx --results-directory TestResults
+      run: dotnet test tests/tests.api/tests.api.csproj --verbosity normal --logger trx --results-directory TestResults
 
     - name: Run application tests
-      run: dotnet test tests\tests.application\tests.application.csproj --verbosity normal --logger trx --results-directory TestResults
+      run: dotnet test tests/tests.application/tests.application.csproj --verbosity normal --logger trx --results-directory TestResults
 
     - name: Run background tests
-      run: dotnet test tests\tests.background\tests.background.csproj --verbosity normal --logger trx --results-directory TestResults
+      run: dotnet test tests/tests.background/tests.background.csproj --verbosity normal --logger trx --results-directory TestResults
 
     - name: Run datahub tests
-      run: dotnet test tests\tests.datahub\tests.datahub.csproj --verbosity normal --logger trx --results-directory TestResults
+      run: dotnet test tests/tests.datahub/tests.datahub.csproj --verbosity normal --logger trx --results-directory TestResults
 
     - name: Run domain tests
-      run: dotnet test tests\tests.domain\tests.domain.csproj --verbosity normal --logger trx --results-directory TestResults
+      run: dotnet test tests/tests.domain/tests.domain.csproj --verbosity normal --logger trx --results-directory TestResults
 
     - name: Run infrasturcture tests
-      run: dotnet test tests/tests.infrasturcture.csproj --verbosity normal --logger trx --results-directory TestResults
+      run: dotnet test tests/tests.infrasturcture/tests.infrasturcture.csproj --verbosity normal --logger trx --results-directory TestResults
