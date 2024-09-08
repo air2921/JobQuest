@@ -30,7 +30,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tests.datahub", "tests\test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tests.background", "tests\tests.background\tests.background.csproj", "{929E2B22-5814-45CF-BDD2-887FB023816F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests.application", "tests\tests.application\tests.application.csproj", "{DAED3B80-E2D6-4EAA-963D-883F7FF34535}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tests.application", "tests\tests.application\tests.application.csproj", "{DAED3B80-E2D6-4EAA-963D-883F7FF34535}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests.api", "tests\tests.api\tests.api.csproj", "{1A0B920A-C131-4A18-88D6-CC56B5A01E0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -90,6 +92,10 @@ Global
 		{DAED3B80-E2D6-4EAA-963D-883F7FF34535}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAED3B80-E2D6-4EAA-963D-883F7FF34535}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAED3B80-E2D6-4EAA-963D-883F7FF34535}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B920A-C131-4A18-88D6-CC56B5A01E0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B920A-C131-4A18-88D6-CC56B5A01E0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B920A-C131-4A18-88D6-CC56B5A01E0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B920A-C131-4A18-88D6-CC56B5A01E0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

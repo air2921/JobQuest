@@ -86,7 +86,10 @@ public class RegisterWk(
             });
 
             if(!await dataCache.DeleteSingleAsync(token))
+            {
                 transaction.Rollback();
+                return Response(500);
+            }
 
             transaction.Commit();
             return Response(201);
@@ -98,5 +101,5 @@ public class RegisterWk(
         }
     }
 
-    private record UserObject(string Email, string Password, string Role, int Code, string FirstName, string LastName, string? Patronymic);
+    public record UserObject(string Email, string Password, string Role, int Code, string FirstName, string LastName, string? Patronymic);
 }

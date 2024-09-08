@@ -9,6 +9,8 @@ namespace tests.background.Deleting_Expired;
 
 public class DeleteExpiredRecoveryTests
 {
+    private readonly DeleteExpiredRecovery _service;
+
     private const int MAX = 10000;
 
     private readonly Mock<ILogger<DeleteExpiredRecovery>> _mockLogger;
@@ -18,6 +20,8 @@ public class DeleteExpiredRecoveryTests
     {
         _mockLogger = new Mock<ILogger<DeleteExpiredRecovery>>();
         _mockRepository = new Mock<IRepository<RecoveryModel>>();
+
+        _service = new DeleteExpiredRecovery(_mockRepository.Object, _mockLogger.Object);
     }
 
     [Fact]
@@ -37,8 +41,7 @@ public class DeleteExpiredRecoveryTests
             spec.OrderByDesc == false && spec.IsExpired == true), null, CancellationToken.None))
             .ReturnsAsync(tokenList);
 
-        var service = new DeleteExpiredRecovery(_mockRepository.Object, _mockLogger.Object);
-        await service.DeleteExpired();
+        await _service.DeleteExpired();
 
         _mockRepository.Verify(r => r.GetCount(It.Is<CountRecoverySpec>(spec => spec.IsExpired == true && spec.IsUsed == true)), Times.Once);
         _mockRepository.Verify(r => r.GetRangeAsync(It.Is<SortRecoverySpec>(spec =>
@@ -66,8 +69,7 @@ public class DeleteExpiredRecoveryTests
             spec.OrderByDesc == false && spec.IsExpired == true && spec.IsUsed == true), null, CancellationToken.None))
             .ReturnsAsync(tokenList);
 
-        var service = new DeleteExpiredRecovery(_mockRepository.Object, _mockLogger.Object);
-        await service.DeleteExpired();
+        await _service.DeleteExpired();
 
         _mockRepository.Verify(r => r.GetCount(It.Is<CountRecoverySpec>(spec => spec.IsExpired == true && spec.IsUsed == true)), Times.Once);
         _mockRepository.Verify(r => r.GetRangeAsync(It.Is<SortRecoverySpec>(spec =>
@@ -83,8 +85,7 @@ public class DeleteExpiredRecoveryTests
         _mockRepository.Setup(r => r.GetCount(It.Is<CountRecoverySpec>(spec => spec.IsExpired == true && spec.IsUsed == true)))
             .Throws(new Exception());
 
-        var service = new DeleteExpiredRecovery(_mockRepository.Object, _mockLogger.Object);
-        await service.DeleteExpired();
+        await _service.DeleteExpired();
 
         _mockRepository.Verify(r => r.GetCount(It.Is<CountRecoverySpec>(spec => spec.IsExpired == true && spec.IsUsed == true)), Times.Once);
         _mockRepository.Verify(r => r.GetRangeAsync(It.Is<SortRecoverySpec>(spec =>

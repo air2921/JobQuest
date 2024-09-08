@@ -12,6 +12,7 @@ namespace tests.application.Components;
 public class AttemptValidatorTests
 {
     private readonly Mock<IDataCache<ConnectionSecondary>> _mockDataCache;
+    private readonly AttemptValidator _service;
     private readonly string _srcEmail = "johndoe134@gmail.com";
     private readonly int _acceptableAttempts = 5;
     private readonly int _delay = 15;
@@ -21,14 +22,14 @@ public class AttemptValidatorTests
     {
         _encodedEmail = Convert.ToBase64String(Encoding.UTF32.GetBytes(_srcEmail));
         _mockDataCache = new Mock<IDataCache<ConnectionSecondary>>();
+        _service = new AttemptValidator(_mockDataCache.Object);
     }
 
     [Fact]
     public async Task IsValidTry_Valid()
     {
         _mockDataCache.Setup(x => x.GetSingleAsync<int>(_encodedEmail)).ReturnsAsync(1);
-        var service = new AttemptValidator(_mockDataCache.Object);
-        var result = await service.IsValidTry(_srcEmail, _acceptableAttempts);
+        var result = await _service.IsValidTry(_srcEmail, _acceptableAttempts);
 
         _mockDataCache.Verify(x => x.GetSingleAsync<int>(_encodedEmail), Times.Once);
         Assert.True(result);
@@ -38,8 +39,7 @@ public class AttemptValidatorTests
     public async Task IsValidTry_Invalid()
     {
         _mockDataCache.Setup(x => x.GetSingleAsync<int>(_encodedEmail)).ReturnsAsync(6);
-        var service = new AttemptValidator(_mockDataCache.Object);
-        var result = await service.IsValidTry(_srcEmail, _acceptableAttempts);
+        var result = await _service.IsValidTry(_srcEmail, _acceptableAttempts);
 
         _mockDataCache.Verify(x => x.GetSingleAsync<int>(_encodedEmail), Times.Once);
         Assert.False(result);
@@ -50,8 +50,7 @@ public class AttemptValidatorTests
     {
         var count = 1;
         _mockDataCache.Setup(x => x.GetSingleAsync<int>(_encodedEmail)).ReturnsAsync(count);
-        var service = new AttemptValidator(_mockDataCache.Object);
-        await service.AddAttempt(_srcEmail, _delay);
+        await _service.AddAttempt(_srcEmail, _delay);
 
         _mockDataCache.Verify(x => x.SetAsync(_encodedEmail, count + 1, TimeSpan.FromMinutes(_delay)));
     }

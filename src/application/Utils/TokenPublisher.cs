@@ -13,7 +13,7 @@ namespace application.Utils;
 
 public class TokenPublisher(IConfiguration configuration, IGenerate generate)
 {
-    public string JsonWebToken(JwtDTO dto)
+    public virtual string JsonWebToken(JwtDTO dto)
     {
         var section = configuration.GetSection(App.JWT_SECTION);
 
@@ -36,5 +36,5 @@ public class TokenPublisher(IConfiguration configuration, IGenerate generate)
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public string RefreshToken() => generate.GuidCombine(3);
+    public virtual string RefreshToken() => generate.GuidCombine(3);
 }
