@@ -24,8 +24,19 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y docker-compose
 
+      - name: Verify docker-compose.yml presence
+        run: |
+          cd docker
+          ls -la
+          if [ ! -f docker-compose.yml ]; then
+            echo "docker-compose.yml not found in docker directory!"
+            exit 1
+          fi
+
       - name: Build and start containers
-        run: docker-compose up -d
+        run: |
+          cd docker
+          docker-compose up -d
 
       - name: Monitor and restart container if necessary
         id: monitor
