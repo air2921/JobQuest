@@ -27,9 +27,20 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
 
-    - name: Run tests
-      run: |
-        for test_project in $(find . -name "*.csproj" -path "*tests*"); do
-          echo "Running tests in $test_project"
-          dotnet test $test_project --no-build --verbosity normal
-        done
+    - name: Run api tests
+      run: dotnet test tests\tests.api\tests.api.csproj --logger trx --results-directory TestResults
+
+    - name: Run application tests
+      run: dotnet test tests\tests.application\tests.application.csproj --logger trx --results-directory TestResults
+
+    - name: Run background tests
+      run: dotnet test tests\tests.background\tests.background.csproj --logger trx --results-directory TestResults
+
+    - name: Run datahub tests
+      run: dotnet test tests\tests.datahub\tests.datahub.csproj --logger trx --results-directory TestResults
+
+    - name: Run domain tests
+      run: dotnet test tests\tests.domain\tests.domain.csproj --logger trx --results-directory TestResults
+
+    - name: Run infrasturcture tests
+      run: dotnet test tests/tests.infrasturcture.csproj --logger trx --results-directory TestResults
