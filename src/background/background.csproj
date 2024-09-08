@@ -15,4 +15,10 @@
     <ProjectReference Include="..\domain\domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="JsonLocalizer">
+      <HintPath>..\..\assembly\JsonLocalizer.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

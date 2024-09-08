@@ -1,8 +1,7 @@
-﻿using Microsoft.Extensions.Hosting;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using datahub.Redis;
+using Microsoft.Extensions.Hosting;
 
-namespace datahub.Redis;
+namespace background;
 
 internal class RedisCleanupService : IHostedService
 {
