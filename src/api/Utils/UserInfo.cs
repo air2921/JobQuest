@@ -4,7 +4,8 @@ namespace api.Utils;
 
 public class UserInfo(IHttpContextAccessor httpContextAccessor) : IUserInfo
 {
-    private readonly HttpContext _httpContext = httpContextAccessor.HttpContext ?? throw new InvalidOperationException("User is not authenticated");
+    private readonly HttpContext _httpContext = httpContextAccessor.HttpContext ??
+        throw new InvalidOperationException("It is not allowed to use HttpContext to retrieve user data for unauthorized access");
 
     public int UserId => GetIntClaimValue(ClaimTypes.NameIdentifier);
 
@@ -14,10 +15,8 @@ public class UserInfo(IHttpContextAccessor httpContextAccessor) : IUserInfo
     {
         ClaimsPrincipal user = _httpContext.User;
         string? value = user.FindFirstValue(claimType);
-        if (value is not null)
-            return value;
-        else
-            throw new InvalidOperationException($"Cannot retrieve claim value for {claimType} as string");
+        return value ??
+            throw new ArgumentNullException(claimType, $"Cannot retrieve claim value for {claimType} as string");
     }
 
     private int GetIntClaimValue(string claimType)
@@ -27,7 +26,7 @@ public class UserInfo(IHttpContextAccessor httpContextAccessor) : IUserInfo
         if (value is not null && int.TryParse(value, out int result))
             return result;
         else
-            throw new InvalidOperationException($"Cannot retrieve claim value for {claimType} as integer");
+            throw new ArgumentNullException(claimType, $"Cannot retrieve claim value for {claimType} as integer");
     }
 }
 
